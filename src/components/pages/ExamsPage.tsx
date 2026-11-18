@@ -961,10 +961,14 @@ export const ExamsPage: React.FC = () => {
         <AnimatePresence initial={false}>
           {historyOpen && (
             <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ height: 0, opacity: 0, filter: 'blur(2px)' }}
+              animate={{ height: 'auto', opacity: 1, filter: 'blur(0px)' }}
+              exit={{ height: 0, opacity: 0, filter: 'blur(2px)' }}
+              transition={{
+                height: { type: 'spring', stiffness: 420, damping: 30, mass: 0.8 },
+                opacity: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
+                filter: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
+              }}
               className="overflow-hidden"
             >
               <div className="px-5 sm:px-6 pb-5 sm:pb-6 pt-2 border-t border-black/[0.06] space-y-4">

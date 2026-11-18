@@ -3,6 +3,7 @@ import { PanelLeft, Layers } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { UI_KIT_CATALOG } from '../uikit/uiKitCatalog';
 import { getUiKitCategoryIcon } from '../uikit/uiKitIcons';
+import { preloadCategoryModule } from '../uikit/uiKitPreload';
 
 export const Sidebar: React.FC = () => {
   const {
@@ -97,7 +98,7 @@ export const Sidebar: React.FC = () => {
 
   return (
     <aside
-      className={`hidden md:flex md:static inset-y-0 left-0 z-50 h-full max-h-full overflow-hidden shrink-0 flex-col transition-all duration-300 ease-out bg-transparent backdrop-blur-md border-r border-black/[0.04] ${
+      className={`hidden md:flex md:static inset-y-0 left-0 z-50 h-full max-h-full overflow-hidden shrink-0 flex-col transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] bg-transparent backdrop-blur-md border-r border-black/[0.12] ${
         sidebarOpen ? 'w-[260px]' : 'w-[84px]'
       } p-4 select-none`}
     >
@@ -116,7 +117,7 @@ export const Sidebar: React.FC = () => {
               <span className="block font-semibold text-[16px] tracking-tight text-[#1C1D21] leading-tight">
                 UI KIT
               </span>
-              <span className="block text-[10.5px] font-medium text-[#8A8D98] leading-tight">
+              <span className="block text-[10.5px] font-medium text-[#646772] leading-tight">
                 Design System
               </span>
             </div>
@@ -125,7 +126,7 @@ export const Sidebar: React.FC = () => {
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           title="Toggle Sidebar"
-          className="hidden md:flex w-8 h-8 rounded-lg hover:bg-black/5 items-center justify-center text-[#6E717A] transition-colors cursor-pointer shrink-0"
+          className="hidden md:flex w-8 h-8 rounded-lg hover:bg-black/5 items-center justify-center text-[#5A5D67] transition-colors cursor-pointer shrink-0"
         >
           <PanelLeft className="w-4 h-4" />
         </button>
@@ -141,7 +142,7 @@ export const Sidebar: React.FC = () => {
           <div ref={mainMenuRef} className="relative space-y-1 pb-2">
             <span
               aria-hidden="true"
-              className={`pointer-events-none absolute left-0 right-0 top-0 rounded-lg bg-white shadow-xs transition-[transform,height,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              className={`pointer-events-none absolute left-0 right-0 top-0 rounded-lg bg-white shadow-xs transition-[transform,height,opacity] duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
                 menuIndicator.visible ? 'opacity-100' : 'opacity-0'
               }`}
               style={{
@@ -150,7 +151,7 @@ export const Sidebar: React.FC = () => {
               }}
             />
             {sidebarOpen && (
-              <div className="relative z-10 px-3 pb-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <div className="relative z-10 px-3 pb-1.5 text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Design System
               </div>
             )}
@@ -158,16 +159,19 @@ export const Sidebar: React.FC = () => {
               const Icon = getUiKitCategoryIcon(group.id);
               const isActive = uiCategory === group.id;
               return (
-                <button
-                  key={group.id}
-                  data-sidebar-item="true"
-                  ref={isActive ? activeMenuBtnRef : undefined}
-                  onClick={() => selectUiNode(group.id)}
-                  title={!sidebarOpen ? group.label : undefined}
-                  className={`relative z-10 w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] group cursor-pointer ${
+                  <button
+                    key={group.id}
+                    data-sidebar-item="true"
+                    ref={isActive ? activeMenuBtnRef : undefined}
+                    onClick={() => selectUiNode(group.id)}
+                    onMouseEnter={() => preloadCategoryModule(group.id)}
+                    onFocus={() => preloadCategoryModule(group.id)}
+                    onTouchStart={() => preloadCategoryModule(group.id)}
+                    title={!sidebarOpen ? group.label : undefined}
+                  className={`relative z-10 w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group cursor-pointer ${
                     isActive
-                      ? `text-gray-900 font-semibold ${menuIndicator.visible ? '' : 'bg-white shadow-xs'}`
-                      : 'text-gray-600 hover:bg-white/60 hover:text-gray-950 font-medium'
+                      ? `text-gray-900 ${menuIndicator.visible ? '' : 'bg-white shadow-xs'}`
+                      : 'text-gray-600 hover:bg-white/60 hover:text-gray-950'
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -197,8 +201,8 @@ export const Sidebar: React.FC = () => {
       </div>
 
       {/* Compact UI KIT System Footer */}
-      <div className="shrink-0 pt-3 mt-2 border-t border-black/[0.05]">
-        <div className="flex items-center justify-between gap-2.5 p-2 rounded-2xl bg-white/65 border border-white">
+      <div className="shrink-0 pt-3 mt-2 border-t border-black/[0.12]">
+        <div className="flex items-center justify-between gap-2.5 p-2 rounded-2xl bg-white/75 border border-black/[0.10]">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="w-9 h-9 rounded-full bg-[#ee2e65] text-white text-xs font-bold flex items-center justify-center shrink-0 shadow-xs">
               UI
@@ -206,7 +210,7 @@ export const Sidebar: React.FC = () => {
             {sidebarOpen && (
               <div className="min-w-0">
                 <div className="text-[13px] font-semibold text-[#1C1D21] truncate">UI KIT</div>
-                <div className="text-[11px] text-[#8A8D98] truncate">Design System</div>
+                <div className="text-[11px] text-[#646772] truncate">Design System</div>
               </div>
             )}
           </div>

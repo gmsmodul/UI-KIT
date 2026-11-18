@@ -53,7 +53,10 @@ import { useApp } from '../../context/AppContext';
 import { UiDocPage, UiDocSection } from './UiDocBlock';
 import { CustomSelect } from '../ui/CustomSelect';
 import { SplitFilterButton } from '../ui/SplitFilterButton';
+import { ToggleSwitch } from '../ui/ToggleSwitch';
 import { SelectCheckboxRadioUiKit } from './SelectCheckboxRadioUiKit';
+import { ToggleUiKit } from './ToggleUiKit';
+import { MenuUxRulesUiKit } from './MenuUxRulesUiKit';
 import {
   ACTION_BTN_PRIMARY,
   ACTION_BTN_SECONDARY,
@@ -174,14 +177,82 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
     { name: 'Modul_Praktikum_Fisika.docx', size: '1.8 MB', type: 'DOCX' },
   ]);
 
-  // 3.10 Date Picker
+  // 3.10 Date Picker (Typed Dates + Month/Year Jump 1960-2030)
+  const dpMonthNames = [
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember',
+  ];
+  const dpMonthOptions = dpMonthNames.map((m, i) => ({ value: String(i), label: m }));
+  const dpYearOptions = Array.from({ length: 71 }, (_, i) => {
+    const yr = String(2030 - i);
+    return { value: yr, label: yr };
+  });
+  const getDpDaysInMonth = (y: number, m: number) => new Date(y, m + 1, 0).getDate();
+  const getDpLeadingOffset = (y: number, m: number) => (new Date(y, m, 1).getDay() + 6) % 7;
+  const formatDpStr = (y: number, m: number, d: number) =>
+    `${String(d).padStart(2, '0')}/${String(m + 1).padStart(2, '0')}/${y}`;
+  const parseDpFlexible = (raw: string): { year: number; month: number; day: number } | null => {
+    const s = raw.trim();
+    const dmy = s.match(/^(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})$/);
+    if (dmy) {
+      const day = Number(dmy[1]);
+      const month = Number(dmy[2]) - 1;
+      const year = Number(dmy[3]);
+      if (year >= 1940 && year <= 2035 && month >= 0 && month <= 11 && day >= 1 && day <= getDpDaysInMonth(year, month)) {
+        return { year, month, day };
+      }
+    }
+    const ymd = s.match(/^(\d{4})[/.-](\d{1,2})[/.-](\d{1,2})$/);
+    if (ymd) {
+      const year = Number(ymd[1]);
+      const month = Number(ymd[2]) - 1;
+      const day = Number(ymd[3]);
+      if (year >= 1940 && year <= 2035 && month >= 0 && month <= 11 && day >= 1 && day <= getDpDaysInMonth(year, month)) {
+        return { year, month, day };
+      }
+    }
+    return null;
+  };
+
+  const [dpYear, setDpYear] = useState(2026);
+  const [dpMonth, setDpMonth] = useState(1);
   const [selectedDay, setSelectedDay] = useState(14);
-  const months = ['Januari 2026', 'Februari 2026', 'Maret 2026', 'April 2026'];
-  const [monthIdx, setMonthIdx] = useState(1);
+  const [dpTypedInput, setDpTypedInput] = useState('14/02/2026');
+  const [dpTypedInvalid, setDpTypedInvalid] = useState(false);
+
+  const [dtYear, setDtYear] = useState(2026);
+  const [dtMonth, setDtMonth] = useState(1);
   const [dateTimeDay, setDateTimeDay] = useState(18);
-  const [dateTimeMonthIdx, setDateTimeMonthIdx] = useState(1);
+  const [dtTypedInput, setDtTypedInput] = useState('18/02/2026');
   const [dateTimeHour, setDateTimeHour] = useState('09');
   const [dateTimeMinute, setDateTimeMinute] = useState('30');
+
+  const syncPrimaryDate = (y: number, m: number, d: number) => {
+    const safeDay = Math.min(d, getDpDaysInMonth(y, m));
+    setDpYear(y);
+    setDpMonth(m);
+    setSelectedDay(safeDay);
+    setDpTypedInput(formatDpStr(y, m, safeDay));
+    setDpTypedInvalid(false);
+  };
+
+  const syncTimeDate = (y: number, m: number, d: number) => {
+    const safeDay = Math.min(d, getDpDaysInMonth(y, m));
+    setDtYear(y);
+    setDtMonth(m);
+    setDateTimeDay(safeDay);
+    setDtTypedInput(formatDpStr(y, m, safeDay));
+  };
 
   // 3.11 Color Picker
   const [selectedColor, setSelectedColor] = useState('#ee2e65');
@@ -432,7 +503,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
           <UiDocSection
             id="btn-animated"
             title="Animated buttons"
-            classesHint="group hover:pr-4 / group-hover:translate-x-1"
+            classesHint="group inline-grid / group-hover:translate-x-1"
             codeSnippet={`<button className="group px-3.5 py-2 rounded-lg bg-gray-900 text-white flex items-center gap-1.5">\n  <span>Animated</span><ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />\n</button>`}
           >
             <button
@@ -440,10 +511,25 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                 setBtnLoading(true);
                 setTimeout(() => setBtnLoading(false), 1200);
               }}
-              className="group px-3.5 py-2 rounded-lg bg-gray-900 text-white text-xs font-semibold flex items-center gap-1.5 transition-all hover:pr-4 cursor-pointer"
+              className="group px-4 py-2 rounded-lg bg-gray-900 text-white text-xs font-semibold inline-grid place-items-center transition-colors cursor-pointer"
             >
-              <span>{btnLoading ? 'Menyimpan...' : 'Animated'}</span>
-              <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+              <span
+                className={`[grid-area:1/1] inline-flex items-center gap-1.5 transition-opacity duration-150 ${
+                  btnLoading ? 'opacity-0 invisible' : 'opacity-100'
+                }`}
+              >
+                <span>Animated</span>
+                <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+              </span>
+              <span
+                aria-hidden={!btnLoading}
+                className={`[grid-area:1/1] inline-flex items-center gap-1.5 transition-opacity duration-150 ${
+                  btnLoading ? 'opacity-100' : 'opacity-0 invisible'
+                }`}
+              >
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span>Menyimpan...</span>
+              </span>
             </button>
           </UiDocSection>
 
@@ -545,14 +631,14 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
           <UiDocSection
             id="btn-disabled"
             title="Disabled State"
-            classesHint="bg-gray-200 text-gray-400 cursor-not-allowed"
-            codeSnippet={`<button disabled className="px-3.5 py-1.5 text-sm rounded-lg bg-gray-200 text-gray-400 cursor-not-allowed">Disabled</button>`}
+            classesHint="bg-gray-200 text-gray-500 cursor-not-allowed"
+            codeSnippet={`<button disabled className="px-3.5 py-1.5 text-sm rounded-lg bg-gray-200 text-gray-500 cursor-not-allowed">Disabled</button>`}
           >
             <div className="flex flex-wrap gap-2.5 text-xs font-semibold">
-              <button disabled className="px-3.5 py-2 rounded-lg bg-gray-200 text-gray-400 cursor-not-allowed">
+              <button disabled className="px-3.5 py-2 rounded-lg bg-gray-200 text-gray-500 cursor-not-allowed">
                 Disabled Solid
               </button>
-              <button disabled className="px-3.5 py-2 rounded-lg border border-gray-200 text-gray-300 cursor-not-allowed">
+              <button disabled className="px-3.5 py-2 rounded-lg border border-gray-300 text-gray-500 cursor-not-allowed">
                 Disabled Outline
               </button>
             </div>
@@ -576,16 +662,24 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                     triggerToast('Tersimpan', 'Perubahan modul berhasil disimpan.', 'success');
                   }, 1400);
                 }}
-                className="px-4 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 disabled:opacity-75 inline-flex items-center gap-2 cursor-pointer disabled:cursor-wait transition-colors"
+                className="px-4 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 disabled:opacity-75 inline-grid place-items-center cursor-pointer disabled:cursor-wait transition-colors"
               >
-                {btnLoading ? (
-                  <>
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    <span>Menyimpan...</span>
-                  </>
-                ) : (
-                  <span>Klik Simulasi Loader</span>
-                )}
+                <span
+                  aria-hidden={!btnLoading}
+                  className={`[grid-area:1/1] inline-flex items-center gap-2 transition-opacity duration-150 ${
+                    btnLoading ? 'opacity-100' : 'opacity-0 invisible'
+                  }`}
+                >
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Menyimpan...</span>
+                </span>
+                <span
+                  className={`[grid-area:1/1] inline-flex items-center transition-opacity duration-150 ${
+                    btnLoading ? 'opacity-0 invisible' : 'opacity-100'
+                  }`}
+                >
+                  Klik Simulasi Loader
+                </span>
               </button>
 
               <button
@@ -640,14 +734,14 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
           <UiDocSection
             id="btn-group-h"
             title="Button Group Horizontal"
-            classesHint="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-0.5"
-            codeSnippet={`<div className="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-0.5">\n  <button className="px-3 py-1.5 rounded-md bg-white text-gray-900 font-semibold">Bulan Ini</button>\n</div>`}
+            classesHint="inline-flex rounded-lg border border-gray-300 bg-gray-50 p-0.5"
+            codeSnippet={`<div className="inline-flex rounded-lg border border-gray-300 bg-gray-50 p-0.5">\n  <button className="px-3 py-1.5 rounded-md bg-white text-gray-900 font-semibold">Bulan Ini</button>\n</div>`}
           >
             <div className="space-y-3 text-xs">
-              <div className="relative inline-grid grid-cols-3 rounded-lg border border-gray-200 bg-gray-100/80 p-0.5">
+              <div className="relative inline-grid grid-cols-3 rounded-lg border border-gray-300 bg-gray-100/80 p-0.5">
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute inset-y-0.5 left-0.5 w-[calc((100%-0.25rem)/3)] rounded-md bg-white shadow-2xs transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  className="pointer-events-none absolute inset-y-0.5 left-0.5 w-[calc((100%-0.25rem)/3)] rounded-md bg-white shadow-2xs transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
                   style={{
                     transform: `translate3d(${Math.max(0, ['Hari Ini', 'Minggu Ini', 'Bulan Ini'].indexOf(activeBtnGroup)) * 100}%, 0, 0)`,
                   }}
@@ -677,13 +771,13 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
           <UiDocSection
             id="btn-group-v"
             title="Button Group Vertical"
-            classesHint="relative inline-grid grid-rows-3 w-52 rounded-lg border border-gray-200"
-            codeSnippet={`<div className="inline-grid grid-rows-3 w-52 rounded-lg border border-gray-200">\n  <button className="px-3 py-2 text-left border-b">1. Profil Kelas 302</button>\n</div>`}
+            classesHint="relative inline-grid grid-rows-3 w-52 rounded-lg border border-gray-300"
+            codeSnippet={`<div className="inline-grid grid-rows-3 w-52 rounded-lg border border-gray-300">\n  <button className="px-3 py-2 text-left border-b">1. Profil Kelas 302</button>\n</div>`}
           >
-            <div className="relative inline-grid grid-rows-3 w-52 rounded-lg border border-gray-200 overflow-hidden bg-white text-xs divide-y divide-gray-200">
+            <div className="relative inline-grid grid-rows-3 w-52 rounded-lg border border-gray-300 overflow-hidden bg-white text-xs divide-y divide-gray-200">
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 top-0 h-1/3 bg-primary-50/90 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                className="pointer-events-none absolute inset-x-0 top-0 h-1/3 bg-primary-50/90 transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
                 style={{
                   transform: `translate3d(0, ${Math.max(0, ['1. Profil Kelas 302', '2. Daftar Hadir Siswa', '3. Rapor Semester'].indexOf(activeBtnGroupV)) * 100}%, 0)`,
                 }}
@@ -695,8 +789,8 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                   key={item}
                   type="button"
                   onClick={() => setActiveBtnGroupV(item)}
-                  className={`relative z-10 px-3.5 py-2 text-left transition-colors duration-200 cursor-pointer ${
-                    activeBtnGroupV === item ? 'text-primary-700 font-semibold' : 'text-gray-700 hover:text-gray-950 font-medium'
+                  className={`relative z-10 px-3.5 py-2 rounded-none text-left font-semibold transition-colors duration-200 cursor-pointer ${
+                    activeBtnGroupV === item ? 'text-primary-700' : 'text-gray-700 hover:text-gray-950'
                   }`}
                 >
                   {item}
@@ -713,11 +807,11 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
           >
             <div className="flex flex-wrap gap-2.5 text-xs font-semibold">
               <button className="group px-3 py-2 rounded-lg bg-gray-900 text-white flex items-center gap-1.5 cursor-pointer hover:bg-black">
-                <Send className="w-3.5 h-3.5 transition-transform duration-200 ease-[cubic-bezier(0.22,1.28,0.36,1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <Send className="w-3.5 h-3.5 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 <span>Kirim Tugas</span>
               </button>
               <button className="group px-3.5 py-2 rounded-lg bg-primary-50 text-primary-700 border border-primary-200 flex items-center gap-2 cursor-pointer hover:bg-primary-100">
-                <BookOpen className="w-4 h-4 transition-transform duration-200 ease-[cubic-bezier(0.22,1.28,0.36,1)] group-hover:scale-110" />
+                <BookOpen className="w-4 h-4 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-110" />
                 <span>Buka materi</span>
               </button>
             </div>
@@ -731,10 +825,10 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
           >
             <div className="flex items-center gap-3">
               <button className="group w-8 h-8 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50 cursor-pointer">
-                <Heart className="w-4 h-4 text-rose-500 transition-transform duration-200 ease-[cubic-bezier(0.22,1.28,0.36,1)] group-hover:scale-110" />
+                <Heart className="w-4 h-4 text-rose-500 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-110" />
               </button>
               <button className="group w-9 h-9 rounded-full bg-primary-600 text-white flex items-center justify-center hover:bg-primary-700 cursor-pointer">
-                <Share2 className="w-4 h-4 transition-transform duration-200 ease-[cubic-bezier(0.22,1.28,0.36,1)] group-hover:scale-110" />
+                <Share2 className="w-4 h-4 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-110" />
               </button>
             </div>
           </UiDocSection>
@@ -747,15 +841,15 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
           >
             <div className="flex flex-wrap gap-2.5 text-xs font-semibold">
               <button className="group px-3 py-1.5 rounded-lg bg-gray-900 text-white flex items-center gap-1.5 cursor-pointer hover:bg-black">
-                <Github className="w-3.5 h-3.5 transition-transform duration-200 ease-[cubic-bezier(0.22,1.28,0.36,1)] group-hover:scale-110" />
+                <Github className="w-3.5 h-3.5 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-110" />
                 <span>GitHub</span>
               </button>
               <button className="group px-3 py-1.5 rounded-lg bg-sky-600 text-white flex items-center gap-1.5 cursor-pointer hover:bg-sky-700">
-                <Globe className="w-3.5 h-3.5 transition-transform duration-200 ease-[cubic-bezier(0.22,1.28,0.36,1)] group-hover:scale-110" />
+                <Globe className="w-3.5 h-3.5 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-110" />
                 <span>Portal Web</span>
               </button>
               <button className="group px-3 py-1.5 rounded-lg bg-primary-600 text-white flex items-center gap-1.5 cursor-pointer hover:bg-primary-700">
-                <Mail className="w-3.5 h-3.5 transition-transform duration-200 ease-[cubic-bezier(0.22,1.28,0.36,1)] group-hover:scale-110" />
+                <Mail className="w-3.5 h-3.5 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-110" />
                 <span>Google SSO</span>
               </button>
             </div>
@@ -791,14 +885,14 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                   onClick={() => setSplitDropdownOpen(!splitDropdownOpen)}
                   className="px-2 py-1.5 bg-gray-900 text-white rounded-r-lg hover:bg-black cursor-pointer"
                 >
-                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${splitDropdownOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-[180ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${splitDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
                 {splitDropdownOpen && (
-                  <div className="absolute left-0 top-9 w-40 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg border border-gray-200 p-1 z-20 animate-ui-pop">
-                    <button onClick={() => setSplitDropdownOpen(false)} className="w-full text-left p-1.5 rounded hover:bg-gray-100 hover:translate-x-0.5 text-gray-700 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer">
+                  <div className="absolute left-0 top-9 w-40 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg border border-gray-300 p-1 z-20 animate-ui-pop">
+                    <button onClick={() => setSplitDropdownOpen(false)} className="w-full text-left p-1.5 rounded hover:bg-gray-100 text-gray-700 transition-colors duration-200 cursor-pointer">
                       Format PDF (.pdf)
                     </button>
-                    <button onClick={() => setSplitDropdownOpen(false)} className="w-full text-left p-1.5 rounded hover:bg-gray-100 hover:translate-x-0.5 text-gray-700 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer">
+                    <button onClick={() => setSplitDropdownOpen(false)} className="w-full text-left p-1.5 rounded hover:bg-gray-100 text-gray-700 transition-colors duration-200 cursor-pointer">
                       Format Excel (.xlsx)
                     </button>
                   </div>
@@ -820,14 +914,14 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                   className="px-3 py-1.5 bg-white border border-gray-300 text-gray-800 font-semibold rounded-lg hover:bg-gray-50 flex items-center gap-1.5 cursor-pointer"
                 >
                   <span>Dropup Menu</span>
-                  <ChevronUp className={`w-3.5 h-3.5 transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${dropupOpen ? 'rotate-180' : ''}`} />
+                  <ChevronUp className={`w-3.5 h-3.5 transition-transform duration-[180ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${dropupOpen ? 'rotate-180' : ''}`} />
                 </button>
                 {dropupOpen && (
-                  <div className="absolute left-0 bottom-9 w-40 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg border border-gray-200 p-1 z-20 animate-ui-pop-up">
-                    <button onClick={() => setDropupOpen(false)} className="w-full text-left p-1.5 rounded hover:bg-gray-100 hover:translate-x-0.5 text-gray-700 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer">
+                  <div className="absolute left-0 bottom-9 w-40 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg border border-gray-300 p-1 z-20 animate-ui-pop-up">
+                    <button onClick={() => setDropupOpen(false)} className="w-full text-left p-1.5 rounded hover:bg-gray-100 text-gray-700 transition-colors duration-200 cursor-pointer">
                       Duplikat Bab
                     </button>
-                    <button onClick={() => setDropupOpen(false)} className="w-full text-left p-1.5 rounded hover:bg-gray-100 hover:translate-x-0.5 text-rose-600 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer">
+                    <button onClick={() => setDropupOpen(false)} className="w-full text-left p-1.5 rounded hover:bg-gray-100 text-rose-600 transition-colors duration-200 cursor-pointer">
                       Hapus Draft
                     </button>
                   </div>
@@ -909,7 +1003,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                 </button>
               </div>
 
-              <div className="pt-2 border-t border-black/[0.06] flex flex-wrap items-center justify-between gap-3">
+              <div className="pt-2 border-t border-black/[0.12] flex flex-wrap items-center justify-between gap-3">
                 <span className="text-xs text-gray-500">Pasangan filter sebaris:</span>
                 <SplitFilterButton
                   value={actionSplitVal}
@@ -971,8 +1065,8 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
           <UiDocSection
             id="fe-helptext"
             title="Help text"
-            classesHint="text-[11px] text-gray-400 mt-1 block"
-            codeSnippet={`<input type="text" className="w-full px-3 py-2 rounded-lg border" />\n<span className="text-[11px] text-gray-400 mt-1 block">Help text panduan.</span>`}
+            classesHint="text-[11px] text-gray-500 mt-1 block"
+            codeSnippet={`<input type="text" className="w-full px-3 py-2 rounded-lg border" />\n<span className="text-[11px] text-gray-500 mt-1 block">Help text panduan.</span>`}
           >
             <div className="max-w-md text-xs">
               <input
@@ -980,7 +1074,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                 placeholder="Masukkan kode modul..."
                 className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-primary-600"
               />
-              <span className="text-[11px] text-gray-400 mt-1 block">
+              <span className="text-[11px] text-gray-500 mt-1 block">
                 Help text: Masukkan judul bab sesuai silabus Kurikulum Merdeka.
               </span>
             </div>
@@ -1111,24 +1205,22 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
           <UiDocSection
             id="fe-switch"
             title="Switch"
-            classesHint="w-9 h-5 rounded-full p-0.5 transition-colors"
-            codeSnippet={`<button onClick={toggle} className="w-9 h-5 rounded-full bg-primary-600" />`}
+            classesHint="ToggleSwitch | Spring physics thumb + --ease-out track"
+            codeSnippet={`<ToggleSwitch checked={on} onChange={setOn} color="primary" />`}
           >
-            <div className="flex items-center gap-4 text-xs">
-              <button
-                type="button"
-                onClick={() => setSwitchA(!switchA)}
-                className={`w-9 h-5 rounded-full p-0.5 transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer ${switchA ? 'bg-primary-600' : 'bg-gray-300'}`}
-              >
-                <div className={`w-4 h-4 rounded-full bg-white shadow-2xs transition-transform duration-300 ease-[cubic-bezier(0.22,1.28,0.36,1)] ${switchA ? 'translate-x-4' : ''}`} />
-              </button>
-              <button
-                type="button"
-                onClick={() => setSwitchB(!switchB)}
-                className={`w-9 h-5 rounded-full p-0.5 transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer ${switchB ? 'bg-emerald-600' : 'bg-gray-300'}`}
-              >
-                <div className={`w-4 h-4 rounded-full bg-white shadow-2xs transition-transform duration-300 ease-[cubic-bezier(0.22,1.28,0.36,1)] ${switchB ? 'translate-x-4' : ''}`} />
-              </button>
+            <div className="flex flex-wrap items-center gap-5 text-xs">
+              <ToggleSwitch
+                checked={switchA}
+                onChange={setSwitchA}
+                color="primary"
+                ariaLabel="Primary switch preview"
+              />
+              <ToggleSwitch
+                checked={switchB}
+                onChange={setSwitchB}
+                color="emerald"
+                ariaLabel="Emerald switch preview"
+              />
             </div>
           </UiDocSection>
 
@@ -1394,14 +1486,14 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
               <div>
                 <label className="font-semibold text-gray-700 block mb-1">Nama Pengajar</label>
                 <div className="relative">
-                  <User className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <User className="w-3.5 h-3.5 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input type="text" defaultValue="James Wilson" className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-300" />
                 </div>
               </div>
               <div>
                 <label className="font-semibold text-gray-700 block mb-1">Email Kampus</label>
                 <div className="relative">
-                  <Mail className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Mail className="w-3.5 h-3.5 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input type="email" defaultValue="james@edu.id" className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-300" />
                 </div>
               </div>
@@ -1469,28 +1561,28 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
               <div>
                 <label className="font-semibold text-gray-700 block mb-1">Telepon</label>
                 <div className="relative">
-                  <Phone className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Phone className="w-3.5 h-3.5 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input type="text" value={phoneMask} onChange={(e) => setPhoneMask(e.target.value)} className="w-full pl-8 pr-3 py-2 rounded-lg border border-gray-300 font-mono" />
                 </div>
               </div>
               <div>
                 <label className="font-semibold text-gray-700 block mb-1">NISN</label>
                 <div className="relative">
-                  <Hash className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Hash className="w-3.5 h-3.5 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input type="text" value={studentIdMask} onChange={(e) => setStudentIdMask(e.target.value)} className="w-full pl-8 pr-3 py-2 rounded-lg border border-gray-300 font-mono" />
                 </div>
               </div>
               <div>
                 <label className="font-semibold text-gray-700 block mb-1">RFID Card</label>
                 <div className="relative">
-                  <CreditCard className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <CreditCard className="w-3.5 h-3.5 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input type="text" value={cardMask} onChange={(e) => setCardMask(e.target.value)} className="w-full pl-8 pr-3 py-2 rounded-lg border border-gray-300 font-mono" />
                 </div>
               </div>
               <div>
                 <label className="font-semibold text-gray-700 block mb-1">Tanggal & Biaya ({currencyMask})</label>
                 <div className="relative">
-                  <Calendar className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Calendar className="w-3.5 h-3.5 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input type="text" value={dateMask} onChange={(e) => setDateMask(e.target.value)} className="w-full pl-8 pr-3 py-2 rounded-lg border border-gray-300 font-mono" />
                 </div>
               </div>
@@ -1769,11 +1861,11 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
             id="fis-lock"
             title="Disabled vs Read-Only State"
             classesHint="disabled:bg-gray-100 disabled:cursor-not-allowed / readOnly:bg-gray-50"
-            codeSnippet={`<input disabled value="Terkunci sistem" className="bg-gray-100 text-gray-400 cursor-not-allowed" />\n<input readOnly value="SRV-TOKEN-2026" className="bg-gray-50 text-gray-700 select-all" />`}
+            codeSnippet={`<input disabled value="Terkunci sistem" className="bg-gray-100 text-gray-500 cursor-not-allowed" />\n<input readOnly value="SRV-TOKEN-2026" className="bg-gray-50 text-gray-700 select-all" />`}
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl text-xs">
               <div className="space-y-1">
-                <label className="font-semibold text-gray-500 inline-flex items-center gap-1">
+                <label className="font-semibold text-gray-600 inline-flex items-center gap-1">
                   <Lock className="w-3 h-3" />
                   <span>Disabled Input</span>
                 </label>
@@ -1781,7 +1873,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                   type="text"
                   disabled
                   value="Semester Genap (Terkunci)"
-                  className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
+                  className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed"
                 />
               </div>
               <div className="space-y-1">
@@ -1790,7 +1882,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                   type="text"
                   readOnly
                   value="ID-KELAS-302-A"
-                  className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-gray-50 text-gray-700 font-mono select-all focus:outline-none focus:border-primary-400"
+                  className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-gray-50 text-gray-700 font-mono select-all focus:outline-none focus:border-primary-400"
                 />
               </div>
             </div>
@@ -1813,7 +1905,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                     setAsyncCourseCode(e.target.value);
                     if (asyncSubmitState === 'saved') setAsyncSubmitState('idle');
                   }}
-                  className="flex-1 px-3 py-2 rounded-lg border border-gray-300 disabled:bg-gray-100 disabled:text-gray-400 focus:outline-none focus:border-primary-600 font-mono"
+                  className="flex-1 px-3 py-2 rounded-lg border border-gray-300 disabled:bg-gray-100 disabled:text-gray-500 focus:outline-none focus:border-primary-600 font-mono"
                 />
                 <button
                   type="button"
@@ -1825,10 +1917,24 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                       triggerToast('Input Tersimpan', `Kode ${asyncCourseCode} berhasil diperbarui.`, 'success');
                     }, 950);
                   }}
-                  className="px-4 py-2 rounded-lg bg-primary-600 text-white font-semibold hover:bg-primary-700 disabled:opacity-75 inline-flex items-center gap-1.5 cursor-pointer disabled:cursor-wait shrink-0"
+                  className="px-4 py-2 rounded-lg bg-primary-600 text-white font-semibold hover:bg-primary-700 disabled:opacity-75 inline-grid place-items-center cursor-pointer disabled:cursor-wait shrink-0 transition-colors"
                 >
-                  {asyncSubmitState === 'submitting' && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                  <span>{asyncSubmitState === 'submitting' ? 'Menyimpan...' : 'Simpan'}</span>
+                  <span
+                    aria-hidden={asyncSubmitState !== 'submitting'}
+                    className={`[grid-area:1/1] inline-flex items-center gap-1.5 transition-opacity duration-150 ${
+                      asyncSubmitState === 'submitting' ? 'opacity-100' : 'opacity-0 invisible'
+                    }`}
+                  >
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Menyimpan...</span>
+                  </span>
+                  <span
+                    className={`[grid-area:1/1] transition-opacity duration-150 ${
+                      asyncSubmitState === 'submitting' ? 'opacity-0 invisible' : 'opacity-100'
+                    }`}
+                  >
+                    Simpan
+                  </span>
                 </button>
               </div>
               {asyncSubmitState === 'saved' && (
@@ -1889,7 +1995,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
           >
             <div className="max-w-md space-y-2 text-xs">
               <div className="relative">
-                <Lock className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Lock className="w-3.5 h-3.5 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={passwordValue}
@@ -1899,7 +2005,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 cursor-pointer"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-800 cursor-pointer"
                 >
                   {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                 </button>
@@ -1909,7 +2015,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                 <span className={`font-bold ${pwStrength.text}`}>{pwStrength.label}</span>
               </div>
               <div className="h-1.5 w-full bg-gray-200 rounded-full overflow-hidden">
-                <div className={`h-full ${pwStrength.color} ${pwStrength.width} transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]`} />
+                <div className={`h-full ${pwStrength.color} ${pwStrength.width} transition-all duration-[260ms] ease-[cubic-bezier(0.23,1,0.32,1)]`} />
               </div>
             </div>
           </UiDocSection>
@@ -1945,7 +2051,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
               <div className="relative h-32 rounded-xl bg-gray-900 text-white flex items-center justify-center overflow-hidden">
                 <div
                   style={{ transform: `scale(${cropZoom / 100})` }}
-                  className={`border-2 border-primary-400 border-dashed flex items-center justify-center bg-primary-500/20 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  className={`border-2 border-primary-400 border-dashed flex items-center justify-center bg-primary-500/20 transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
                     cropAspect === '1:1'
                       ? 'w-20 h-20 rounded-full'
                       : cropAspect === '4:3'
@@ -1995,13 +2101,13 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                 }}
                 className="group border-2 border-dashed border-gray-300 hover:border-primary-500 p-5 rounded-xl text-center cursor-pointer transition-colors bg-gray-50/50"
               >
-                <UploadCloud className="w-7 h-7 text-primary-600 mx-auto mb-1.5 transition-transform duration-300 ease-[cubic-bezier(0.22,1.28,0.36,1)] group-hover:-translate-y-1" />
+                <UploadCloud className="w-7 h-7 text-primary-600 mx-auto mb-1.5 transition-transform duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:-translate-y-1" />
                 <div className="font-semibold text-gray-800">Klik atau seret berkas ke sini</div>
-                <div className="text-[11px] text-gray-400 mt-0.5">PDF, PPTX, MP4 (Maks. 50 MB)</div>
+                <div className="text-[11px] text-gray-500 mt-0.5">PDF, PPTX, MP4 (Maks. 50 MB)</div>
               </div>
               <div className="space-y-1.5">
                 {uploadedFiles.map((file, idx) => (
-                  <div key={`${file.name}-${idx}`} className="flex items-center justify-between p-2.5 rounded-lg bg-gray-50 border border-gray-200 animate-ui-slide-down">
+                  <div key={`${file.name}-${idx}`} className="flex items-center justify-between p-2.5 rounded-lg bg-gray-50 border border-gray-300 animate-ui-slide-down">
                     <div className="flex items-center gap-2 truncate">
                       <FileText className="w-4 h-4 text-primary-600 shrink-0" />
                       <span className="truncate font-medium text-gray-800">{file.name}</span>
@@ -2024,40 +2130,122 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
       {isVisible('datepicker') && (
         <UiDocPage
           title="Date Picker"
+          description="Pemilih tanggal modern yang menggabungkan ketik langsung (typed dates DD/MM/YYYY atau YYYY-MM-DD), lompatan Bulan & Tahun (1960–2030), dan grid kalender akurat."
           subLinks={[
-            { id: 'dp-calendar', label: 'Interactive Calendar Grid' },
+            { id: 'dp-calendar', label: 'Typed Date + Calendar Jump' },
             { id: 'dp-time', label: 'Date Picker with Time' },
           ]}
         >
           <UiDocSection
             id="dp-calendar"
-            title="Interactive Calendar Grid"
-            classesHint="grid grid-cols-7 gap-1 text-center"
-            codeSnippet={`<div className="grid grid-cols-7 gap-1 text-center">\n  {days.map(d => <button onClick={() => setDay(d)}>{d}</button>)}\n</div>`}
-            actions={<Calendar className="w-4 h-4 text-primary-600" />}
+            title="Typed Date + Month & Year Jump"
+            classesHint="Typed input (DD/MM/YYYY | YYYY-MM-DD) + Month/Year CustomSelect + grid-cols-7"
+            actions={
+              <button
+                type="button"
+                onClick={() => {
+                  const parsed = parseDpFlexible('14/08/1994');
+                  if (parsed) syncPrimaryDate(parsed.year, parsed.month, parsed.day);
+                }}
+                className={ACTION_BTN_SOFT_PRIMARY}
+              >
+                <span>Coba 14/08/1994</span>
+              </button>
+            }
+            codeSnippet={`<input value={typedDate} onChange={parseAndSyncCalendar} placeholder="DD/MM/YYYY" />\n<div className="flex gap-1.5">\n  <CustomSelect options={monthOptions} value={String(month)} onChange={...} />\n  <CustomSelect options={yearOptions} value={String(year)} onChange={...} />\n</div>\n<div className="grid grid-cols-7 gap-1 text-center">...</div>`}
           >
-            <div className="max-w-xs space-y-3 text-xs">
-              <div className="flex items-center justify-between px-1 font-bold text-gray-800">
-                <span>{months[monthIdx]}</span>
-                <div className="flex gap-1">
-                  <button onClick={() => setMonthIdx((p) => (p > 0 ? p - 1 : months.length - 1))} className="p-1 rounded hover:bg-gray-100 cursor-pointer">
-                    <ChevronLeft className="w-4 h-4" />
-                  </button>
-                  <button onClick={() => setMonthIdx((p) => (p + 1) % months.length)} className="p-1 rounded hover:bg-gray-100 cursor-pointer">
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
+            <div className="max-w-sm space-y-3 text-xs">
+              <div className="space-y-1">
+                <label className="text-[11px] font-semibold text-gray-700 block">
+                  Ketik Tanggal Langsung (DD/MM/YYYY atau YYYY-MM-DD)
+                </label>
+                <div className="relative">
+                  <Calendar className="w-3.5 h-3.5 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <input
+                    type="text"
+                    value={dpTypedInput}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setDpTypedInput(val);
+                      const parsed = parseDpFlexible(val);
+                      if (parsed) {
+                        setDpYear(parsed.year);
+                        setDpMonth(parsed.month);
+                        setSelectedDay(parsed.day);
+                        setDpTypedInvalid(false);
+                      } else if (val.trim()) {
+                        setDpTypedInvalid(true);
+                      } else {
+                        setDpTypedInvalid(false);
+                      }
+                    }}
+                    placeholder="14/08/1994"
+                    className={`w-full h-9 pl-9 pr-3 rounded-lg border font-mono tabular-nums focus:outline-none ${
+                      dpTypedInvalid
+                        ? 'border-rose-500 bg-rose-50/40 text-rose-700'
+                        : 'border-gray-300 focus:border-primary-600 text-gray-900'
+                    }`}
+                  />
                 </div>
               </div>
-              <div key={monthIdx} className="grid grid-cols-7 gap-1 text-center tabular-nums animate-ui-fade">
+
+              <div className="flex items-center gap-1.5">
+                <CustomSelect
+                  className="flex-1"
+                  size="sm"
+                  value={String(dpMonth)}
+                  onChange={(val) => syncPrimaryDate(dpYear, Number(val), selectedDay)}
+                  options={dpMonthOptions}
+                  ariaLabel="Pilih Bulan"
+                />
+                <CustomSelect
+                  className="w-24"
+                  size="sm"
+                  value={String(dpYear)}
+                  onChange={(val) => syncPrimaryDate(Number(val), dpMonth, selectedDay)}
+                  options={dpYearOptions}
+                  ariaLabel="Pilih Tahun"
+                />
+                <button
+                  type="button"
+                  aria-label="Bulan sebelumnya"
+                  onClick={() => {
+                    const prevM = dpMonth === 0 ? 11 : dpMonth - 1;
+                    const prevY = dpMonth === 0 ? Math.max(1960, dpYear - 1) : dpYear;
+                    syncPrimaryDate(prevY, prevM, selectedDay);
+                  }}
+                  className="h-8 w-8 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 flex items-center justify-center cursor-pointer shrink-0"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  aria-label="Bulan berikutnya"
+                  onClick={() => {
+                    const nextM = (dpMonth + 1) % 12;
+                    const nextY = dpMonth === 11 ? Math.min(2030, dpYear + 1) : dpYear;
+                    syncPrimaryDate(nextY, nextM, selectedDay);
+                  }}
+                  className="h-8 w-8 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 flex items-center justify-center cursor-pointer shrink-0"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div key={`${dpYear}-${dpMonth}`} className="grid grid-cols-7 gap-1 text-center tabular-nums animate-ui-fade">
                 {['Sn', 'Sl', 'Rb', 'Km', 'Jm', 'Sb', 'Mg'].map((d) => (
-                  <div key={d} className="font-bold text-gray-400 py-1">{d}</div>
+                  <div key={d} className="font-bold text-gray-500 py-1">{d}</div>
                 ))}
-                {Array.from({ length: 28 }).map((_, i) => {
+                {Array.from({ length: getDpLeadingOffset(dpYear, dpMonth) }).map((_, i) => (
+                  <div key={`lead-${i}`} />
+                ))}
+                {Array.from({ length: getDpDaysInMonth(dpYear, dpMonth) }).map((_, i) => {
                   const dayNum = i + 1;
                   return (
                     <button
-                      key={i}
-                      onClick={() => setSelectedDay(dayNum)}
+                      key={dayNum}
+                      type="button"
+                      onClick={() => syncPrimaryDate(dpYear, dpMonth, dayNum)}
                       className={`py-1.5 rounded-md transition-colors cursor-pointer ${
                         selectedDay === dayNum ? 'bg-gray-900 text-white font-bold' : 'hover:bg-primary-50 text-gray-700'
                       }`}
@@ -2067,8 +2255,11 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                   );
                 })}
               </div>
-              <div className="text-xs text-gray-500 pt-2 border-t border-gray-100">
-                Terpilih: <strong className="text-gray-900">{selectedDay} {months[monthIdx]}</strong>
+              <div className="text-xs text-gray-500 pt-2 border-t border-gray-200">
+                Terpilih:{' '}
+                <strong className="text-gray-900 tabular-nums">
+                  {selectedDay} {dpMonthNames[dpMonth]} {dpYear}
+                </strong>
               </div>
             </div>
           </UiDocSection>
@@ -2077,46 +2268,87 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
             id="dp-time"
             title="Date Picker with Time"
             classesHint="grid grid-cols-1 sm:grid-cols-12 gap-5"
-            codeSnippet={`<div className="flex flex-col sm:flex-row gap-4 p-4 border rounded-xl">\n  <CalendarGrid value={date} onChange={setDate} />\n  <TimeSelector hour={hour} minute={minute} onChange={setTime} />\n</div>`}
+            codeSnippet={`<div className="flex flex-col sm:flex-row gap-4 p-4 border rounded-xl">\n  <CalendarWithJump value={date} onChange={setDate} />\n  <TimeSelector hour={hour} minute={minute} onChange={setTime} />\n</div>`}
             actions={
               <span className="text-xs font-mono font-semibold text-primary-700 bg-primary-50 px-2.5 py-1 rounded-md tabular-nums">
-                {dateTimeDay} {months[dateTimeMonthIdx]} · {dateTimeHour}:{dateTimeMinute} WIB
+                {dateTimeDay} {dpMonthNames[dtMonth]} {dtYear} · {dateTimeHour}:{dateTimeMinute} WIB
               </span>
             }
           >
-            <div className="max-w-xl grid grid-cols-1 sm:grid-cols-12 gap-5 text-xs">
+            <div className="max-w-2xl grid grid-cols-1 sm:grid-cols-12 gap-5 text-xs">
               {/* Calendar Grid */}
-              <div className="sm:col-span-7 space-y-3 border border-gray-200 rounded-xl p-3.5 bg-white">
-                <div className="flex items-center justify-between font-bold text-gray-800">
-                  <span>{months[dateTimeMonthIdx]}</span>
-                  <div className="flex gap-1">
-                    <button
-                      type="button"
-                      onClick={() => setDateTimeMonthIdx((p) => (p > 0 ? p - 1 : months.length - 1))}
-                      className="p-1 rounded hover:bg-gray-100 cursor-pointer"
-                    >
-                      <ChevronLeft className="w-4 h-4" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setDateTimeMonthIdx((p) => (p + 1) % months.length)}
-                      className="p-1 rounded hover:bg-gray-100 cursor-pointer"
-                    >
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
-                  </div>
+              <div className="sm:col-span-7 space-y-3 border border-gray-300 rounded-xl p-3.5 bg-white">
+                <input
+                  type="text"
+                  value={dtTypedInput}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setDtTypedInput(val);
+                    const parsed = parseDpFlexible(val);
+                    if (parsed) {
+                      setDtYear(parsed.year);
+                      setDtMonth(parsed.month);
+                      setDateTimeDay(parsed.day);
+                    }
+                  }}
+                  placeholder="Ketik DD/MM/YYYY..."
+                  aria-label="Ketik tanggal jadwal"
+                  className="w-full h-8 px-2.5 rounded-lg border border-gray-300 font-mono text-xs tabular-nums focus:outline-none focus:border-primary-600"
+                />
+                <div className="flex items-center gap-1.5">
+                  <CustomSelect
+                    className="flex-1"
+                    size="sm"
+                    value={String(dtMonth)}
+                    onChange={(val) => syncTimeDate(dtYear, Number(val), dateTimeDay)}
+                    options={dpMonthOptions}
+                    ariaLabel="Pilih Bulan Jadwal"
+                  />
+                  <CustomSelect
+                    className="w-24"
+                    size="sm"
+                    value={String(dtYear)}
+                    onChange={(val) => syncTimeDate(Number(val), dtMonth, dateTimeDay)}
+                    options={dpYearOptions}
+                    ariaLabel="Pilih Tahun Jadwal"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const prevM = dtMonth === 0 ? 11 : dtMonth - 1;
+                      const prevY = dtMonth === 0 ? Math.max(1960, dtYear - 1) : dtYear;
+                      syncTimeDate(prevY, prevM, dateTimeDay);
+                    }}
+                    className="p-1.5 rounded-lg border border-gray-300 hover:bg-gray-100 cursor-pointer shrink-0"
+                  >
+                    <ChevronLeft className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const nextM = (dtMonth + 1) % 12;
+                      const nextY = dtMonth === 11 ? Math.min(2030, dtYear + 1) : dtYear;
+                      syncTimeDate(nextY, nextM, dateTimeDay);
+                    }}
+                    className="p-1.5 rounded-lg border border-gray-300 hover:bg-gray-100 cursor-pointer shrink-0"
+                  >
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-                <div key={dateTimeMonthIdx} className="grid grid-cols-7 gap-1 text-center tabular-nums animate-ui-fade">
+                <div key={`${dtYear}-${dtMonth}`} className="grid grid-cols-7 gap-1 text-center tabular-nums animate-ui-fade">
                   {['Sn', 'Sl', 'Rb', 'Km', 'Jm', 'Sb', 'Mg'].map((d) => (
-                    <div key={d} className="font-bold text-gray-400 py-1">{d}</div>
+                    <div key={d} className="font-bold text-gray-500 py-1">{d}</div>
                   ))}
-                  {Array.from({ length: 28 }).map((_, i) => {
+                  {Array.from({ length: getDpLeadingOffset(dtYear, dtMonth) }).map((_, i) => (
+                    <div key={`tlead-${i}`} />
+                  ))}
+                  {Array.from({ length: getDpDaysInMonth(dtYear, dtMonth) }).map((_, i) => {
                     const dayNum = i + 1;
                     return (
                       <button
-                        key={i}
+                        key={dayNum}
                         type="button"
-                        onClick={() => setDateTimeDay(dayNum)}
+                        onClick={() => syncTimeDate(dtYear, dtMonth, dayNum)}
                         className={`py-1.5 rounded-md transition-colors cursor-pointer ${
                           dateTimeDay === dayNum
                             ? 'bg-primary-600 text-white font-bold'
@@ -2131,7 +2363,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
               </div>
 
               {/* Time Selector Column */}
-              <div className="sm:col-span-5 flex flex-col justify-between gap-3 border border-gray-200 rounded-xl p-3.5 bg-gray-50/60">
+              <div className="sm:col-span-5 flex flex-col justify-between gap-3 border border-gray-300 rounded-xl p-3.5 bg-gray-50/60">
                 <div className="space-y-3">
                   <div className="flex items-center gap-1.5 font-bold text-gray-800">
                     <Clock className="w-3.5 h-3.5 text-primary-600" />
@@ -2192,7 +2424,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                             className={`px-2 py-1.5 rounded-md font-mono font-semibold border transition-colors cursor-pointer ${
                               active
                                 ? 'bg-primary-600 text-white border-primary-600'
-                                : 'bg-white text-gray-700 border-gray-200 hover:bg-primary-50'
+                                : 'bg-white text-gray-700 border-gray-300 hover:bg-primary-50'
                             }`}
                           >
                             {slot.h}:{slot.m}
@@ -2208,7 +2440,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                   onClick={() =>
                     triggerToast(
                       'Jadwal Ditetapkan',
-                      `${dateTimeDay} ${months[dateTimeMonthIdx]} pukul ${dateTimeHour}:${dateTimeMinute} WIB.`,
+                      `${dateTimeDay} ${dpMonthNames[dtMonth]} ${dtYear} pukul ${dateTimeHour}:${dateTimeMinute} WIB.`,
                       'success'
                     )
                   }
@@ -2243,7 +2475,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                   <button
                     key={color}
                     onClick={() => setSelectedColor(color)}
-                    className={`w-7 h-7 rounded-lg border-2 transition-transform duration-250 ease-[cubic-bezier(0.22,1.28,0.36,1)] hover:scale-110 cursor-pointer ${
+                    className={`w-7 h-7 rounded-lg border-2 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] hover:scale-110 cursor-pointer ${
                       selectedColor === color ? 'border-gray-900 scale-110' : 'border-transparent'
                     }`}
                     style={{ backgroundColor: color }}
@@ -2287,7 +2519,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                 />
                 <span className="w-9 rounded-r-lg border border-l-0 border-gray-300" style={{ backgroundColor: selectedColor }} />
               </div>
-              <div className="p-2.5 rounded-lg border border-gray-200 flex items-center justify-between">
+              <div className="p-2.5 rounded-lg border border-gray-300 flex items-center justify-between">
                 <span className="text-gray-600">Warna aktif tersinkronisasi:</span>
                 <span className="font-mono font-bold text-gray-900">{selectedColor}</span>
               </div>
@@ -2592,7 +2824,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
         >
           <UiDocSection
             title="3-Step Module Registration Wizard"
-            classesHint="flex items-center justify-between / bg-gray-50 border border-gray-200 rounded-xl"
+            classesHint="flex items-center justify-between / bg-gray-50 border border-gray-300 rounded-xl"
             codeSnippet={`<div className="space-y-3">\n  <StepHeader current={step} />\n  <StepContent step={step} />\n</div>`}
             actions={
               <span className="text-xs font-bold text-primary-600 bg-primary-50 px-2.5 py-0.5 rounded-full tabular-nums">
@@ -2611,13 +2843,13 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                     >
                       {wizardStep > step ? '✓' : step}
                     </span>
-                    <span className={`transition-colors duration-150 ${wizardStep === step ? 'font-bold text-gray-900' : 'text-gray-400'}`}>
+                    <span className={`transition-colors duration-150 ${wizardStep === step ? 'font-bold text-gray-900' : 'text-gray-500'}`}>
                       {step === 1 ? 'Data Dasar' : step === 2 ? 'Silabus' : 'Publikasi'}
                     </span>
                   </div>
                 ))}
               </div>
-              <div key={wizardStep} className="p-4 rounded-xl border border-gray-200 bg-gray-50/60 text-gray-800 animate-ui-slide-down">
+              <div key={wizardStep} className="p-4 rounded-xl border border-gray-300 bg-gray-50/60 text-gray-800 animate-ui-slide-down">
                 {wizardStep === 1 && <div>Langkah 1: Masukkan detail judul dan kode kelas pengampu.</div>}
                 {wizardStep === 2 && <div>Langkah 2: Unggah berkas dokumen silabus pembelajaran.</div>}
                 {wizardStep === 3 && <div>Langkah 3: Konfirmasi dan publikasikan ke portal siswa.</div>}
@@ -2626,7 +2858,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                 <button
                   disabled={wizardStep === 1}
                   onClick={() => setWizardStep((p) => p - 1)}
-                  className="px-3 py-1.5 rounded-md border border-gray-200 text-gray-700 disabled:opacity-40 cursor-pointer"
+                  className="px-3 py-1.5 rounded-md border border-gray-300 text-gray-700 disabled:opacity-40 cursor-pointer"
                 >
                   Kembali
                 </button>
@@ -2652,12 +2884,12 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
         >
           <UiDocSection
             title="WYSIWYG Rich Text Editor Toolbar"
-            classesHint="p-2 bg-gray-100 rounded-lg border border-gray-200"
+            classesHint="p-2 bg-gray-100 rounded-lg border border-gray-300"
             codeSnippet={`<div className="space-y-2">\n  <Toolbar onToggle={setFormat} />\n  <textarea value={content} className="w-full p-3 rounded-lg border" />\n</div>`}
-            actions={<span className="text-xs text-gray-400 font-mono">WYSIWYG Toolbar</span>}
+            actions={<span className="text-xs text-gray-500 font-mono">WYSIWYG Toolbar</span>}
           >
             <div className="space-y-3 text-xs">
-              <div className="flex flex-wrap items-center gap-1 p-2 bg-gray-100 rounded-lg border border-gray-200 text-gray-700">
+              <div className="flex flex-wrap items-center gap-1 p-2 bg-gray-100 rounded-lg border border-gray-300 text-gray-700">
                 <button onClick={() => setRichFormat({ ...richFormat, bold: !richFormat.bold })} className={`p-1.5 rounded hover:bg-white cursor-pointer ${richFormat.bold ? 'bg-white text-primary-700 shadow-2xs' : ''}`}>
                   <Bold className="w-4 h-4" />
                 </button>
@@ -2698,7 +2930,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                   richFormat.strike ? 'line-through' : ''
                 } ${richFormat.code ? 'font-mono bg-gray-50' : ''}`}
               />
-              <div className="flex justify-between items-center text-gray-400 tabular-nums">
+              <div className="flex justify-between items-center text-gray-500 tabular-nums">
                 <span>
                   {richContent.split(' ').filter(Boolean).length} Kata · {richContent.length} Karakter
                 </span>
@@ -2810,10 +3042,10 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
           >
             <div className="flex flex-wrap gap-2 text-xs">
               {userChips.map((u) => (
-                <span key={u.name} className="inline-flex items-center gap-1.5 pl-1 pr-2.5 py-0.5 rounded-full bg-gray-100 border border-gray-200 font-semibold text-gray-800">
+                <span key={u.name} className="inline-flex items-center gap-1.5 pl-1 pr-2.5 py-0.5 rounded-full bg-gray-100 border border-gray-300 font-semibold text-gray-800">
                   <span className={`w-5 h-5 rounded-full ${u.bg} text-white text-[9px] flex items-center justify-center`}>{u.init}</span>
                   <span>{u.name}</span>
-                  <button onClick={() => setUserChips(userChips.filter((x) => x.name !== u.name))} className="text-gray-400 hover:text-gray-700 cursor-pointer">
+                  <button onClick={() => setUserChips(userChips.filter((x) => x.name !== u.name))} className="text-gray-500 hover:text-gray-800 cursor-pointer">
                     <X className="w-3 h-3" />
                   </button>
                 </span>
@@ -2881,16 +3113,16 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
             id="rtg-default"
             title="Default rating"
             classesHint="text-amber-400 fill-amber-400"
-            codeSnippet={`<div className="flex items-center gap-1">\n  {[1,2,3,4,5].map(s => <Star key={s} className={s <= rating ? 'text-amber-400 fill-amber-400' : 'text-gray-300'} />)}\n</div>`}
+            codeSnippet={`<div className="flex items-center gap-1">\n  {[1,2,3,4,5].map(s => <Star key={s} className={s <= rating ? 'text-amber-400 fill-amber-400' : 'text-gray-400'} />)}\n</div>`}
           >
             <div className="flex items-center gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
                   onClick={() => setStarRating(star)}
-                  className="cursor-pointer transition-transform duration-200 ease-[cubic-bezier(0.22,1.28,0.36,1)] hover:scale-115 active:scale-90"
+                  className="cursor-pointer transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] hover:scale-115 active:scale-90"
                 >
-                  <Star className={`w-5 h-5 transition-colors duration-200 ${star <= starRating ? 'text-amber-400 fill-amber-400' : 'text-gray-300'}`} />
+                  <Star className={`w-5 h-5 transition-colors duration-200 ${star <= starRating ? 'text-amber-400 fill-amber-400' : 'text-gray-400'}`} />
                 </button>
               ))}
             </div>
@@ -2910,9 +3142,9 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                     onMouseEnter={() => setHoverStar(star)}
                     onMouseLeave={() => setHoverStar(null)}
                     onClick={() => setStarRating(star)}
-                    className="cursor-pointer transition-transform duration-200 ease-[cubic-bezier(0.22,1.28,0.36,1)] hover:scale-115 active:scale-90"
+                    className="cursor-pointer transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] hover:scale-115 active:scale-90"
                   >
-                    <Star className={`w-5 h-5 transition-colors duration-200 ${star <= (hoverStar ?? starRating) ? 'text-amber-400 fill-amber-400' : 'text-gray-300'}`} />
+                    <Star className={`w-5 h-5 transition-colors duration-200 ${star <= (hoverStar ?? starRating) ? 'text-amber-400 fill-amber-400' : 'text-gray-400'}`} />
                   </button>
                 ))}
               </div>
@@ -2935,7 +3167,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                   <button
                     key={n}
                     onClick={() => setProgressiveRating(n)}
-                    className={`h-2.5 flex-1 rounded cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:opacity-90 ${n <= progressiveRating ? 'bg-primary-600' : 'bg-gray-200'}`}
+                    className={`h-2.5 flex-1 rounded cursor-pointer transition-all duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:opacity-90 ${n <= progressiveRating ? 'bg-primary-600' : 'bg-gray-200'}`}
                   />
                 ))}
               </div>
@@ -2946,13 +3178,13 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
             id="rtg-readonly"
             title="Read only"
             classesHint="flex items-center gap-0.5"
-            codeSnippet={`<div className="flex items-center gap-0.5">\n  {[1,2,3,4].map(n => <Star className="w-4 h-4 text-amber-400 fill-amber-400" />)}\n  <Star className="w-4 h-4 text-gray-300" />\n</div>`}
+            codeSnippet={`<div className="flex items-center gap-0.5">\n  {[1,2,3,4].map(n => <Star className="w-4 h-4 text-amber-400 fill-amber-400" />)}\n  <Star className="w-4 h-4 text-gray-400" />\n</div>`}
           >
             <div className="flex items-center gap-1 text-xs text-gray-600">
               {[1, 2, 3, 4].map((n) => (
                 <Star key={n} className="w-4 h-4 text-amber-400 fill-amber-400" />
               ))}
-              <Star className="w-4 h-4 text-gray-300" />
+              <Star className="w-4 h-4 text-gray-400" />
               <span className="ml-2 font-semibold tabular-nums">4.0 / 5.0</span>
             </div>
           </UiDocSection>
@@ -3038,11 +3270,11 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
             id="ps-page"
             title="Page Search"
             classesHint="relative / pl-9 pr-12 py-2 rounded-lg border"
-            codeSnippet={`<div className="relative">\n  <Search className="w-4 h-4 absolute left-3 top-2.5 text-gray-400" />\n  <input value={query} onChange={...} className="w-full pl-9 pr-12 py-2 rounded-lg border" />\n</div>`}
+            codeSnippet={`<div className="relative">\n  <Search className="w-4 h-4 absolute left-3 top-2.5 text-gray-500" />\n  <input value={query} onChange={...} className="w-full pl-9 pr-12 py-2 rounded-lg border" />\n</div>`}
           >
             <div className="max-w-lg space-y-3 text-xs">
               <div className="relative">
-                <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Search className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="Cari modul (Page search)..."
@@ -3050,7 +3282,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                   onChange={(e) => setPageSearch(e.target.value)}
                   className="w-full pl-9 pr-12 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-primary-600"
                 />
-                <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-mono font-bold bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded border border-gray-200">
+                <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-mono font-bold bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded border border-gray-300">
                   ⌘K
                 </span>
               </div>
@@ -3070,12 +3302,12 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
           <UiDocSection
             id="ps-list"
             title="List Search"
-            classesHint="border border-gray-200 rounded-lg divide-y"
-            codeSnippet={`<div className="border border-gray-200 rounded-lg divide-y divide-gray-100">\n  {items.map(item => <div className="px-3 py-2 flex justify-between">...</div>)}\n</div>`}
+            classesHint="border border-gray-300 rounded-lg divide-y"
+            codeSnippet={`<div className="border border-gray-300 rounded-lg divide-y divide-gray-200">\n  {items.map(item => <div className="px-3 py-2 flex justify-between">...</div>)}\n</div>`}
           >
             <div className="max-w-lg space-y-3 text-xs">
               <div className="relative">
-                <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Search className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="Filter daftar materi (List search)..."
@@ -3084,11 +3316,11 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                   className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-primary-600"
                 />
               </div>
-              <div className="border border-gray-200 rounded-lg divide-y divide-gray-100">
+              <div className="border border-gray-300 rounded-lg divide-y divide-gray-200">
                 {filteredSearch.map((item) => (
-                  <div key={item.title} className="px-3 py-2 flex items-center justify-between hover:bg-gray-50 hover:pl-4 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]">
+                  <div key={item.title} className="px-3 py-2 flex items-center justify-between hover:bg-gray-50 hover:pl-4 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]">
                     <span className="font-medium text-gray-800 truncate">{item.title}</span>
-                    <span className="text-gray-400 shrink-0 ml-2">{item.tag} · {item.type}</span>
+                    <span className="text-gray-500 shrink-0 ml-2">{item.tag} · {item.type}</span>
                   </div>
                 ))}
               </div>
@@ -3098,12 +3330,12 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
           <UiDocSection
             id="ps-dropdown"
             title="Dropdown Search"
-            classesHint="shadow-md bg-white border border-gray-200 rounded-lg"
-            codeSnippet={`<div className="shadow-md bg-white border border-gray-200 rounded-lg divide-y">\n  {results.map(r => <div className="px-3 py-2">...</div>)}\n</div>`}
+            classesHint="shadow-md bg-white border border-gray-300 rounded-lg"
+            codeSnippet={`<div className="shadow-md bg-white border border-gray-300 rounded-lg divide-y">\n  {results.map(r => <div className="px-3 py-2">...</div>)}\n</div>`}
           >
             <div className="max-w-lg space-y-2 text-xs">
               <div className="relative">
-                <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Search className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="Cari dengan hasil dropdown melayang..."
@@ -3112,9 +3344,9 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                   className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-primary-600"
                 />
               </div>
-              <div className="border border-gray-200 rounded-lg divide-y divide-gray-100 shadow-md bg-white">
+              <div className="border border-gray-300 rounded-lg divide-y divide-gray-200 shadow-md bg-white">
                 {filteredSearch.slice(0, 3).map((item) => (
-                  <div key={item.title} className="px-3 py-2.5 flex items-center justify-between hover:bg-primary-50/40 hover:pl-4 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer">
+                  <div key={item.title} className="px-3 py-2.5 flex items-center justify-between hover:bg-primary-50/40 hover:pl-4 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer">
                     <span className="font-medium text-gray-800 truncate">{item.title}</span>
                     <span className="text-gray-500 text-[11px] shrink-0 ml-2">{item.tag}</span>
                   </div>
@@ -3131,7 +3363,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
           >
             <div className="max-w-lg space-y-3 text-xs">
               <div className="relative">
-                <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Search className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="Cari kartu modul (Card search)..."
@@ -3142,7 +3374,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {filteredSearch.map((item) => (
-                  <div key={item.title} className="p-3 rounded-lg border border-gray-200 bg-gray-50 hover:bg-white hover:-translate-y-0.5 hover:shadow-xs transition-all duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer">
+                  <div key={item.title} className="p-3 rounded-lg border border-gray-300 bg-gray-50 hover:bg-white hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer">
                     <div className="font-bold text-gray-800 truncate">{item.title}</div>
                     <div className="text-gray-500 text-[11px] mt-0.5">{item.tag} · {item.type}</div>
                   </div>
@@ -3154,6 +3386,8 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
       )}
 
       <SelectCheckboxRadioUiKit isVisible={isVisible} />
+      <ToggleUiKit isVisible={isVisible} />
+      <MenuUxRulesUiKit isVisible={isVisible} />
     </div>
   );
 };

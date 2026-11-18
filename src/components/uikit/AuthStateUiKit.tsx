@@ -213,7 +213,7 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
             id="auth-status-switch"
             title="Status Login Switcher"
             description="Simulasi transisi status masuk antara Authenticated, Guest, MFA Pending, dan Akun Terkunci."
-            classesHint="inline-flex / border border-gray-200 rounded-xl p-4"
+            classesHint="inline-flex / border border-gray-300 rounded-xl p-4"
             codeSnippet={`const [status, setStatus] = useState<'authenticated' | 'guest' | 'mfa_pending' | 'locked'>('authenticated');`}
             actions={<UserCheck className="w-4 h-4 text-primary-600" />}
           >
@@ -231,7 +231,7 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
                     key={item.key}
                     type="button"
                     onClick={() => setLoginStatus(item.key)}
-                    className={`px-3 py-1.5 rounded-lg font-semibold cursor-pointer transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    className={`px-3 py-1.5 rounded-lg font-semibold cursor-pointer transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] ${
                       loginStatus === item.key
                         ? 'bg-primary-600 text-white shadow-xs'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -268,7 +268,7 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
               )}
 
               {loginStatus === 'guest' && (
-                <div className="p-4 rounded-xl border border-gray-200 bg-gray-50 flex items-center justify-between gap-3 animate-ui-slide-down">
+                <div className="p-4 rounded-xl border border-gray-300 bg-gray-50 flex items-center justify-between gap-3 animate-ui-slide-down">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center shrink-0">
                       <UserX className="w-4 h-4" />
@@ -349,10 +349,10 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
           <UiDocSection
             id="auth-login-card"
             title="Signed-In Account Card"
-            classesHint="rounded-xl border border-gray-200 bg-white p-4"
-            codeSnippet={`<div className="p-4 rounded-xl border border-gray-200 bg-white flex items-center justify-between">\n  <div className="flex items-center gap-3">...</div>\n  <span className="text-emerald-700 font-semibold">Terverifikasi</span>\n</div>`}
+            classesHint="rounded-xl border border-gray-300 bg-white p-4"
+            codeSnippet={`<div className="p-4 rounded-xl border border-gray-300 bg-white flex items-center justify-between">\n  <div className="flex items-center gap-3">...</div>\n  <span className="text-emerald-700 font-semibold">Terverifikasi</span>\n</div>`}
           >
-            <div className="max-w-lg p-4 rounded-xl border border-gray-200 bg-white space-y-3 text-xs">
+            <div className="max-w-lg p-4 rounded-xl border border-gray-300 bg-white space-y-3 text-xs">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-primary-600 text-white font-bold flex items-center justify-center">
@@ -368,7 +368,7 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
                   <span>Terverifikasi</span>
                 </span>
               </div>
-              <div className="pt-2.5 border-t border-gray-100 flex flex-wrap items-center justify-between gap-2 text-[11px] text-gray-500 tabular-nums">
+              <div className="pt-2.5 border-t border-gray-300 flex flex-wrap items-center justify-between gap-2 text-[11px] text-gray-500 tabular-nums">
                 <span>Metode: Google Workspace SSO</span>
                 <span>Login terakhir: 13 Nov 2026 · 08:14 WIB</span>
               </div>
@@ -380,10 +380,10 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
             title="Unauthenticated Auth Gate"
             description="Pembatas akses untuk rute privat ketika pengguna belum terautentikasi."
             classesHint="rounded-xl border border-dashed border-gray-300 bg-gray-50/70 p-5 text-center"
-            codeSnippet={`<div className="p-5 rounded-xl border border-dashed border-gray-300 text-center">\n  <Lock className="w-6 h-6 mx-auto text-gray-400" />\n  <p>Silakan masuk untuk mengakses lembar nilai.</p>\n</div>`}
+            codeSnippet={`<div className="p-5 rounded-xl border border-dashed border-gray-300 text-center">\n  <Lock className="w-6 h-6 mx-auto text-gray-500" />\n  <p>Silakan masuk untuk mengakses lembar nilai.</p>\n</div>`}
           >
             <div className="max-w-lg p-5 rounded-xl border border-dashed border-gray-300 bg-gray-50/60 text-center space-y-2.5 text-xs">
-              <div className="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center mx-auto text-gray-500">
+              <div className="w-10 h-10 rounded-xl bg-white border border-gray-300 flex items-center justify-center mx-auto text-gray-500">
                 <Lock className="w-4 h-4" />
               </div>
               <div className="font-bold text-gray-900 text-sm">Autentikasi Diperlukan</div>
@@ -407,7 +407,7 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
             classesHint="font-mono tracking-widest tabular-nums"
             codeSnippet={`<input type="text" maxLength={6} value={otp} className="font-mono tracking-widest text-center border rounded-lg" />`}
           >
-            <div className="max-w-sm p-4 rounded-xl border border-gray-200 bg-white space-y-3 text-xs">
+            <div className="max-w-sm p-4 rounded-xl border border-gray-300 bg-white space-y-3 text-xs">
               <div className="flex items-center justify-between">
                 <span className="font-bold text-gray-900">Verifikasi 2 Langkah (OTP)</span>
                 <span className="text-[11px] font-mono text-primary-600 font-semibold tabular-nums">
@@ -459,7 +459,7 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
           <UiDocSection
             id="rbac-profile-role"
             title="Profile & Active Role Switcher"
-            classesHint="rounded-xl border border-gray-200 bg-white p-4"
+            classesHint="rounded-xl border border-gray-300 bg-white p-4"
             codeSnippet={`<button onClick={() => setRole('teacher')} className={role === 'teacher' ? 'bg-primary-600 text-white' : 'bg-gray-100'}>Pengajar</button>`}
           >
             <div className="max-w-xl space-y-3 text-xs">
@@ -469,7 +469,7 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
                     key={key}
                     type="button"
                     onClick={() => setSelectedRole(key)}
-                    className={`px-3 py-1.5 rounded-lg font-semibold cursor-pointer transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    className={`px-3 py-1.5 rounded-lg font-semibold cursor-pointer transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] ${
                       selectedRole === key
                         ? 'bg-primary-600 text-white shadow-xs'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -480,7 +480,7 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
                 ))}
               </div>
 
-              <div key={selectedRole} className="p-4 rounded-xl border border-gray-200 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-ui-fade">
+              <div key={selectedRole} className="p-4 rounded-xl border border-gray-300 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-ui-fade">
                 <div className="flex items-center gap-3">
                   <div className="w-11 h-11 rounded-full bg-primary-50 text-primary-700 border border-primary-200 font-bold flex items-center justify-center shrink-0">
                     {activeRole.initials}
@@ -496,7 +496,7 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
                     <div className="text-[11px] text-gray-600 mt-0.5">{activeRole.scope}</div>
                   </div>
                 </div>
-                <span className="text-[11px] font-medium text-gray-500 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-lg self-start sm:self-center shrink-0">
+                <span className="text-[11px] font-medium text-gray-600 bg-gray-50 border border-gray-300 px-2.5 py-1 rounded-lg self-start sm:self-center shrink-0">
                   {activeRole.department}
                 </span>
               </div>
@@ -506,19 +506,19 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
           <UiDocSection
             id="rbac-matrix"
             title="Roles & Permissions Matrix"
-            classesHint="w-full text-xs border border-gray-200 rounded-xl overflow-hidden"
+            classesHint="w-full text-xs border border-gray-300 rounded-xl overflow-hidden"
             codeSnippet={`<table className="w-full text-xs">\n  <thead><tr><th>Peran</th><th>Read</th><th>Write</th><th>Delete</th></tr></thead>\n</table>`}
           >
             <HorizontalSlideTrack
-              className="max-w-2xl border border-gray-200 rounded-xl bg-white overflow-hidden"
+              className="max-w-2xl border border-gray-300 rounded-xl bg-white overflow-hidden"
               trackClassName=""
               fadeEdges={false}
               indicatorSize="wide"
               accent="primary"
-              indicatorClassName="py-2 bg-gray-50/70 border-t border-gray-100 mt-0"
+              indicatorClassName="py-2 bg-gray-50/70 border-t border-gray-300 mt-0"
             >
               <table className="w-full text-xs text-left">
-                <thead className="bg-gray-50 border-b border-gray-200 text-gray-600 font-semibold">
+                <thead className="bg-gray-50 border-b border-gray-300 text-gray-600 font-semibold">
                   <tr>
                     <th className="px-3.5 py-2.5">Peran</th>
                     <th className="px-3 py-2.5 text-center">Create</th>
@@ -528,7 +528,7 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
                     <th className="px-3 py-2.5 text-center">Export</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-gray-200">
                   {(Object.keys(ROLE_CONFIG) as RoleKey[]).map((key) => {
                     const row = ROLE_CONFIG[key];
                     const isActiveRow = key === selectedRole;
@@ -543,7 +543,7 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
                       <tr
                         key={key}
                         onClick={() => setSelectedRole(key)}
-                        className={`cursor-pointer transition-colors duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        className={`cursor-pointer transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] ${
                           isActiveRow ? 'bg-primary-50/50' : 'hover:bg-gray-50'
                         }`}
                       >
@@ -561,7 +561,7 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
                                 <span className="hidden sm:inline">Ya</span>
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 text-gray-400">
+                              <span className="inline-flex items-center gap-1 text-gray-500">
                                 <XCircle className="w-3.5 h-3.5" />
                                 <span className="hidden sm:inline">Tidak</span>
                               </span>
@@ -588,7 +588,7 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
                 type="button"
                 disabled={!activeRole.permissions.create}
                 onClick={() => triggerToast('Modul Baru', 'Akses Create tersedia.', 'success')}
-                className="px-3.5 py-2 rounded-lg bg-primary-600 text-white font-semibold hover:bg-primary-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed inline-flex items-center gap-1.5 cursor-pointer"
+                className="px-3.5 py-2 rounded-lg bg-primary-600 text-white font-semibold hover:bg-primary-700 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed inline-flex items-center gap-1.5 cursor-pointer"
               >
                 {activeRole.permissions.create ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
                 <span>Buat Modul Baru</span>
@@ -598,7 +598,7 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
                 type="button"
                 disabled={!activeRole.permissions.exportData}
                 onClick={() => triggerToast('Ekspor Rapor', 'Mengunduh CSV rekap nilai.', 'info')}
-                className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white text-gray-800 font-semibold hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed inline-flex items-center gap-1.5 cursor-pointer"
+                className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white text-gray-800 font-semibold hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed inline-flex items-center gap-1.5 cursor-pointer"
               >
                 {activeRole.permissions.exportData ? <Unlock className="w-3.5 h-3.5 text-emerald-600" /> : <Lock className="w-3.5 h-3.5" />}
                 <span>Ekspor Laporan</span>
@@ -608,7 +608,7 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
                 type="button"
                 disabled={!activeRole.permissions.delete}
                 onClick={() => triggerToast('Hapus Data', 'Data dihapus dengan hak Super Admin.', 'warning')}
-                className="px-3.5 py-2 rounded-lg bg-rose-600 text-white font-semibold hover:bg-rose-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed inline-flex items-center gap-1.5 cursor-pointer"
+                className="px-3.5 py-2 rounded-lg bg-rose-600 text-white font-semibold hover:bg-rose-700 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed inline-flex items-center gap-1.5 cursor-pointer"
               >
                 {activeRole.permissions.delete ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
                 <span>Hapus Permanen</span>
@@ -655,7 +655,7 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
               </div>
             }
           >
-            <div className="max-w-xl p-4 rounded-xl border border-gray-200 bg-white space-y-3 text-xs">
+            <div className="max-w-xl p-4 rounded-xl border border-gray-300 bg-white space-y-3 text-xs">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <KeyRound className="w-4 h-4 text-primary-600" />
@@ -674,7 +674,7 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
                   </span>
                 </div>
                 <span className="font-mono font-semibold text-gray-600 tabular-nums inline-flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5 text-gray-400" />
+                  <Clock className="w-3.5 h-3.5 text-gray-500" />
                   TTL: {formatTtl(tokenTtl)}
                 </span>
               </div>
@@ -688,7 +688,7 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
                     type="button"
                     onClick={() => setShowRawToken(!showRawToken)}
                     aria-label="Toggle token visibility"
-                    className="p-1 rounded hover:bg-gray-800 text-gray-300 transition-colors duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer"
+                    className="p-1 rounded hover:bg-gray-800 text-gray-300 transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer"
                   >
                     {showRawToken ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                   </button>
@@ -701,7 +701,7 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
                       setTimeout(() => setTokenCopied(false), 1800);
                     }}
                     aria-label="Salin token"
-                    className="p-1 rounded hover:bg-gray-800 text-gray-300 transition-colors duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer"
+                    className="p-1 rounded hover:bg-gray-800 text-gray-300 transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer"
                   >
                     {tokenCopied ? <Check className="w-3.5 h-3.5 text-emerald-400 animate-ui-check" /> : <Copy className="w-3.5 h-3.5" />}
                   </button>
@@ -714,10 +714,25 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
                   type="button"
                   disabled={refreshingToken}
                   onClick={handleRefreshToken}
-                  className="px-3.5 py-1.5 rounded-lg bg-primary-600 text-white font-semibold hover:bg-primary-700 disabled:opacity-70 inline-flex items-center gap-1.5 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer"
+                  className="px-3.5 py-1.5 rounded-lg bg-primary-600 text-white font-semibold hover:bg-primary-700 disabled:opacity-70 inline-grid place-items-center transition-colors duration-200 cursor-pointer"
                 >
-                  <RefreshCw className={`w-3.5 h-3.5 ${refreshingToken ? 'animate-spin' : ''}`} />
-                  <span>{refreshingToken ? 'Memperbarui...' : 'Refresh Token'}</span>
+                  <span
+                    aria-hidden={!refreshingToken}
+                    className={`[grid-area:1/1] inline-flex items-center gap-1.5 transition-opacity duration-150 ${
+                      refreshingToken ? 'opacity-100' : 'opacity-0 invisible'
+                    }`}
+                  >
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Memperbarui...</span>
+                  </span>
+                  <span
+                    className={`[grid-area:1/1] inline-flex items-center gap-1.5 transition-opacity duration-150 ${
+                      refreshingToken ? 'opacity-0 invisible' : 'opacity-100'
+                    }`}
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    <span>Refresh Token</span>
+                  </span>
                 </button>
               </div>
             </div>
@@ -726,15 +741,15 @@ export const AuthStateUiKit: React.FC<AuthStateUiKitProps> = ({ activeSubJump })
           <UiDocSection
             id="tok-sessions"
             title="Active Devices & Session Manager"
-            classesHint="divide-y divide-gray-100 rounded-xl border border-gray-200"
+            classesHint="divide-y divide-gray-200 rounded-xl border border-gray-300"
             codeSnippet={`{sessions.map(s => <div key={s.id} className="flex justify-between p-3.5">...<button onClick={() => revoke(s.id)}>Cabut</button></div>)}`}
           >
-            <div className="max-w-xl rounded-xl border border-gray-200 bg-white divide-y divide-gray-100 text-xs overflow-hidden">
+            <div className="max-w-xl rounded-xl border border-gray-300 bg-white divide-y divide-gray-200 text-xs overflow-hidden">
               {sessions.map((sess) => {
                 const Icon =
                   sess.type === 'desktop' ? Monitor : sess.type === 'tablet' ? Tablet : Smartphone;
                 return (
-                  <div key={sess.id} className="p-3.5 flex items-center justify-between gap-3 hover:bg-gray-50/70 transition-colors duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]">
+                  <div key={sess.id} className="p-3.5 flex items-center justify-between gap-3 hover:bg-gray-50/70 transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]">
                     <div className="flex items-center gap-3 min-w-0">
                       <div className="w-9 h-9 rounded-lg bg-gray-100 text-gray-700 flex items-center justify-center shrink-0">
                         <Icon className="w-4 h-4" />

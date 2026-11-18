@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X, CheckCircle2, AlertTriangle, Clock, Check, LogOut } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useBottomSheetMotion } from '../../hooks/useBottomSheetMotion';
+import { playUiMotionSound } from '../../utils/uiMotionSound';
 import {
   ACTION_BTN_PRIMARY,
   ACTION_BTN_SECONDARY,
@@ -16,6 +17,10 @@ const DemoModalSheet: React.FC<{
   const { setSheetElement, backdropRef, animateClose, sheetGestureProps } = useBottomSheetMotion({
     onClose,
   });
+
+  useEffect(() => {
+    playUiMotionSound('pop');
+  }, []);
 
   return (
     <div
@@ -34,9 +39,9 @@ const DemoModalSheet: React.FC<{
           data-sheet-handle="true"
           className="sm:hidden flex justify-center py-2 -mt-3 -mb-1 cursor-grab active:cursor-grabbing touch-none"
         >
-          <div className="w-10 h-1 bg-black/15 rounded-full animate-sheet-handle" />
+          <div className="w-10 h-1 bg-black/20 rounded-full animate-sheet-handle" />
         </div>
-        <div className="flex items-center justify-between pb-3 border-b border-black/[0.06]">
+        <div className="flex items-center justify-between pb-3 border-b border-black/[0.12]">
           <div>
             <span className="text-[10.5px] font-bold uppercase text-[#ee2e65]">
               Modal Variant · {variant.toUpperCase()}
@@ -51,7 +56,7 @@ const DemoModalSheet: React.FC<{
           </div>
           <button
             onClick={animateClose}
-            className="w-8 h-8 rounded-full hover:bg-[#F4F5F8] hover:rotate-90 transition-all duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-95 flex items-center justify-center cursor-pointer"
+            className="w-8 h-8 rounded-full hover:bg-[#F4F5F8] hover:rotate-90 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-95 flex items-center justify-center cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -71,7 +76,7 @@ const DemoModalSheet: React.FC<{
           </p>
         )}
 
-        <div className="flex justify-end gap-2.5 pt-3 border-t border-black/[0.06]">
+        <div className="flex justify-end gap-2.5 pt-3 border-t border-black/[0.12]">
           <button
             onClick={animateClose}
             className={ACTION_BTN_SECONDARY}
@@ -105,7 +110,16 @@ const DrawerSpecSheet: React.FC<{
     alwaysBottomSheet: isBottomDrawer,
   });
 
-  const handleClose = isBottomDrawer ? animateClose : onClose;
+  useEffect(() => {
+    playUiMotionSound('pop');
+  }, [spec.dir, spec.type]);
+
+  const handleClose = isBottomDrawer
+    ? animateClose
+    : () => {
+        playUiMotionSound('tick');
+        onClose();
+      };
 
   return (
     <div
@@ -116,7 +130,7 @@ const DrawerSpecSheet: React.FC<{
       <div
         ref={isBottomDrawer ? setSheetElement : undefined}
         {...(isBottomDrawer ? sheetGestureProps : {})}
-        className={`bg-white shadow-2xl p-6 flex flex-col justify-between transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`bg-white shadow-2xl p-6 flex flex-col justify-between transition-all duration-[260ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
           spec.dir === 'left'
             ? 'w-80 max-w-[85vw] h-full mr-auto rounded-r-[28px] animate-ui-drawer-left'
             : spec.dir === 'right'
@@ -132,10 +146,10 @@ const DrawerSpecSheet: React.FC<{
               data-sheet-handle="true"
               className="flex justify-center py-2 -mt-3 -mb-1 cursor-grab active:cursor-grabbing touch-none"
             >
-              <div className="w-10 h-1 bg-black/15 rounded-full animate-sheet-handle" />
+              <div className="w-10 h-1 bg-black/20 rounded-full animate-sheet-handle" />
             </div>
           )}
-          <div className="flex items-center justify-between pb-3 border-b border-black/[0.06]">
+          <div className="flex items-center justify-between pb-3 border-b border-black/[0.12]">
             <div>
               <span className="text-[10.5px] font-bold uppercase text-[#ee2e65]">
                 {spec.type} · {spec.dir.toUpperCase()} Placement
@@ -144,7 +158,7 @@ const DrawerSpecSheet: React.FC<{
             </div>
             <button
               onClick={handleClose}
-              className="w-8 h-8 rounded-full hover:bg-[#F4F5F8] hover:rotate-90 transition-all duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-95 flex items-center justify-center cursor-pointer"
+              className="w-8 h-8 rounded-full hover:bg-[#F4F5F8] hover:rotate-90 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-95 flex items-center justify-center cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -153,7 +167,7 @@ const DrawerSpecSheet: React.FC<{
             This slide-over {spec.type} opens smoothly from the <strong>{spec.dir}</strong> edge of the viewport, ideal for quick filters, inspectors, and mobile navigation.
           </p>
         </div>
-        <div className="pt-4 border-t border-black/[0.06] flex justify-end gap-2">
+        <div className="pt-4 border-t border-black/[0.12] flex justify-end gap-2">
           <button
             onClick={handleClose}
             className={ACTION_BTN_SOFT_PRIMARY}
@@ -177,6 +191,10 @@ const SweetAlertSheet: React.FC<{
     onClose,
   });
 
+  useEffect(() => {
+    playUiMotionSound(type === 'success' ? 'success' : 'pop');
+  }, [type]);
+
   return (
     <div
       ref={backdropRef}
@@ -194,7 +212,7 @@ const SweetAlertSheet: React.FC<{
           data-sheet-handle="true"
           className="sm:hidden flex justify-center py-2 -mt-3 -mb-1 cursor-grab active:cursor-grabbing touch-none"
         >
-          <div className="w-10 h-1 bg-black/15 rounded-full animate-sheet-handle" />
+          <div className="w-10 h-1 bg-black/20 rounded-full animate-sheet-handle" />
         </div>
         <div
           className={`animate-ui-check w-12 h-12 rounded-full mx-auto flex items-center justify-center ${
@@ -206,7 +224,7 @@ const SweetAlertSheet: React.FC<{
         <h3 className="text-[17px] font-bold text-[#1C1D21]">
           {type === 'success' ? 'Good job!' : 'Are you sure?'}
         </h3>
-        <p className="text-[12.5px] text-[#6E717A]">
+        <p className="text-[12.5px] text-[#5A5D67]">
           {type === 'success'
             ? 'Your UI KIT design token updates have been published.'
             : 'You will not be able to recover this deleted record!'}
@@ -246,6 +264,10 @@ const SessionTimeoutSheet: React.FC<{
     onClose,
   });
 
+  useEffect(() => {
+    playUiMotionSound('pop');
+  }, []);
+
   return (
     <div
       ref={backdropRef}
@@ -263,13 +285,13 @@ const SessionTimeoutSheet: React.FC<{
           data-sheet-handle="true"
           className="sm:hidden flex justify-center py-2 -mt-3 -mb-1 cursor-grab active:cursor-grabbing touch-none"
         >
-          <div className="w-10 h-1 bg-black/15 rounded-full animate-sheet-handle" />
+          <div className="w-10 h-1 bg-black/20 rounded-full animate-sheet-handle" />
         </div>
         <div className="flex items-center gap-2.5 text-[#8C5811]">
           <Clock className="w-5 h-5" />
           <h3 className="text-[16px] font-bold text-[#1C1D21]">Session Timeout Warning</h3>
         </div>
-        <p className="text-[12.5px] text-[#6E717A]">
+        <p className="text-[12.5px] text-[#5A5D67]">
           Your UI KIT workspace session will automatically lock in <strong>00:59</strong> due to inactivity.
         </p>
         <div className="flex gap-2 pt-2">

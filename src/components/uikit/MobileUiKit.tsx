@@ -30,6 +30,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useApp } from '../../context/AppContext';
 import { UiDocPage, UiDocSection } from './UiDocBlock';
 import { MobileNavUiKitDemo } from './MobileNavUiKitDemo';
+import { Mobile375FixesUiKit } from './Mobile375FixesUiKit';
 import { SplitFilterButton } from '../ui/SplitFilterButton';
 import { HorizontalSlideTrack } from '../ui/HorizontalSlideTrack';
 import { ElasticPullToRefresh } from '../ui/ElasticPullToRefresh';
@@ -136,7 +137,7 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                     className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                       headerMode === m
                         ? 'bg-[#ee2e65] text-white shadow-xs'
-                        : 'bg-[#F4F5F8] text-[#6E717A] hover:text-[#1C1D21]'
+                        : 'bg-[#F4F5F8] text-[#5A5D67] hover:text-[#1C1D21]'
                     }`}
                   >
                     {headerPageMeta[m].category}
@@ -145,15 +146,15 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
               </div>
 
               <div className="bg-[#E8EAEE] rounded-2xl p-4 sm:p-6 flex justify-center">
-                <div className="w-full max-w-[375px] bg-white rounded-[24px] shadow-md border border-black/[0.06] overflow-hidden">
+                <div className="w-full max-w-[375px] bg-white rounded-[24px] shadow-md border border-black/[0.12] overflow-hidden">
                   {/* Simulated Mobile Top Header */}
-                  <div className="h-16 px-4 border-b border-black/[0.06] flex items-center justify-between gap-3 bg-white">
+                  <div className="h-16 px-4 border-b border-black/[0.12] flex items-center justify-between gap-3 bg-white">
                     <div className="flex items-center gap-2.5 min-w-0">
                       <div className="w-8 h-8 rounded-xl bg-[#FEF1F5] text-[#ee2e65] flex items-center justify-center shrink-0">
                         <ActiveHeaderIcon className="w-4 h-4" />
                       </div>
                       <div className="min-w-0">
-                        <span className="block text-[10.5px] font-semibold uppercase tracking-wider text-[#8A8D98] leading-tight">
+                        <span className="block text-[10.5px] font-semibold uppercase tracking-wider text-[#646772] leading-tight">
                           UI KIT · {headerPageMeta[headerMode].category.replace(/^\d+\.\s*/, '')}
                         </span>
                         <span className="block text-[16px] font-semibold tracking-tight text-[#1C1D21] truncate leading-tight">
@@ -166,7 +167,7 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                       <button
                         type="button"
                         onClick={() => triggerToast('UI KIT Updates', 'Membuka panel pembaruan komponen.', 'info')}
-                        className="w-9 h-9 rounded-full border border-black/[0.07] flex items-center justify-center text-[#1C1D21] relative cursor-pointer"
+                        className="w-9 h-9 rounded-full border border-black/[0.14] flex items-center justify-center text-[#1C1D21] relative cursor-pointer"
                       >
                         <Bell className="w-4 h-4" />
                         <span className="min-w-[16px] h-[16px] px-1 rounded-full bg-[#EF4444] text-white text-[9.5px] font-bold flex items-center justify-center absolute -top-1 -right-1 ring-2 ring-white tabular-nums">
@@ -176,7 +177,7 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                       <button
                         type="button"
                         onClick={() => triggerToast('Search UI KIT', 'Membuka pencarian cepat komponen.', 'info')}
-                        className="w-9 h-9 rounded-full border border-black/[0.07] flex items-center justify-center text-[#1C1D21] cursor-pointer"
+                        className="w-9 h-9 rounded-full border border-black/[0.14] flex items-center justify-center text-[#1C1D21] cursor-pointer"
                       >
                         <Search className="w-4 h-4" />
                       </button>
@@ -191,7 +192,7 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                       </span>
                       <button
                         type="button"
-                        className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full border border-black/[0.09] text-xs font-medium text-[#1C1D21] whitespace-nowrap shrink-0"
+                        className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full border border-black/[0.14] text-xs font-medium text-[#1C1D21] whitespace-nowrap shrink-0"
                       >
                         <Download className="w-3.5 h-3.5 text-gray-500" />
                         <span>PDF</span>
@@ -204,7 +205,7 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                         <span>Copy</span>
                       </button>
                     </div>
-                    <div className="h-14 rounded-2xl bg-[#F4F5F8] border border-black/[0.04] flex items-center justify-center text-[11.5px] text-[#8A8D98]">
+                    <div className="h-14 rounded-2xl bg-[#F4F5F8] border border-black/[0.10] flex items-center justify-center text-[11.5px] text-[#646772]">
                       Konten UI KIT tampil bersih tanpa duplikasi judul
                     </div>
                   </div>
@@ -220,15 +221,15 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
             codeSnippet={`{/* Mobile: Category Title */}\n<div className="flex md:hidden items-center gap-2 min-w-0">\n  <Icon className="w-[18px] h-[18px] text-[#ee2e65]" />\n  <h1 className="text-[17px] font-semibold truncate">{uiSubJump}</h1>\n</div>\n\n{/* Tablet & PC: Breadcrumb */}\n<nav className="hidden md:flex items-center gap-2 text-[13px]">\n  <span>UI KIT</span> <ChevronRight /> <span>{category}</span> <ChevronRight /> <span>{uiSubJump}</span>\n</nav>`}
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-              <div className="p-4 rounded-xl bg-[#FAFBFD] border border-black/[0.05] space-y-1.5">
+              <div className="p-4 rounded-xl bg-[#FAFBFD] border border-black/[0.12] space-y-1.5">
                 <div className="font-semibold text-[#1C1D21]">Mobile (&lt; 768px)</div>
-                <p className="text-[#6E717A] leading-relaxed">
+                <p className="text-[#5A5D67] leading-relaxed">
                   Sidebar &amp; breadcrumb disembunyikan. Header menampilkan ikon kategori + nama komponen aktif secara ringkas untuk menghindari dua baris judul yang sempit.
                 </p>
               </div>
-              <div className="p-4 rounded-xl bg-[#FAFBFD] border border-black/[0.05] space-y-1.5">
+              <div className="p-4 rounded-xl bg-[#FAFBFD] border border-black/[0.12] space-y-1.5">
                 <div className="font-semibold text-[#1C1D21]">Tablet &amp; PC (&ge; 768px)</div>
-                <p className="text-[#6E717A] leading-relaxed">
+                <p className="text-[#5A5D67] leading-relaxed">
                   Sidebar kiri menampilkan seluruh kategori, dan header menampilkan breadcrumb animasi <code className="px-1 py-0.5 rounded bg-gray-100">UI KIT &gt; Kategori &gt; Komponen</code>.
                 </p>
               </div>
@@ -241,12 +242,12 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
             classesHint="flex items-center justify-end gap-2.5 w-full md:w-auto"
             codeSnippet={`<div className="flex items-center justify-end gap-2.5 w-full md:w-auto">\n  <button className={ACTION_BTN_SECONDARY}>...</button>\n  <button className={ACTION_BTN_PRIMARY}>...</button>\n</div>`}
           >
-            <div className="max-w-[375px] bg-[#FAFBFD] p-3.5 rounded-2xl border border-black/[0.05]">
+            <div className="max-w-[375px] bg-[#FAFBFD] p-3.5 rounded-2xl border border-black/[0.12]">
               <div className="flex items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => triggerToast('Export Tokens', 'Mengunduh konfigurasi JSON token.', 'success')}
-                  className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full border border-black/[0.09] bg-white text-xs font-medium text-[#1C1D21] whitespace-nowrap shrink-0 cursor-pointer"
+                  className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full border border-black/[0.14] bg-white text-xs font-medium text-[#1C1D21] whitespace-nowrap shrink-0 cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>JSON</span>
@@ -317,7 +318,7 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                 />
               </div>
 
-              <div className="text-xs text-[#6E717A] bg-[#FAFBFD] px-3.5 py-2.5 rounded-xl border border-black/[0.04]">
+              <div className="text-xs text-[#5A5D67] bg-[#FAFBFD] px-3.5 py-2.5 rounded-xl border border-black/[0.10]">
                 Kelas aktif: <strong className="text-[#1C1D21]">{demoClass}</strong> · Tipe aktif:{' '}
                 <strong className="text-[#1C1D21]">{demoType}</strong> — klik sisi kiri untuk beralih cepat, atau tekan panah untuk memilih dari daftar.
               </div>
@@ -369,7 +370,7 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                 ]}
               />
 
-              <span className="text-xs text-[#6E717A]">
+              <span className="text-xs text-[#5A5D67]">
                 Status terpilih: <strong className="text-[#9D113C]">{demoStatus}</strong>
               </span>
             </div>
@@ -399,9 +400,9 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                 { label: 'Create', icon: Plus, style: 'bg-[#ee2e65] text-white hover:bg-[#d82256]' },
                 { label: 'Add', icon: Plus, style: 'bg-[#ee2e65] text-white hover:bg-[#d82256]' },
                 { label: 'Save', icon: Save, style: 'bg-[#ee2e65] text-white hover:bg-[#d82256]' },
-                { label: 'Export', icon: Download, style: 'bg-white text-[#1C1D21] border border-black/[0.09] hover:bg-[#FAFBFD]' },
-                { label: 'CSV', icon: FileText, style: 'bg-white text-[#1C1D21] border border-black/[0.09] hover:bg-[#FAFBFD]' },
-                { label: 'Statistics', icon: BarChart2, style: 'bg-white text-[#1C1D21] border border-black/[0.09] hover:bg-[#FAFBFD]' },
+                { label: 'Export', icon: Download, style: 'bg-white text-[#1C1D21] border border-black/[0.14] hover:bg-[#FAFBFD]' },
+                { label: 'CSV', icon: FileText, style: 'bg-white text-[#1C1D21] border border-black/[0.14] hover:bg-[#FAFBFD]' },
+                { label: 'Statistics', icon: BarChart2, style: 'bg-white text-[#1C1D21] border border-black/[0.14] hover:bg-[#FAFBFD]' },
                 { label: 'Read', icon: CheckCheck, style: 'bg-[#FEF1F5] text-[#9D113C] border border-[#FBC2D4]/70 hover:bg-[#FDE0E9]' },
                 { label: 'Back', icon: ArrowLeft, style: 'bg-[#F4F5F8] text-[#1C1D21] hover:bg-gray-200/70' },
               ].map((btn) => {
@@ -446,16 +447,16 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
           <UiDocSection
             id="mlt-hairline-table"
             title="Mobile Hairline List vs Desktop Table"
-            description="Pada layar kecil (< 768px), tabel lebar diganti daftar garis tipis tanpa kartu berat (divide-y divide-black/[0.06]) yang merender langsung di kanvas putih."
-            classesHint="md:hidden divide-y divide-black/[0.06] | hidden md:block rounded-2xl border overflow-hidden"
-            codeSnippet={`{/* Mobile Hairline List */}\n<div className="md:hidden divide-y divide-black/[0.06]">\n  {rows.map(r => (\n    <div className="py-3 flex items-center justify-between gap-3">\n      <div className="flex items-center gap-2.5 min-w-0">...</div>\n      <span className="text-xs font-bold tabular-nums">{r.score}</span>\n    </div>\n  ))}\n</div>`}
+            description="Pada layar kecil (< 768px), tabel lebar diganti daftar garis tipis tanpa kartu berat (divide-y divide-black/[0.12]) yang merender langsung di kanvas putih."
+            classesHint="md:hidden divide-y divide-black/[0.12] | hidden md:block rounded-2xl border overflow-hidden"
+            codeSnippet={`{/* Mobile Hairline List */}\n<div className="md:hidden divide-y divide-black/[0.12]">\n  {rows.map(r => (\n    <div className="py-3 flex items-center justify-between gap-3">\n      <div className="flex items-center gap-2.5 min-w-0">...</div>\n      <span className="text-xs font-bold tabular-nums">{r.score}</span>\n    </div>\n  ))}\n</div>`}
             actions={
               <div className="inline-flex bg-gray-100 p-0.5 rounded-lg text-[11px] font-semibold">
                 <button
                   type="button"
                   onClick={() => setHairlineMode('mobile')}
                   className={`px-2.5 py-1 rounded-md cursor-pointer transition-all ${
-                    hairlineMode === 'mobile' ? 'bg-white text-gray-900 shadow-2xs' : 'text-gray-500'
+                    hairlineMode === 'mobile' ? 'bg-white text-gray-900 shadow-2xs' : 'text-gray-600'
                   }`}
                 >
                   Mobile List
@@ -464,7 +465,7 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                   type="button"
                   onClick={() => setHairlineMode('desktop')}
                   className={`px-2.5 py-1 rounded-md cursor-pointer transition-all ${
-                    hairlineMode === 'desktop' ? 'bg-white text-gray-900 shadow-2xs' : 'text-gray-500'
+                    hairlineMode === 'desktop' ? 'bg-white text-gray-900 shadow-2xs' : 'text-gray-600'
                   }`}
                 >
                   Desktop Table
@@ -473,7 +474,7 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
             }
           >
             {hairlineMode === 'mobile' ? (
-              <div className="max-w-sm mx-auto bg-white rounded-[22px] border border-black/[0.06] px-4 py-1 divide-y divide-black/[0.06]">
+              <div className="max-w-sm mx-auto bg-white rounded-[22px] border border-black/[0.12] px-4 py-1 divide-y divide-black/[0.12]">
                 {[
                   { init: 'SA', name: 'Sarah Anderson', sub: 'Token Layout · 14 Sep', val: '96%', tone: 'bg-[#E6F9F0] text-[#146C43]' },
                   { init: 'JW', name: 'James Wilson', sub: 'Motion Spec · 15 Sep', val: '92%', tone: 'bg-[#FEF1F5] text-[#9D113C]' },
@@ -486,7 +487,7 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                       </div>
                       <div className="min-w-0">
                         <div className="text-[13px] font-semibold text-[#1C1D21] truncate">{item.name}</div>
-                        <div className="text-[11px] text-[#8A8D98] truncate">{item.sub}</div>
+                        <div className="text-[11px] text-[#646772] truncate">{item.sub}</div>
                       </div>
                     </div>
                     <span className={`px-2 py-0.5 rounded-full text-[11px] font-bold tabular-nums shrink-0 ${item.tone}`}>
@@ -496,16 +497,16 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                 ))}
               </div>
             ) : (
-              <div className="rounded-xl border border-gray-200 overflow-x-auto bg-white text-xs">
+              <div className="rounded-xl border border-gray-300 overflow-x-auto bg-white text-xs">
                 <table className="w-full text-left border-collapse">
-                  <thead className="bg-gray-50 border-b border-gray-200 text-gray-600">
+                  <thead className="bg-gray-50 border-b border-gray-300 text-gray-600">
                     <tr>
                       <th className="py-2.5 px-3.5 font-semibold">Reviewer</th>
                       <th className="py-2.5 px-3.5 font-semibold">Scope</th>
                       <th className="py-2.5 px-3.5 font-semibold text-right">Score</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100 tabular-nums">
+                  <tbody className="divide-y divide-gray-200 tabular-nums">
                     <tr>
                       <td className="py-2.5 px-3.5 font-semibold text-gray-900">Sarah Anderson</td>
                       <td className="py-2.5 px-3.5 text-gray-600">Token Layout · 14 Sep</td>
@@ -540,12 +541,12 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
             id="mbs-interactive"
             title="Interactive Swipeable Bottom Sheet"
             classesHint="rounded-t-[28px] shadow-2xl animate-bottom-sheet / useBottomSheetMotion"
-            codeSnippet={`const { setSheetElement, backdropRef, animateClose, sheetGestureProps } = useBottomSheetMotion({ onClose });\n\n<div ref={backdropRef} data-modal-sheet-backdrop="true" className="fixed inset-0 z-50 flex items-end">\n  <div ref={setSheetElement} {...sheetGestureProps} className="w-full bg-white rounded-t-[28px] p-5 animate-bottom-sheet">\n    <div data-sheet-handle="true" className="w-10 h-1 bg-black/15 rounded-full mx-auto" />\n    ...\n  </div>\n</div>`}
+            codeSnippet={`const { setSheetElement, backdropRef, animateClose, sheetGestureProps } = useBottomSheetMotion({ onClose });\n\n<div ref={backdropRef} data-modal-sheet-backdrop="true" className="fixed inset-0 z-50 flex items-end">\n  <div ref={setSheetElement} {...sheetGestureProps} className="w-full bg-white rounded-t-[28px] p-5 animate-bottom-sheet">\n    <div data-sheet-handle="true" className="w-10 h-1 bg-black/20 rounded-full mx-auto" />\n    ...\n  </div>\n</div>`}
           >
             <div className="bg-[#E8EAEE] rounded-2xl p-5 sm:p-6 flex flex-col items-center gap-4">
-              <div className="w-full max-w-[340px] bg-white rounded-[26px] p-4 space-y-3 shadow-lg border border-black/[0.06]">
+              <div className="w-full max-w-[340px] bg-white rounded-[26px] p-4 space-y-3 shadow-lg border border-black/[0.12]">
                 <div className="flex justify-center">
-                  <div className="w-10 h-1 bg-black/15 rounded-full animate-sheet-handle" />
+                  <div className="w-10 h-1 bg-black/20 rounded-full animate-sheet-handle" />
                 </div>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
@@ -554,10 +555,10 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                     </div>
                     <div>
                       <div className="text-[13.5px] font-semibold text-[#1C1D21]">Component Sheet</div>
-                      <div className="text-[11px] text-[#8A8D98]">Tarik handle ke bawah untuk menutup</div>
+                      <div className="text-[11px] text-[#646772]">Tarik handle ke bawah untuk menutup</div>
                     </div>
                   </div>
-                  <span className="w-7 h-7 rounded-full bg-[#F4F5F8] flex items-center justify-center text-[#6E717A]">
+                  <span className="w-7 h-7 rounded-full bg-[#F4F5F8] flex items-center justify-center text-[#5A5D67]">
                     <X className="w-3.5 h-3.5" />
                   </span>
                 </div>
@@ -597,13 +598,13 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                       data-sheet-handle="true"
                       className="flex justify-center py-2 -mt-2 cursor-grab active:cursor-grabbing touch-none sm:hidden"
                     >
-                      <div className="w-10 h-1 bg-black/15 rounded-full animate-sheet-handle" />
+                      <div className="w-10 h-1 bg-black/20 rounded-full animate-sheet-handle" />
                     </div>
 
                     <div className="flex items-center justify-between">
                       <div>
                         <h3 className="text-[16px] font-semibold text-[#1C1D21]">Live Mobile Bottom Sheet</h3>
-                        <p className="text-[12px] text-[#8A8D98]">
+                        <p className="text-[12px] text-[#646772]">
                           Tarik handle ke bawah di layar sentuh atau tekan Tutup.
                         </p>
                       </div>
@@ -611,13 +612,13 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                         type="button"
                         onClick={animateClose}
                         aria-label="Close sheet"
-                        className="w-8 h-8 rounded-full hover:bg-[#F4F5F8] flex items-center justify-center text-[#6E717A] cursor-pointer"
+                        className="w-8 h-8 rounded-full hover:bg-[#F4F5F8] flex items-center justify-center text-[#5A5D67] cursor-pointer"
                       >
                         <X className="w-4 h-4" />
                       </button>
                     </div>
 
-                    <div className="p-3.5 rounded-2xl bg-[#FAFBFD] border border-black/[0.05] text-xs text-[#5A5D67] leading-relaxed">
+                    <div className="p-3.5 rounded-2xl bg-[#FAFBFD] border border-black/[0.10] text-xs text-[#5A5D67] leading-relaxed">
                       Sheet ini memakai hook <code className="px-1 py-0.5 rounded bg-gray-100">useBottomSheetMotion</code> untuk mendukung gestur seret ke bawah secara halus dengan akselerasi spring.
                     </div>
 
@@ -666,7 +667,7 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
             }
           >
             <div className="bg-[#E8EAEE] rounded-2xl p-4 sm:p-6 flex justify-center">
-              <div className="w-full max-w-[340px] h-[250px] bg-white rounded-[24px] border border-black/[0.06] shadow-md overflow-hidden flex flex-col">
+              <div className="w-full max-w-[340px] h-[250px] bg-white rounded-[24px] border border-black/[0.12] shadow-md overflow-hidden flex flex-col">
                 <ElasticPullToRefresh
                   allowDesktopMousePull
                   demoTriggerSeq={ptrDemoSeq}
@@ -692,10 +693,10 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
             classesHint="HorizontalSlideTrack activeKey={active} accent='dark'"
             codeSnippet={`<HorizontalSlideTrack activeKey={month} accent="dark">\n  {months.map(m => <button data-slide-active={month === m}>{m}</button>)}\n</HorizontalSlideTrack>`}
           >
-            <div className="max-w-sm bg-[#FAFBFD] p-4 rounded-2xl border border-black/[0.05] space-y-3">
+            <div className="max-w-sm bg-[#FAFBFD] p-4 rounded-2xl border border-black/[0.12] space-y-3">
               <HorizontalSlideTrack
                 activeKey={slideMonth}
-                trackClassName="inline-flex items-center gap-1.5 bg-white p-1 rounded-full border border-black/[0.06] max-w-full select-none"
+                trackClassName="inline-flex items-center gap-1.5 bg-white p-1 rounded-full border border-black/[0.12] max-w-full select-none"
                 accent="dark"
               >
                 {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'].map((m) => (
@@ -705,14 +706,14 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                     data-slide-active={slideMonth === m ? 'true' : undefined}
                     onClick={() => setSlideMonth(m)}
                     className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all shrink-0 cursor-pointer ${
-                      slideMonth === m ? 'bg-[#ee2e65] text-white' : 'text-[#6E717A] hover:text-[#1C1D21]'
+                      slideMonth === m ? 'bg-[#ee2e65] text-white' : 'text-[#5A5D67] hover:text-[#1C1D21]'
                     }`}
                   >
                     {m}
                   </button>
                 ))}
               </HorizontalSlideTrack>
-              <div className="text-[11.5px] text-[#8A8D98]">
+              <div className="text-[11.5px] text-[#646772]">
                 Bulan terpilih: <strong className="text-[#1C1D21]">{slideMonth}</strong>
               </div>
             </div>
@@ -739,7 +740,7 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* PageTransition axis preview */}
-              <div className="rounded-2xl border border-gray-200 bg-[#FAFBFD] p-4 space-y-3">
+              <div className="rounded-2xl border border-gray-300 bg-[#FAFBFD] p-4 space-y-3">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-xs font-bold text-[#1C1D21]">Adaptive Axis Switch (Mobile X vs Desktop Y)</span>
                   <div className="flex items-center gap-1">
@@ -752,7 +753,7 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                           setTransitionTab(idx);
                         }}
                         className={`px-2.5 py-1 rounded-full text-[11px] font-semibold cursor-pointer transition-colors ${
-                          transitionTab === idx ? 'bg-[#ee2e65] text-white' : 'bg-white text-gray-600 border border-gray-200'
+                          transitionTab === idx ? 'bg-[#ee2e65] text-white' : 'bg-white text-gray-600 border border-gray-300'
                         }`}
                       >
                         {lbl}
@@ -760,7 +761,7 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                     ))}
                   </div>
                 </div>
-                <div className="h-24 rounded-xl bg-white border border-gray-200 overflow-hidden relative flex items-center justify-center p-4">
+                <div className="h-24 rounded-xl bg-white border border-gray-300 overflow-hidden relative flex items-center justify-center p-4">
                   <AnimatePresence mode="popLayout" initial={false} custom={transitionDir}>
                     <motion.div
                       key={transitionTab}
@@ -786,7 +787,7 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                       <div className="text-xs font-bold text-[#1C1D21]">
                         Halaman {['1. Grid System', '2. Action Buttons', '3. Pastel Cards'][transitionTab]}
                       </div>
-                      <div className="text-[11px] text-[#6E717A]">
+                      <div className="text-[11px] text-[#5A5D67]">
                         Spring directional transition (stiffness: 400, damping: 36)
                       </div>
                     </motion.div>
@@ -795,26 +796,26 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
               </div>
 
               {/* App Shell Depth Pull-Back Preview */}
-              <div className="rounded-2xl border border-gray-200 bg-[#E8EAEE] p-4 flex items-center justify-center relative overflow-hidden min-h-[164px]">
+              <div className="rounded-2xl border border-gray-300 bg-[#E8EAEE] p-4 flex items-center justify-center relative overflow-hidden min-h-[164px]">
                 <div
-                  className="w-full max-w-[260px] h-[132px] bg-white rounded-[20px] p-3 border border-black/[0.06] shadow-sm transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  className="w-full max-w-[260px] h-[132px] bg-white rounded-[20px] p-3 border border-black/[0.12] shadow-sm transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
                   style={{
-                    transform: depthPullDemo ? 'scale(0.945)' : 'scale(1)',
+                    transform: depthPullDemo ? 'scale(0.95)' : 'scale(1)',
                     filter: depthPullDemo ? 'brightness(0.88)' : 'none',
                   }}
                 >
                   <div className="text-[11px] font-bold text-[#1C1D21]">.app-shell-container</div>
-                  <div className="text-[10px] text-[#8A8D98] mt-1">
-                    {depthPullDemo ? 'Tarik mundur (scale 0.945, brightness 0.88)' : 'Latar normal (scale 1)'}
+                  <div className="text-[10px] text-[#646772] mt-1">
+                    {depthPullDemo ? 'Tarik mundur (scale 0.95, brightness 0.88)' : 'Latar normal (scale 1)'}
                   </div>
                 </div>
                 <AnimatePresence>
                   {depthPullDemo && (
                     <motion.div
-                      initial={{ y: 40, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1, transition: { type: 'spring', stiffness: 380, damping: 32 } }}
-                      exit={{ y: 36, opacity: 0, transition: { duration: 0.16 } }}
-                      className="absolute inset-x-4 bottom-2 bg-white rounded-t-[20px] p-3 shadow-xl border border-black/[0.08] flex items-center justify-between"
+                      initial={{ y: 40, opacity: 0, filter: 'blur(3px)' }}
+                      animate={{ y: 0, opacity: 1, filter: 'blur(0px)', transition: { type: 'spring', stiffness: 380, damping: 28 } }}
+                      exit={{ y: 36, opacity: 0, filter: 'blur(2px)', transition: { duration: 0.16, ease: [0.23, 1, 0.32, 1] } }}
+                      className="absolute inset-x-4 bottom-2 bg-white rounded-t-[20px] p-3 shadow-xl border border-black/[0.14] flex items-center justify-between"
                     >
                       <span className="text-[11px] font-semibold text-[#1C1D21]">Bottom Sheet Aktif</span>
                       <span className="px-2 py-0.5 rounded-full bg-[#FEF1F5] text-[#ee2e65] text-[10px] font-bold">
@@ -846,7 +847,7 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
             codeSnippet={`createPortal(\n  <div style={{ top, left: 12, right: 12 }} className="fixed bg-white rounded-[24px] shadow-2xl p-4 z-[9999]">\n    <NotificationsHeader />\n    <SegmentedFilter />\n    <NotificationCards />\n  </div>,\n  document.body\n)`}
           >
             <div className="bg-[#E8EAEE] rounded-2xl p-4 sm:p-6 flex justify-center">
-              <div className="w-full max-w-[352px] bg-white rounded-[24px] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.2)] border border-black/[0.08] p-4 space-y-3">
+              <div className="w-full max-w-[352px] bg-white rounded-[24px] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.2)] border border-black/[0.14] p-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="text-[15px] font-semibold text-[#1C1D21]">Notifications</span>
@@ -877,7 +878,7 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                       className={`flex-1 py-1 rounded-md text-xs font-medium transition-all cursor-pointer ${
                         notifTab === tab
                           ? 'bg-white text-gray-900 shadow-2xs font-semibold'
-                          : 'text-gray-500 hover:text-gray-900'
+                          : 'text-gray-600 hover:text-gray-900'
                       }`}
                     >
                       {tab}
@@ -898,18 +899,18 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                           )
                         }
                         className={`w-full text-left p-3 rounded-xl border transition-all flex items-start gap-2.5 cursor-pointer ${
-                          n.unread ? `${theme.bg} border-black/[0.05]` : 'bg-gray-50 border-gray-100'
+                          n.unread ? `${theme.bg} border-black/[0.12]` : 'bg-gray-50 border-gray-200'
                         }`}
                       >
                         <span
                           className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
-                            n.unread ? theme.dot : 'bg-gray-300'
+                            n.unread ? theme.dot : 'bg-gray-400'
                           }`}
                         />
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center justify-between gap-2">
                             <span className="text-xs font-semibold text-gray-900 truncate">{n.title}</span>
-                            <span className="text-[10.5px] text-gray-400 shrink-0">{n.time}</span>
+                            <span className="text-[10.5px] text-gray-500 shrink-0">{n.time}</span>
                           </div>
                           <p className="text-[11px] text-gray-600 mt-0.5 line-clamp-2">{n.desc}</p>
                         </div>
@@ -961,6 +962,9 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
           </UiDocSection>
         </UiDocPage>
       )}
+
+      {/* 8. MOBILE 375PX FIXES */}
+      {activeSubJump === 'Mobile 375px Fixes' && <Mobile375FixesUiKit />}
     </div>
   );
 };

@@ -333,7 +333,7 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
     const rowsToShow = filteredBasicData.slice(0, rowsLimit);
     const cellPad =
       variant === 'small' ? 'py-1.5 px-3' : variant === 'large' ? 'py-4 px-5' : 'py-3 px-4';
-    const cellBorder = variant === 'bordered' ? 'border-r border-gray-200 last:border-r-0' : '';
+    const cellBorder = variant === 'bordered' ? 'border-r border-gray-300 last:border-r-0' : '';
     return (
       <HorizontalSlideTrack
         fadeEdges={false}
@@ -342,11 +342,11 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
         trackClassName=""
         indicatorClassName="pb-2"
       >
-        <table className={`w-full text-left border-collapse text-sm ${variant === 'bordered' ? 'border-y border-gray-200' : ''}`}>
+        <table className={`w-full text-left border-collapse text-sm ${variant === 'bordered' ? 'border-y border-gray-300' : ''}`}>
           <thead>
             <tr
               className={`text-xs font-semibold uppercase tracking-wider ${
-                variant === 'borderless' ? '' : 'border-b border-gray-200'
+                variant === 'borderless' ? '' : 'border-b border-gray-300'
               } ${
                 headOpt === 'dark'
                   ? 'bg-gray-900 text-white'
@@ -367,8 +367,8 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
               variant === 'borderless'
                 ? ''
                 : variant === 'striped'
-                ? 'divide-y divide-gray-200/60'
-                : 'divide-y divide-gray-100'
+                ? 'divide-y divide-gray-200'
+                : 'divide-y divide-gray-200'
             }
           >
             {rowsToShow.map((row, idx) => {
@@ -384,12 +384,12 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
                       : 'bg-white'
                   } ${variant === 'hover' ? 'hover:bg-primary-50/50' : 'hover:bg-gray-50/40'}`}
                 >
-                  <td className={`${cellPad} ${cellBorder} text-xs font-mono text-gray-400 tabular-nums`}>
+                  <td className={`${cellPad} ${cellBorder} text-xs font-mono text-gray-500 tabular-nums`}>
                     0{row.id}
                   </td>
                   <td className={`${cellPad} ${cellBorder} font-semibold text-gray-900`}>
                     <div>{row.name}</div>
-                    <div className="text-xs text-gray-400 font-normal">{row.role}</div>
+                    <div className="text-xs text-gray-500 font-normal">{row.role}</div>
                   </td>
                   <td className={`${cellPad} ${cellBorder} text-gray-600 text-xs`}>{row.email}</td>
                   <td className={`${cellPad} ${cellBorder} text-gray-700 font-medium text-xs`}>{row.classCode}</td>
@@ -430,17 +430,17 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
             id="tbl-regular"
             title="Regular Table & Quick Search"
             classesHint="w-full text-left border-collapse text-sm"
-            codeSnippet={`<table className="w-full text-left border-collapse text-sm">\n  <thead className="bg-gray-50 text-xs uppercase border-b border-gray-200">...</thead>\n  <tbody className="divide-y divide-gray-100">...</tbody>\n</table>`}
+            codeSnippet={`<table className="w-full text-left border-collapse text-sm">\n  <thead className="bg-gray-50 text-xs uppercase border-b border-gray-300">...</thead>\n  <tbody className="divide-y divide-gray-200">...</tbody>\n</table>`}
             noPadding
             actions={
               <div className="relative text-xs">
-                <Search className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                <Search className="w-3.5 h-3.5 text-gray-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   value={basicSearch}
                   onChange={(e) => setBasicSearch(e.target.value)}
                   placeholder="Filter baris tabel..."
-                  className="pl-8 pr-2.5 py-1 rounded-md border border-gray-200 bg-white text-xs focus:outline-none focus:border-gray-900"
+                  className="pl-8 pr-2.5 py-1 rounded-md border border-gray-300 bg-white text-xs placeholder:text-gray-500 focus:outline-none focus:border-gray-900"
                 />
               </div>
             }
@@ -491,8 +491,8 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
           <UiDocSection
             id="tbl-bordered"
             title="Bordered Table (.table-bordered)"
-            classesHint="border-r border-gray-200"
-            codeSnippet={`<td className="py-3 px-4 border-r border-gray-200 last:border-r-0">...</td>`}
+            classesHint="border-r border-gray-300"
+            codeSnippet={`<td className="py-3 px-4 border-r border-gray-300 last:border-r-0">...</td>`}
             noPadding
           >
             {renderBasicTable('bordered', 'light', 3)}
@@ -546,15 +546,15 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
           <UiDocSection
             title="Search, Filter, Sort, Bulk Select & Export CSV"
             description="Centang baris untuk memunculkan bilah aksi massal, klik judul kolom untuk mengurutkan, atau ekspor ke CSV."
-            classesHint="overflow-x-auto / divide-y divide-gray-100 / tabular-nums"
-            codeSnippet={`<div className="border border-gray-200 rounded-xl overflow-hidden">\n  <DataTableToolbar onSearch={setSearch} onExport={handleExportCsv} />\n  <table className="w-full text-left text-sm">...</table>\n</div>`}
+            classesHint="overflow-x-auto / divide-y divide-gray-200 / tabular-nums"
+            codeSnippet={`<div className="border border-gray-300 rounded-xl overflow-hidden">\n  <DataTableToolbar onSearch={setSearch} onExport={handleExportCsv} />\n  <table className="w-full text-left text-sm">...</table>\n</div>`}
             noPadding
           >
             <div>
               {/* Top Toolbar */}
-              <div className="p-4 border-b border-gray-200 bg-gray-50/50 flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div className="p-4 border-b border-gray-300 bg-gray-50/50 flex flex-col md:flex-row md:items-center justify-between gap-3">
                 <div className="relative flex-1 max-w-sm">
-                  <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Search className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     value={dataSearch}
@@ -563,12 +563,12 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
                       setDataPage(1);
                     }}
                     placeholder="Cari nama, kelas, atau mapel..."
-                    className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-white border border-gray-200 text-xs focus:outline-none focus:border-gray-900"
+                    className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-white border border-gray-300 text-xs placeholder:text-gray-500 focus:outline-none focus:border-gray-900"
                   />
                   {dataSearch && (
                     <button
                       onClick={() => setDataSearch('')}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-gray-400 hover:text-gray-600"
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-gray-500 hover:text-gray-800"
                     >
                       ×
                     </button>
@@ -611,7 +611,7 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
 
                   <button
                     onClick={handleExportCsv}
-                    className="px-3 py-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-100 text-gray-700 font-semibold flex items-center gap-1.5 cursor-pointer"
+                    className="px-3 py-1.5 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 font-semibold flex items-center gap-1.5 cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" />
                     <span>Export CSV</span>
@@ -650,156 +650,225 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
                 </div>
               )}
 
-              {/* Data Table */}
-              <HorizontalSlideTrack
-                fadeEdges={false}
-                indicatorSize="wide"
-                accent="primary"
-                trackClassName=""
-                indicatorClassName="pb-2"
-              >
-                <table className="w-full text-left border-collapse text-sm">
-                  <thead>
-                    <tr className="bg-gray-50 text-gray-600 text-xs uppercase tracking-wider border-b border-gray-200 select-none">
-                      <th className="py-3 px-4 w-10">
-                        <button
-                          type="button"
-                          onClick={handleSelectAllToggle}
-                          className="flex items-center justify-center cursor-pointer text-gray-500 hover:text-gray-900"
-                          title="Pilih Semua"
-                        >
-                          {dataSelectedIds.length === pagedDataTable.length && pagedDataTable.length > 0 ? (
-                            <CheckSquare className="w-4 h-4 text-primary-600" />
-                          ) : dataSelectedIds.length > 0 ? (
-                            <MinusSquare className="w-4 h-4 text-primary-600" />
-                          ) : (
-                            <Square className="w-4 h-4" />
-                          )}
-                        </button>
-                      </th>
-
-                      <th onClick={() => handleSortCol('name')} className="py-3 px-4 cursor-pointer hover:text-gray-900 group">
-                        <div className="flex items-center gap-1 font-semibold">
-                          <span>Nama Mahasiswa</span>
-                          {dataSortCol === 'name' ? (
-                            dataSortDir === 'asc' ? <ArrowUp className="w-3.5 h-3.5 text-primary-600" /> : <ArrowDown className="w-3.5 h-3.5 text-primary-600" />
-                          ) : (
-                            <ArrowUpDown className="w-3 h-3 text-gray-400 group-hover:text-gray-600" />
-                          )}
-                        </div>
-                      </th>
-
-                      <th onClick={() => handleSortCol('classCode')} className="py-3 px-4 cursor-pointer hover:text-gray-900 group">
-                        <div className="flex items-center gap-1 font-semibold">
-                          <span>Kelas & Mapel</span>
-                          {dataSortCol === 'classCode' && (
-                            dataSortDir === 'asc' ? <ArrowUp className="w-3.5 h-3.5 text-primary-600" /> : <ArrowDown className="w-3.5 h-3.5 text-primary-600" />
-                          )}
-                        </div>
-                      </th>
-
-                      <th onClick={() => handleSortCol('rate')} className="py-3 px-4 cursor-pointer hover:text-gray-900 group">
-                        <div className="flex items-center gap-1 font-semibold">
-                          <span>Kehadiran</span>
-                          {dataSortCol === 'rate' && (
-                            dataSortDir === 'asc' ? <ArrowUp className="w-3.5 h-3.5 text-primary-600" /> : <ArrowDown className="w-3.5 h-3.5 text-primary-600" />
-                          )}
-                        </div>
-                      </th>
-
-                      <th onClick={() => handleSortCol('score')} className="py-3 px-4 cursor-pointer hover:text-gray-900 group">
-                        <div className="flex items-center gap-1 font-semibold">
-                          <span>Nilai Skor</span>
-                          {dataSortCol === 'score' && (
-                            dataSortDir === 'asc' ? <ArrowUp className="w-3.5 h-3.5 text-primary-600" /> : <ArrowDown className="w-3.5 h-3.5 text-primary-600" />
-                          )}
-                        </div>
-                      </th>
-
-                      <th className="py-3 px-4 font-semibold">Status</th>
-                      <th className="py-3 px-4 font-semibold text-right">Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {pagedDataTable.length === 0 ? (
-                      <tr>
-                        <td colSpan={7} className="py-8 text-center text-xs text-gray-500">
-                          Tidak ada entri data yang cocok dengan kriteria pencarian.
-                        </td>
-                      </tr>
-                    ) : (
-                      pagedDataTable.map((row) => {
-                        const isSelected = dataSelectedIds.includes(row.id);
-                        return (
-                          <tr key={row.id} className={`transition-colors duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSelected ? 'bg-primary-50/50' : 'hover:bg-gray-50/70'}`}>
-                            <td className="py-3 px-4">
-                              <button
-                                type="button"
-                                onClick={() => handleToggleRowSelect(row.id)}
-                                className="flex items-center justify-center cursor-pointer text-gray-400 hover:text-gray-900"
-                              >
-                                {isSelected ? <CheckSquare className="w-4 h-4 text-primary-600" /> : <Square className="w-4 h-4" />}
-                              </button>
-                            </td>
-
-                            <td className="py-3 px-4">
-                              <div className="font-semibold text-gray-900">{row.name}</div>
-                              <div className="text-xs text-gray-400 tabular-nums">ID #{row.id.toString().padStart(3, '0')}</div>
-                            </td>
-
-                            <td className="py-3 px-4">
-                              <div className="text-xs font-semibold text-gray-800">{row.classCode}</div>
-                              <div className="text-xs text-gray-500">{row.subject}</div>
-                            </td>
-
-                            <td className="py-3 px-4">
-                              <div className="flex items-center gap-2 tabular-nums">
-                                <span className="font-semibold text-xs text-gray-900">{row.rate}%</span>
-                                <div className="w-16 bg-gray-100 h-1.5 rounded-full overflow-hidden">
-                                  <div
-                                    className={`h-full rounded-full ${
-                                      row.rate >= 95 ? 'bg-emerald-500' : row.rate >= 85 ? 'bg-primary-500' : 'bg-rose-500'
-                                    }`}
-                                    style={{ width: `${row.rate}%` }}
-                                  />
-                                </div>
+              {/* Mobile (< 640px) Card View — Zero hidden columns behind horizontal swipe */}
+              <div className="sm:hidden divide-y divide-gray-200 bg-white">
+                {pagedDataTable.length === 0 ? (
+                  <div className="py-8 px-4 text-center text-xs text-gray-500">
+                    Tidak ada entri data yang cocok dengan kriteria pencarian.
+                  </div>
+                ) : (
+                  pagedDataTable.map((row) => {
+                    const isSelected = dataSelectedIds.includes(row.id);
+                    return (
+                      <div
+                        key={`mob-${row.id}`}
+                        className={`p-3.5 space-y-2.5 ${isSelected ? 'bg-primary-50/50' : 'bg-white'}`}
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex items-start gap-2.5 min-w-0">
+                            <button
+                              type="button"
+                              onClick={() => handleToggleRowSelect(row.id)}
+                              aria-label={`Pilih ${row.name}`}
+                              className="touch-target-44 -ml-1.5 px-1.5 flex items-center justify-center cursor-pointer text-gray-500 hover:text-gray-900 shrink-0"
+                            >
+                              {isSelected ? <CheckSquare className="w-4 h-4 text-primary-600" /> : <Square className="w-4 h-4" />}
+                            </button>
+                            <div className="min-w-0">
+                              <div className="font-semibold text-sm text-gray-900 truncate">{row.name}</div>
+                              <div className="text-[11px] text-gray-500 tabular-nums">
+                                #{row.id.toString().padStart(3, '0')} · {row.classCode} ({row.subject})
                               </div>
-                            </td>
+                            </div>
+                          </div>
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-[11px] font-semibold border whitespace-nowrap shrink-0 ${
+                              row.status === 'Honor Roll'
+                                ? 'bg-primary-50 text-primary-700 border-primary-200'
+                                : row.status === 'Active'
+                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                : 'bg-rose-50 text-rose-700 border-rose-200'
+                            }`}
+                          >
+                            {row.status}
+                          </span>
+                        </div>
 
-                            <td className="py-3 px-4 font-semibold text-gray-900 tabular-nums">{row.score}/100</td>
+                        <div className="flex items-center justify-between gap-3 pt-1 text-xs tabular-nums">
+                          <div className="flex items-center gap-3 text-gray-600">
+                            <span>
+                              Hadir: <strong className="text-gray-900">{row.rate}%</strong>
+                            </span>
+                            <span>
+                              Skor: <strong className="text-gray-900">{row.score}/100</strong>
+                            </span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => triggerToast(row.name, `Membuka rekam jejak akademik ${row.classCode}`, 'info')}
+                            className="touch-target-44 px-3 py-1 rounded-lg border border-gray-300 text-xs font-semibold text-gray-700 hover:bg-gray-100 whitespace-nowrap shrink-0 cursor-pointer"
+                          >
+                            Detail
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
 
-                            <td className="py-3 px-4">
-                              <span
-                                className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${
-                                  row.status === 'Honor Roll'
-                                    ? 'bg-primary-50 text-primary-700 border-primary-200'
-                                    : row.status === 'Active'
-                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                                    : 'bg-rose-50 text-rose-700 border-rose-200'
-                                }`}
-                              >
-                                {row.status}
-                              </span>
-                            </td>
+              {/* Desktop (>= 640px) Data Table */}
+              <div className="hidden sm:block">
+                <HorizontalSlideTrack
+                  fadeEdges={false}
+                  indicatorSize="wide"
+                  accent="primary"
+                  trackClassName=""
+                  indicatorClassName="pb-2"
+                >
+                  <table className="w-full text-left border-collapse text-sm">
+                    <thead>
+                      <tr className="bg-gray-50 text-gray-600 text-xs uppercase tracking-wider border-b border-gray-300 select-none">
+                        <th className="py-3 px-4 w-10">
+                          <button
+                            type="button"
+                            onClick={handleSelectAllToggle}
+                            className="flex items-center justify-center cursor-pointer text-gray-500 hover:text-gray-900"
+                            title="Pilih Semua"
+                          >
+                            {dataSelectedIds.length === pagedDataTable.length && pagedDataTable.length > 0 ? (
+                              <CheckSquare className="w-4 h-4 text-primary-600" />
+                            ) : dataSelectedIds.length > 0 ? (
+                              <MinusSquare className="w-4 h-4 text-primary-600" />
+                            ) : (
+                              <Square className="w-4 h-4" />
+                            )}
+                          </button>
+                        </th>
 
-                            <td className="py-3 px-4 text-right">
-                              <button
-                                onClick={() => triggerToast(row.name, `Membuka rekam jejak akademik ${row.classCode}`, 'info')}
-                                className="px-2.5 py-1 rounded-lg border border-gray-200 text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
-                              >
-                                Detail
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      })
-                    )}
-                  </tbody>
-                </table>
-              </HorizontalSlideTrack>
+                        <th onClick={() => handleSortCol('name')} className="py-3 px-4 cursor-pointer hover:text-gray-900 group">
+                          <div className="flex items-center gap-1 font-semibold">
+                            <span>Nama Mahasiswa</span>
+                            {dataSortCol === 'name' ? (
+                              dataSortDir === 'asc' ? <ArrowUp className="w-3.5 h-3.5 text-primary-600" /> : <ArrowDown className="w-3.5 h-3.5 text-primary-600" />
+                            ) : (
+                              <ArrowUpDown className="w-3 h-3 text-gray-500 group-hover:text-gray-700" />
+                            )}
+                          </div>
+                        </th>
+
+                        <th onClick={() => handleSortCol('classCode')} className="py-3 px-4 cursor-pointer hover:text-gray-900 group">
+                          <div className="flex items-center gap-1 font-semibold">
+                            <span>Kelas & Mapel</span>
+                            {dataSortCol === 'classCode' && (
+                              dataSortDir === 'asc' ? <ArrowUp className="w-3.5 h-3.5 text-primary-600" /> : <ArrowDown className="w-3.5 h-3.5 text-primary-600" />
+                            )}
+                          </div>
+                        </th>
+
+                        <th onClick={() => handleSortCol('rate')} className="py-3 px-4 cursor-pointer hover:text-gray-900 group">
+                          <div className="flex items-center gap-1 font-semibold">
+                            <span>Kehadiran</span>
+                            {dataSortCol === 'rate' && (
+                              dataSortDir === 'asc' ? <ArrowUp className="w-3.5 h-3.5 text-primary-600" /> : <ArrowDown className="w-3.5 h-3.5 text-primary-600" />
+                            )}
+                          </div>
+                        </th>
+
+                        <th onClick={() => handleSortCol('score')} className="py-3 px-4 cursor-pointer hover:text-gray-900 group">
+                          <div className="flex items-center gap-1 font-semibold">
+                            <span>Nilai Skor</span>
+                            {dataSortCol === 'score' && (
+                              dataSortDir === 'asc' ? <ArrowUp className="w-3.5 h-3.5 text-primary-600" /> : <ArrowDown className="w-3.5 h-3.5 text-primary-600" />
+                            )}
+                          </div>
+                        </th>
+
+                        <th className="py-3 px-4 font-semibold">Status</th>
+                        <th className="py-3 px-4 font-semibold text-right">Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {pagedDataTable.length === 0 ? (
+                        <tr>
+                          <td colSpan={7} className="py-8 text-center text-xs text-gray-500">
+                            Tidak ada entri data yang cocok dengan kriteria pencarian.
+                          </td>
+                        </tr>
+                      ) : (
+                        pagedDataTable.map((row) => {
+                          const isSelected = dataSelectedIds.includes(row.id);
+                          return (
+                            <tr key={row.id} className={`transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] ${isSelected ? 'bg-primary-50/50' : 'hover:bg-gray-50/70'}`}>
+                              <td className="py-3 px-4">
+                                <button
+                                  type="button"
+                                  onClick={() => handleToggleRowSelect(row.id)}
+                                  className="flex items-center justify-center cursor-pointer text-gray-500 hover:text-gray-900"
+                                >
+                                  {isSelected ? <CheckSquare className="w-4 h-4 text-primary-600" /> : <Square className="w-4 h-4" />}
+                                </button>
+                              </td>
+
+                              <td className="py-3 px-4">
+                                <div className="font-semibold text-gray-900">{row.name}</div>
+                                <div className="text-xs text-gray-500 tabular-nums">ID #{row.id.toString().padStart(3, '0')}</div>
+                              </td>
+
+                              <td className="py-3 px-4">
+                                <div className="text-xs font-semibold text-gray-800">{row.classCode}</div>
+                                <div className="text-xs text-gray-500">{row.subject}</div>
+                              </td>
+
+                              <td className="py-3 px-4">
+                                <div className="flex items-center gap-2 tabular-nums">
+                                  <span className="font-semibold text-xs text-gray-900">{row.rate}%</span>
+                                  <div className="w-16 bg-gray-200 h-1.5 rounded-full overflow-hidden">
+                                    <div
+                                      className={`h-full rounded-full ${
+                                        row.rate >= 95 ? 'bg-emerald-500' : row.rate >= 85 ? 'bg-primary-500' : 'bg-rose-500'
+                                      }`}
+                                      style={{ width: `${row.rate}%` }}
+                                    />
+                                  </div>
+                                </div>
+                              </td>
+
+                              <td className="py-3 px-4 font-semibold text-gray-900 tabular-nums">{row.score}/100</td>
+
+                              <td className="py-3 px-4">
+                                <span
+                                  className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${
+                                    row.status === 'Honor Roll'
+                                      ? 'bg-primary-50 text-primary-700 border-primary-200'
+                                      : row.status === 'Active'
+                                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                      : 'bg-rose-50 text-rose-700 border-rose-200'
+                                  }`}
+                                >
+                                  {row.status}
+                                </span>
+                              </td>
+
+                              <td className="py-3 px-4 text-right">
+                                <button
+                                  onClick={() => triggerToast(row.name, `Membuka rekam jejak akademik ${row.classCode}`, 'info')}
+                                  className="px-2.5 py-1 rounded-lg border border-gray-300 text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
+                                >
+                                  Detail
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                </HorizontalSlideTrack>
+              </div>
 
               {/* Pagination */}
-              <div className="px-4 py-3 bg-gray-50/70 border-t border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-gray-500 tabular-nums">
+              <div className="px-4 py-3 bg-gray-50/70 border-t border-gray-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-gray-600 tabular-nums">
                 <div className="flex items-center gap-2">
                   <span>Tampilkan</span>
                   <CustomSelect
@@ -824,7 +893,7 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
                   <button
                     disabled={dataPage === 1}
                     onClick={() => setDataPage((p) => Math.max(1, p - 1))}
-                    className="px-2.5 py-1 rounded border border-gray-200 bg-white hover:bg-gray-100 disabled:opacity-40 cursor-pointer"
+                    className="px-2.5 py-1 rounded border border-gray-300 bg-white hover:bg-gray-100 disabled:opacity-40 cursor-pointer"
                   >
                     Sebelumnya
                   </button>
@@ -835,7 +904,7 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
                       className={`w-7 h-7 rounded text-xs font-semibold flex items-center justify-center transition-colors cursor-pointer ${
                         dataPage === i + 1
                           ? 'bg-gray-900 text-white'
-                          : 'border border-gray-200 bg-white text-gray-700 hover:bg-gray-100'
+                          : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-100'
                       }`}
                     >
                       {i + 1}
@@ -844,7 +913,7 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
                   <button
                     disabled={dataPage === totalPages}
                     onClick={() => setDataPage((p) => Math.min(totalPages, p + 1))}
-                    className="px-2.5 py-1 rounded border border-gray-200 bg-white hover:bg-gray-100 disabled:opacity-40 cursor-pointer"
+                    className="px-2.5 py-1 rounded border border-gray-300 bg-white hover:bg-gray-100 disabled:opacity-40 cursor-pointer"
                   >
                     Selanjutnya
                   </button>
@@ -861,7 +930,7 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
           <UiDocSection
             title="Expandable Rows, Video Progress & Inline Status"
             description="Klik panah pada kolom pertama untuk membuka rincian baris atau ubah progres video langsung."
-            classesHint="divide-y divide-gray-100 / hover:bg-primary-50/40"
+            classesHint="divide-y divide-gray-200 / hover:bg-primary-50/40"
             codeSnippet={`<React.Fragment key={row.id}>\n  <tr>...master row...</tr>\n  {isExpanded && <tr><td colSpan={6}>...accordion detail...</td></tr>}\n</React.Fragment>`}
             noPadding
             actions={
@@ -870,7 +939,7 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
                 className={`px-3 py-1 rounded-md text-xs font-semibold border cursor-pointer ${
                   advanceHoverEnabled
                     ? 'bg-primary-50 text-primary-700 border-primary-200'
-                    : 'bg-gray-100 text-gray-700 border-gray-200'
+                    : 'bg-gray-100 text-gray-700 border-gray-300'
                 }`}
               >
                 Table Hover: {advanceHoverEnabled ? 'Aktif' : 'Basic'}
@@ -887,7 +956,7 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
               >
                 <table className="w-full text-left border-collapse text-sm">
                   <thead>
-                    <tr className="bg-gray-50 text-gray-600 text-xs uppercase tracking-wider border-b border-gray-200">
+                    <tr className="bg-gray-50 text-gray-600 text-xs uppercase tracking-wider border-b border-gray-300">
                       <th className="py-3.5 px-4 w-10">Expand</th>
                       <th className="py-3.5 px-4 w-[32%]">Modul & Kursus</th>
                       <th className="py-3.5 px-4 w-[16%]">Kelas & Pengajar</th>
@@ -896,23 +965,23 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
                       <th className="py-3.5 px-4 w-12 text-right">Opsi</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-gray-200">
                     {advanceRows.map((row) => {
                       const isExpanded = expandedRows.includes(row.id);
                       const isVideo = row.type === 'video';
 
                       return (
                         <React.Fragment key={row.id}>
-                          <tr className={`transition-colors duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${advanceHoverEnabled ? 'hover:bg-primary-50/40' : ''} ${isExpanded ? 'bg-primary-50/20' : ''}`}>
+                          <tr className={`transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] ${advanceHoverEnabled ? 'hover:bg-primary-50/40' : ''} ${isExpanded ? 'bg-primary-50/20' : ''}`}>
                             <td className="py-3.5 px-4 align-top">
                               <button
                                 type="button"
                                 onClick={() => toggleRowExpand(row.id)}
-                                className="w-7 h-7 rounded-lg hover:bg-gray-200/70 flex items-center justify-center text-gray-500 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer"
+                                className="w-7 h-7 rounded-lg hover:bg-gray-200/70 flex items-center justify-center text-gray-500 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer"
                                 title={isExpanded ? 'Tutup Rincian' : 'Buka Rincian'}
                               >
                                 <ChevronRight
-                                  className={`w-4 h-4 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                  className={`w-4 h-4 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] ${
                                     isExpanded ? 'rotate-90 text-primary-600' : ''
                                   }`}
                                 />
@@ -940,8 +1009,8 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
 
                             <td className="py-3.5 px-4 align-top">
                               <div className="font-semibold text-xs text-gray-900">{row.classCode}</div>
-                              <div className="text-xs text-gray-500 mt-0.5">{row.instructor}</div>
-                              <div className="text-xs text-gray-400 mt-0.5 tabular-nums">{row.studentsEnrolled} Siswa</div>
+                              <div className="text-xs text-gray-600 mt-0.5">{row.instructor}</div>
+                              <div className="text-xs text-gray-500 mt-0.5 tabular-nums">{row.studentsEnrolled} Siswa</div>
                             </td>
 
                             <td className="py-3.5 px-4 align-top">
@@ -970,7 +1039,7 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
 
                                   <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
                                     <div
-                                      className={`h-full rounded-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                      className={`h-full rounded-full transition-all duration-[260ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
                                         row.isWatchedCompleted
                                           ? 'bg-emerald-500'
                                           : row.watchProgress > 0
@@ -1027,15 +1096,15 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
                                 </button>
 
                                 {advanceMenuOpenId === row.id && (
-                                  <div className="absolute right-0 top-9 w-44 bg-white/95 backdrop-blur-sm rounded-xl shadow-[0_14px_28px_-10px_rgba(15,23,42,0.16)] border border-gray-200 p-1.5 z-40 space-y-1 text-left text-xs animate-ui-pop origin-top-right">
+                                  <div className="absolute right-0 top-9 w-44 bg-white/95 backdrop-blur-sm rounded-xl shadow-[0_14px_28px_-10px_rgba(15,23,42,0.16)] border border-gray-300 p-1.5 z-40 space-y-1 text-left text-xs animate-ui-pop origin-top-right">
                                     <button
                                       onClick={() => {
                                         setAdvanceMenuOpenId(null);
                                         toggleRowExpand(row.id);
                                       }}
-                                      className="w-full px-2.5 py-1.5 rounded-md hover:bg-gray-100 hover:translate-x-0.5 flex items-center gap-2 text-gray-700 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer"
+                                      className="w-full px-2.5 py-1.5 rounded-md hover:bg-gray-100 flex items-center gap-2 text-gray-700 transition-colors duration-200 cursor-pointer"
                                     >
-                                      <Eye className="w-3.5 h-3.5 text-gray-400" />
+                                      <Eye className="w-3.5 h-3.5 text-gray-500" />
                                       <span>Lihat Rincian</span>
                                     </button>
                                     <button
@@ -1043,7 +1112,7 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
                                         setAdvanceMenuOpenId(null);
                                         handleAdvanceVideoToggle(row.id);
                                       }}
-                                      className="w-full px-2.5 py-1.5 rounded-md hover:bg-gray-100 hover:translate-x-0.5 flex items-center gap-2 text-gray-700 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer"
+                                      className="w-full px-2.5 py-1.5 rounded-md hover:bg-gray-100 flex items-center gap-2 text-gray-700 transition-colors duration-200 cursor-pointer"
                                     >
                                       <Check className="w-3.5 h-3.5 text-emerald-600" />
                                       <span>Tandai Selesai</span>
@@ -1053,9 +1122,9 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
                                         setAdvanceMenuOpenId(null);
                                         triggerToast('Unduhan Dimulai', `Mengunduh silabus ${row.course}`, 'info');
                                       }}
-                                      className="w-full px-2.5 py-1.5 rounded-md hover:bg-gray-100 hover:translate-x-0.5 flex items-center gap-2 text-gray-700 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer"
+                                      className="w-full px-2.5 py-1.5 rounded-md hover:bg-gray-100 flex items-center gap-2 text-gray-700 transition-colors duration-200 cursor-pointer"
                                     >
-                                      <Download className="w-3.5 h-3.5 text-gray-400" />
+                                      <Download className="w-3.5 h-3.5 text-gray-500" />
                                       <span>Download Silabus</span>
                                     </button>
                                   </div>
@@ -1066,9 +1135,9 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
 
                           {isExpanded && (
                             <tr className="bg-gray-50/70">
-                              <td colSpan={6} className="px-6 py-4 border-t border-b border-gray-200">
+                              <td colSpan={6} className="px-6 py-4 border-t border-b border-gray-300">
                                 <div className="space-y-3 animate-ui-slide-down">
-                                  <div className="flex items-center justify-between border-b border-gray-200 pb-2">
+                                  <div className="flex items-center justify-between border-b border-gray-300 pb-2">
                                     <span className="text-xs font-bold uppercase tracking-wider text-primary-900">
                                       Rincian Modul & Perkembangan Mahasiswa
                                     </span>
@@ -1079,19 +1148,19 @@ export const TableUiKit: React.FC<TableUiKitProps> = ({ activeSubJump }) => {
 
                                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs divide-y sm:divide-y-0 sm:divide-x divide-gray-200">
                                     <div className="pt-1 sm:pt-0">
-                                      <div className="text-gray-400">Penyelesaian Sesi</div>
+                                      <div className="text-gray-500">Penyelesaian Sesi</div>
                                       <div className="text-base font-bold text-gray-900 mt-0.5 tabular-nums">
                                         {row.breakdown.completedLectures} / {row.breakdown.totalLectures} Sesi
                                       </div>
                                     </div>
                                     <div className="pt-2 sm:pt-0 sm:pl-4">
-                                      <div className="text-gray-400">Nilai Rata-rata Kelas</div>
+                                      <div className="text-gray-500">Nilai Rata-rata Kelas</div>
                                       <div className="text-base font-bold text-gray-900 mt-0.5 tabular-nums">
                                         {row.breakdown.avgScore}
                                       </div>
                                     </div>
                                     <div className="pt-2 sm:pt-0 sm:pl-4">
-                                      <div className="text-gray-400">Tingkat Ketuntasan</div>
+                                      <div className="text-gray-500">Tingkat Ketuntasan</div>
                                       <div className="text-base font-bold text-emerald-600 mt-0.5 tabular-nums">
                                         {Math.round((row.breakdown.completedLectures / row.breakdown.totalLectures) * 100)}%
                                       </div>

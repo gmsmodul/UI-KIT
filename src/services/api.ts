@@ -19,6 +19,7 @@ import {
   BatchRecord,
 } from '../types';
 import { createDefaultBatchStore } from '../data/batchDefaults';
+import { executeWithOfflineQueue } from '../utils/offlineSyncQueue';
 import {
   INITIAL_EXAMS,
   INITIAL_ASSIGNMENTS,
@@ -60,7 +61,33 @@ function saveStorage<T>(key: string, value: T): void {
   }
 }
 
+export interface CachedUiNavState {
+  category: string;
+  sub: string;
+}
+
 export const apiService = {
+  // Synchronous cache-first helpers so screens never open empty
+  getCachedUiNavState(): CachedUiNavState | null {
+    return loadStorage<CachedUiNavState | null>('ui_nav_state', null);
+  },
+  saveCachedUiNavState(state: CachedUiNavState): void {
+    saveStorage('ui_nav_state', state);
+  },
+  getCachedReadUpdateIds(): string[] {
+    return loadStorage<string[]>('ui_updates_read', []);
+  },
+  saveCachedReadUpdateIds(ids: string[]): void {
+    saveStorage('ui_updates_read', ids);
+  },
+  getCachedBatchDatabaseStore(): BatchDatabaseStore {
+    const cached = loadStorage<BatchDatabaseStore | null>('batch_database', null);
+    if (cached && Array.isArray(cached.batches) && cached.batches.length > 0) {
+      return cached;
+    }
+    return createDefaultBatchStore();
+  },
+
   // Exams
   async getExams(): Promise<Exam[]> {
     if (API_BASE_URL) {
@@ -335,57 +362,34 @@ export const apiService = {
 
   async saveBatchDatabaseStore(store: BatchDatabaseStore): Promise<void> {
     saveStorage('batch_database', store);
-    try {
-      await fetch(`${API_BASE_URL}/api/batches/store`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(store),
-      });
-    } catch {
-      // Offline / network error silently keeps localStorage mirror
-    }
+    await executeWithOfflineQueue(`${API_BASE_URL}/api/batches/store`, 'PUT', store);
   },
 
   async saveBatchRecord(batch: BatchRecord, storeSnapshot?: BatchDatabaseStore): Promise<void> {
     if (storeSnapshot) {
       saveStorage('batch_database', storeSnapshot);
     }
-    try {
-      await fetch(`${API_BASE_URL}/api/batches/${encodeURIComponent(batch.id)}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(batch),
-      });
-    } catch {
-      // Offline / network error silently keeps localStorage mirror
-    }
+    await executeWithOfflineQueue(
+      `${API_BASE_URL}/api/batches/${encodeURIComponent(batch.id)}`,
+      'PUT',
+      batch
+    );
   },
 
   async setActiveBatchOnServer(batchId: string, storeSnapshot?: BatchDatabaseStore): Promise<void> {
     if (storeSnapshot) {
       saveStorage('batch_database', storeSnapshot);
     }
-    try {
-      await fetch(`${API_BASE_URL}/api/batches/active`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ batchId }),
-      });
-    } catch {
-      // Offline / network error silently keeps localStorage mirror
-    }
+    await executeWithOfflineQueue(`${API_BASE_URL}/api/batches/active`, 'PUT', { batchId });
   },
 
   async deleteBatchOnServer(batchId: string, storeSnapshot?: BatchDatabaseStore): Promise<void> {
     if (storeSnapshot) {
       saveStorage('batch_database', storeSnapshot);
     }
-    try {
-      await fetch(`${API_BASE_URL}/api/batches/${encodeURIComponent(batchId)}`, {
-        method: 'DELETE',
-      });
-    } catch {
-      // Offline / network error silently keeps localStorage mirror
-    }
+    await executeWithOfflineQueue(
+      `${API_BASE_URL}/api/batches/${encodeURIComponent(batchId)}`,
+      'DELETE'
+    );
   },
 };

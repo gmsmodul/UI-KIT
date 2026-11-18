@@ -209,7 +209,7 @@ export const LiveQuizParticipantView: React.FC<LiveQuizParticipantViewProps> = (
       {roomState.status === 'active' && !me?.finished && activeQuestion && (
         <div className="h-1.5 w-full bg-white/10 overflow-hidden">
           <div
-            className={`h-full transition-all duration-300 ${
+            className={`h-full transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
               timePct > 50 ? 'bg-[#00C985]' : timePct > 25 ? 'bg-[#F59E0B]' : 'bg-[#E53E51]'
             }`}
             style={{ width: `${timePct}%` }}

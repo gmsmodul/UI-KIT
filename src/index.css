@@ -18,27 +18,110 @@ body {
   overscroll-behavior-y: contain;
 }
 
-/* Custom Sleek Scrollbar matching sidebar design */
-.custom-sidebar-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: #71737D #E8EAEF;
+/* ==========================================================================
+   375px Mobile & Touch Responsive Foundations
+   1. Big numbers stay one-line, tabular, and size-capped
+   2. Inputs >= 16px below 640px to prevent iOS Safari auto-zoom
+   3. Touch targets >= 44px strictly for coarse pointers (mouse stays dense)
+   4. Bottom bar & content safe-area padding via env(safe-area-inset-bottom)
+   ========================================================================== */
+.kpi-value {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(1.25rem, 5.5vw, 1.875rem);
+  line-height: 1.15;
 }
+
+@media (max-width: 639px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not(.no-ios-zoom-guard),
+  textarea:not(.no-ios-zoom-guard),
+  select:not(.no-ios-zoom-guard) {
+    font-size: 16px;
+  }
+}
+
+@media (pointer: coarse) {
+  .touch-target-44,
+  button[aria-haspopup="listbox"],
+  nav[aria-label="UI KIT mobile navigation"] button {
+    min-height: 44px;
+  }
+}
+
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Global Pill Capsule Scrollbars matching Role Permissions Matrix (compact 5px, zero arrow buttons) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*:not(.no-scrollbar)::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+html::-webkit-scrollbar-button,
+body::-webkit-scrollbar-button,
+*:not(.no-scrollbar)::-webkit-scrollbar-button,
+*:not(.no-scrollbar)::-webkit-scrollbar-button:single-button,
+*:not(.no-scrollbar)::-webkit-scrollbar-button:double-button,
+*:not(.no-scrollbar)::-webkit-scrollbar-button:start,
+*:not(.no-scrollbar)::-webkit-scrollbar-button:end,
+*:not(.no-scrollbar)::-webkit-scrollbar-button:decrement,
+*:not(.no-scrollbar)::-webkit-scrollbar-button:increment,
+*:not(.no-scrollbar)::-webkit-scrollbar-button:vertical,
+*:not(.no-scrollbar)::-webkit-scrollbar-button:horizontal {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+*:not(.no-scrollbar)::-webkit-scrollbar-track {
+  background: #ede9fe;
+  border-radius: 9999px;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+*:not(.no-scrollbar)::-webkit-scrollbar-thumb {
+  background-color: #6852ec;
+  border-radius: 9999px;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+*:not(.no-scrollbar)::-webkit-scrollbar-thumb:hover {
+  background-color: #543de2;
+}
+
+html::-webkit-scrollbar-corner,
+body::-webkit-scrollbar-corner,
+*:not(.no-scrollbar)::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Custom Sleek Scrollbar matching sidebar design */
 .custom-sidebar-scrollbar::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
+  height: 5px;
 }
 .custom-sidebar-scrollbar::-webkit-scrollbar-track {
-  background: #E8EAEF;
+  background: #e8eaef;
   border-radius: 9999px;
 }
 .custom-sidebar-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #71737D;
+  background-color: #71737d;
   border-radius: 9999px;
 }
 .custom-sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: #52545F;
+  background-color: #52545f;
 }
 
-/* Hide native horizontal scrollbars cleanly for custom slide indicator tracks */
+/* Hide native scrollbars cleanly for custom slide/scroll indicator tracks */
 .no-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -51,29 +134,26 @@ body {
 
 .slide-indicator-thumb {
   transition:
-    width 240ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    scale 260ms cubic-bezier(0.22, 1.28, 0.36, 1);
+    width 240ms var(--ease-out),
+    background-color 200ms var(--ease-out),
+    box-shadow 200ms var(--ease-out),
+    scale 240ms var(--ease-out);
   will-change: transform, scale, width;
 }
 
 .vertical-scroll-thumb {
   transition:
-    height 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 200ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1),
-    scale 220ms cubic-bezier(0.22, 1.28, 0.36, 1);
+    height 180ms var(--ease-out),
+    background-color 200ms var(--ease-out),
+    box-shadow 200ms var(--ease-out),
+    scale 200ms var(--ease-out);
   will-change: transform, scale, height;
 }
 
 /* Floating Pill Vertical Scrollbar Variants (CSS Utility) */
-.ui-scrollbar-violet {
-  scrollbar-width: thin;
-  scrollbar-color: #6852ec #ede9fe;
-}
 .ui-scrollbar-violet::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
+  height: 5px;
 }
 .ui-scrollbar-violet::-webkit-scrollbar-track {
   background: #ede9fe;
@@ -87,12 +167,9 @@ body {
   background-color: #543de2;
 }
 
-.ui-scrollbar-rose {
-  scrollbar-width: thin;
-  scrollbar-color: #ee2e65 #fef1f5;
-}
 .ui-scrollbar-rose::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
+  height: 5px;
 }
 .ui-scrollbar-rose::-webkit-scrollbar-track {
   background: #fef1f5;
@@ -106,12 +183,9 @@ body {
   background-color: #c11448;
 }
 
-.ui-scrollbar-dark {
-  scrollbar-width: thin;
-  scrollbar-color: #1c1d21 #eaecef;
-}
 .ui-scrollbar-dark::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
+  height: 5px;
 }
 .ui-scrollbar-dark::-webkit-scrollbar-track {
   background: #eaecef;
@@ -125,6 +199,32 @@ body {
   background-color: #000000;
 }
 
+/* Fallback ONLY for engines without ::-webkit-scrollbar (e.g. Firefox) so Chromium keeps pill capsules without triangle arrows */
+@supports not selector(::-webkit-scrollbar) {
+  html,
+  body,
+  *:not(.no-scrollbar) {
+    scrollbar-width: thin;
+    scrollbar-color: #6852ec #ede9fe;
+  }
+  .custom-sidebar-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #71737d #e8eaef;
+  }
+  .ui-scrollbar-violet {
+    scrollbar-width: thin;
+    scrollbar-color: #6852ec #ede9fe;
+  }
+  .ui-scrollbar-rose {
+    scrollbar-width: thin;
+    scrollbar-color: #ee2e65 #fef1f5;
+  }
+  .ui-scrollbar-dark {
+    scrollbar-width: thin;
+    scrollbar-color: #1c1d21 #eaecef;
+  }
+}
+
 /* ==========================================================================
    UI Kit Motion & Micro-Interaction Primitives
    Fluid exponential deceleration & soft damped springs using compositor-only
@@ -135,8 +235,6 @@ body {
 :root {
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-fluid: cubic-bezier(0.23, 1, 0.32, 1);
-  --ease-spring: cubic-bezier(0.22, 1.24, 0.36, 1);
-  --ease-spring-crisp: cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
 @keyframes ui-fade {
@@ -152,11 +250,13 @@ body {
   from {
     opacity: 0;
     translate: 0 12px;
+    scale: 0.95;
     filter: blur(4px);
   }
   to {
     opacity: 1;
     translate: 0 0;
+    scale: 1;
     filter: blur(0px);
   }
 }
@@ -165,8 +265,8 @@ body {
   from {
     opacity: 0;
     translate: 0 10px;
-    scale: 0.992;
-    filter: blur(3px);
+    scale: 0.95;
+    filter: blur(4px);
   }
   to {
     opacity: 1;
@@ -291,8 +391,8 @@ body {
   }
   100% {
     opacity: 0;
-    translate: 0 20px;
-    scale: 0.94 0.78;
+    translate: 0 16px;
+    scale: 0.95;
     filter: blur(3px);
   }
 }
@@ -418,11 +518,11 @@ body {
 
 @keyframes ui-check {
   0% {
-    scale: 0.85;
+    scale: 0.95;
     opacity: 0;
   }
   65% {
-    scale: 1.08;
+    scale: 1.06;
     opacity: 1;
   }
   100% {
@@ -431,25 +531,16 @@ body {
   }
 }
 
-@keyframes demo-scale-zero {
-  from {
-    opacity: 0;
-    scale: 0;
-  }
-  to {
-    opacity: 1;
-    scale: 1;
-  }
-}
-
 @keyframes demo-scale-95 {
   from {
     opacity: 0;
     scale: 0.95;
+    filter: blur(2px);
   }
   to {
     opacity: 1;
     scale: 1;
+    filter: blur(0px);
   }
 }
 
@@ -480,6 +571,21 @@ body {
   }
 }
 
+@keyframes ui-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.ui-skeleton-shimmer {
+  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 37%, #f3f4f6 63%);
+  background-size: 200% 100%;
+  animation: ui-shimmer 1.35s var(--ease-out) infinite;
+}
+
 .animate-ui-fade {
   animation: ui-fade 200ms var(--ease-out) both;
 }
@@ -499,7 +605,7 @@ body {
   animation: ui-sheet-item 200ms var(--ease-out) both;
 }
 .animate-menu-fold-up > *:nth-child(2) {
-  animation-delay: 25ms;
+  animation-delay: 45ms;
 }
 
 .animate-menu-fold-down {
@@ -509,11 +615,11 @@ body {
 }
 
 .animate-ui-page {
-  animation: ui-page 260ms var(--ease-out) both;
+  animation: ui-page 240ms var(--ease-out) both;
 }
 
 .animate-bottom-sheet {
-  animation: bottom-sheet-mobile 280ms var(--ease-out) both;
+  animation: bottom-sheet-mobile 260ms var(--ease-out) both;
   will-change: transform, translate, opacity;
 }
 
@@ -530,23 +636,23 @@ body {
 
 .animate-bottom-sheet > *:not([data-sheet-handle="true"]),
 .animate-modal-sheet > *:not([data-sheet-handle="true"]) {
-  animation: ui-sheet-item 220ms var(--ease-out) both;
+  animation: ui-sheet-item 200ms var(--ease-out) both;
 }
 .animate-bottom-sheet > *:nth-child(2):not([data-sheet-handle="true"]),
 .animate-modal-sheet > *:nth-child(2):not([data-sheet-handle="true"]) {
-  animation-delay: 20ms;
+  animation-delay: 45ms;
 }
 .animate-bottom-sheet > *:nth-child(3):not([data-sheet-handle="true"]),
 .animate-modal-sheet > *:nth-child(3):not([data-sheet-handle="true"]) {
-  animation-delay: 40ms;
+  animation-delay: 90ms;
 }
 .animate-bottom-sheet > *:nth-child(4):not([data-sheet-handle="true"]),
 .animate-modal-sheet > *:nth-child(4):not([data-sheet-handle="true"]) {
-  animation-delay: 60ms;
+  animation-delay: 135ms;
 }
 .animate-bottom-sheet > *:nth-child(n + 5):not([data-sheet-handle="true"]),
 .animate-modal-sheet > *:nth-child(n + 5):not([data-sheet-handle="true"]) {
-  animation-delay: 80ms;
+  animation-delay: 180ms;
 }
 
 /* Modal sheet background depth pull-back */
@@ -607,52 +713,59 @@ body:has([data-modal-sheet-backdrop="true"]:not([data-closing="true"])) .app-she
 }
 
 .animate-ui-check {
-  animation: ui-check 220ms var(--ease-spring-crisp) both;
+  animation: ui-check 200ms var(--ease-out) both;
 }
 
 .animate-ui-shake {
-  animation: ui-shake 280ms var(--ease-out) both;
+  animation: ui-shake 260ms var(--ease-out) both;
 }
 
 .animate-ui-stripes {
   animation: ui-stripes 0.85s linear infinite;
 }
 
-/* Staggered Section Cascade on Component Switch (sub-300ms) */
+/* Staggered Own-Beat Section Cascade (+45ms/beat, sub-300ms) with Sensory Blur & scale(0.95) */
 .ui-stagger > * {
-  animation: ui-section-enter 240ms var(--ease-out) both;
+  animation: ui-section-enter 220ms var(--ease-out) both;
 }
 .ui-stagger > *:nth-child(2) {
-  animation-delay: 30ms;
+  animation-delay: 45ms;
 }
 .ui-stagger > *:nth-child(3) {
-  animation-delay: 60ms;
-}
-.ui-stagger > *:nth-child(4) {
   animation-delay: 90ms;
 }
+.ui-stagger > *:nth-child(4) {
+  animation-delay: 135ms;
+}
 .ui-stagger > *:nth-child(5) {
-  animation-delay: 120ms;
+  animation-delay: 180ms;
 }
 .ui-stagger > *:nth-child(n + 6) {
-  animation-delay: 145ms;
+  animation-delay: 225ms;
 }
 
-/* Global Baseline Silky Motion for all UI Kit actionable elements */
+/* Global Baseline Silky Motion & Zero-Jump Tactile Press (Emil Kowalski 200ms ease-out) */
+#root button,
+#root [role="button"],
+#root a[href],
+#root summary,
 .ui-kit-root button,
 .ui-kit-root [role="button"],
 .ui-kit-root a[href],
 .ui-kit-root summary {
   transition-property: color, background-color, border-color, box-shadow, opacity, scale, translate, transform, filter;
-  transition-duration: 180ms;
+  transition-duration: 200ms;
   transition-timing-function: var(--ease-out);
 }
 
+#root button:not(:disabled):not(.no-press):active,
+#root [role="button"]:not([aria-disabled="true"]):not(.no-press):active,
+#root a[href]:not(.no-press):active,
 .ui-kit-root button:not(:disabled):not(.no-press):active,
 .ui-kit-root [role="button"]:not([aria-disabled="true"]):not(.no-press):active,
 .ui-kit-root a[href]:not(.no-press):active {
-  scale: 0.965;
-  transition-duration: 90ms;
+  scale: 0.97;
+  transition-duration: 85ms;
 }
 
 .ui-kit-root input[type="checkbox"]:not(:disabled),
@@ -662,13 +775,13 @@ body:has([data-modal-sheet-backdrop="true"]:not([data-closing="true"])) .app-she
 
 .ui-kit-root input[type="checkbox"]:not(:disabled):active,
 .ui-kit-root input[type="radio"]:not(:disabled):active {
-  scale: 0.9;
+  scale: 0.95;
   transition-duration: 80ms;
 }
 
 .ui-kit-root input[type="checkbox"]:not(:disabled):checked,
 .ui-kit-root input[type="radio"]:not(:disabled):checked {
-  animation: ui-check 200ms var(--ease-spring-crisp);
+  animation: ui-check 200ms var(--ease-out);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -697,6 +810,7 @@ body:has([data-modal-sheet-backdrop="true"]:not([data-closing="true"])) .app-she
   .animate-ui-check,
   .animate-ui-shake,
   .animate-ui-stripes,
+  .ui-skeleton-shimmer,
   .ui-stagger > * {
     animation: none !important;
     filter: none !important;
@@ -710,6 +824,9 @@ body:has([data-modal-sheet-backdrop="true"]:not([data-closing="true"])) .app-she
     filter: none !important;
   }
 
+  #root *,
+  #root *::before,
+  #root *::after,
   .ui-kit-root *,
   .ui-kit-root *::before,
   .ui-kit-root *::after {

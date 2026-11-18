@@ -23,12 +23,12 @@ function MainLayout() {
   };
 
   return (
-    <div className="min-h-screen md:h-screen md:overflow-hidden bg-[#E8E9F0] p-0 sm:p-3 md:p-5 font-sans text-[#1C1D21] flex justify-center items-stretch selection:bg-[#D6D4FF] selection:text-[#1C1D21]">
+    <div className="min-h-screen md:h-screen md:overflow-hidden bg-[#E8E9F0] p-2.5 sm:p-3.5 md:p-4 lg:p-5 font-sans text-[#1C1D21] flex justify-center items-stretch selection:bg-[#D6D4FF] selection:text-[#1C1D21]">
       {/* Main Container Shell */}
-      <div className="app-shell-container w-full max-w-[1440px] md:h-full bg-gradient-to-br from-[#F1EFFE] via-[#F8F9FC] to-[#ECF8F2] sm:rounded-[28px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] border border-white/80 flex overflow-hidden relative min-h-0">
+      <div className="app-shell-container w-full md:h-full bg-gradient-to-br from-[#F1EFFE] via-[#F8F9FC] to-[#ECF8F2] rounded-[22px] sm:rounded-[26px] md:rounded-[28px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] border border-white/80 flex overflow-hidden relative min-w-0 min-h-0">
         <Sidebar />
 
-        <main className="flex-1 bg-white sm:m-2.5 sm:rounded-[24px] shadow-[0_2px_20px_rgba(0,0,0,0.02)] border border-black/[0.03] flex flex-col min-w-0 min-h-0 overflow-hidden pb-20 md:pb-0">
+        <main className="flex-1 bg-white m-1.5 sm:m-2.5 rounded-[18px] sm:rounded-[24px] shadow-[0_2px_20px_rgba(0,0,0,0.02)] border border-black/[0.12] flex flex-col min-w-0 min-h-0 overflow-hidden pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))] md:pb-0">
           <Header />
 
           <ElasticPullToRefresh onRefresh={handleWorkspaceRefresh}>

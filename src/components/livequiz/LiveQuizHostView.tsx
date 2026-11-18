@@ -688,7 +688,7 @@ export const LiveQuizHostView: React.FC<LiveQuizHostViewProps> = ({
                       </div>
                       <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
                         <div
-                          className="h-full rounded-full bg-[#00C985] transition-all duration-300"
+                          className="h-full rounded-full bg-[#00C985] transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
                           style={{ width: `${overallAccuracy}%` }}
                         />
                       </div>
@@ -718,7 +718,7 @@ export const LiveQuizHostView: React.FC<LiveQuizHostViewProps> = ({
                           </div>
                           <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
                             <div
-                              className="h-full rounded-full bg-[#60A5FA] transition-all duration-300"
+                              className="h-full rounded-full bg-[#60A5FA] transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
                               style={{ width: `${completionPct}%` }}
                             />
                           </div>
@@ -897,7 +897,7 @@ export const LiveQuizHostView: React.FC<LiveQuizHostViewProps> = ({
 
                               <div className="h-2 rounded-full bg-white/10 overflow-hidden">
                                 <div
-                                  className="h-full rounded-full bg-gradient-to-r from-[#8854C0] via-[#A855F7] to-[#00C985] transition-all duration-300"
+                                  className="h-full rounded-full bg-gradient-to-r from-[#8854C0] via-[#A855F7] to-[#00C985] transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
                                   style={{ width: `${p.score > 0 ? scoreBarWidth : pct}%` }}
                                 />
                               </div>
@@ -959,7 +959,7 @@ export const LiveQuizHostView: React.FC<LiveQuizHostViewProps> = ({
                             <div className="flex items-center gap-2.5">
                               <div className="flex-1 h-1.5 rounded-full bg-white/10 overflow-hidden">
                                 <div
-                                  className={`h-full rounded-full transition-all duration-300 ${
+                                  className={`h-full rounded-full transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
                                     accuracy >= 70
                                       ? 'bg-[#00C985]'
                                       : accuracy >= 40
@@ -1132,7 +1132,7 @@ export const LiveQuizHostView: React.FC<LiveQuizHostViewProps> = ({
 
                           <div className="mt-3 h-1.5 rounded-full bg-black/20 overflow-hidden">
                             <div
-                              className="h-full bg-white/85 rounded-full transition-all duration-300"
+                              className="h-full bg-white/85 rounded-full transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
                               style={{ width: `${votePct}%` }}
                             />
                           </div>
@@ -1275,7 +1275,7 @@ export const LiveQuizHostView: React.FC<LiveQuizHostViewProps> = ({
                     <div className="flex items-center gap-2.5">
                       <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
                         <div
-                          className={`h-full rounded-full transition-all duration-300 ${
+                          className={`h-full rounded-full transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
                             qs.accuracyPct >= 70
                               ? 'bg-[#00C985]'
                               : qs.accuracyPct >= 40

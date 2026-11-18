@@ -42,7 +42,7 @@ const ACCENT_TOKENS: Record<
 export const VerticalScrollTrack: React.FC<VerticalScrollTrackProps> = ({
   children,
   className = 'h-72',
-  contentClassName = 'pr-4',
+  contentClassName = 'pr-3.5',
   accent = 'violet',
   railInsetClass = 'top-2 bottom-2 right-1.5',
 }) => {
@@ -205,7 +205,7 @@ export const VerticalScrollTrack: React.FC<VerticalScrollTrackProps> = ({
           aria-valuemin={0}
           aria-valuemax={100}
           onClick={handleRailClick}
-          className={`absolute ${railInsetClass} w-[6px] rounded-full ${token.track} cursor-pointer select-none z-20`}
+          className={`absolute ${railInsetClass} w-[5px] rounded-full ${token.track} cursor-pointer select-none z-20`}
         >
           <div
             onPointerDown={handleThumbPointerDown}

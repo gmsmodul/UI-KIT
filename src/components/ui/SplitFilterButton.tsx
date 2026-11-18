@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronDown, Check, Filter } from 'lucide-react';
+import { playUiMotionSound } from '../../utils/uiMotionSound';
 
 export interface SplitFilterOption {
   value: string;
@@ -116,6 +117,7 @@ export const SplitFilterButton: React.FC<SplitFilterButtonProps> = ({
 
   const handleCycleNext = () => {
     if (options.length <= 1) return;
+    playUiMotionSound('tick');
     const nextOption = options[(activeIndex + 1) % options.length];
     onChange(nextOption.value);
   };
@@ -194,14 +196,19 @@ export const SplitFilterButton: React.FC<SplitFilterButtonProps> = ({
 
         <button
           type="button"
-          onClick={() => setOpen((prev) => !prev)}
+          onClick={() =>
+            setOpen((prev) => {
+              playUiMotionSound(!prev ? 'pop' : 'tick');
+              return !prev;
+            })
+          }
           aria-label={ariaLabel ? `Buka menu ${ariaLabel}` : 'Buka daftar filter'}
           aria-haspopup="listbox"
           aria-expanded={open}
-          className={`inline-flex items-center justify-center px-2.5 transition-colors cursor-pointer ${styles.right}`}
+          className={`inline-flex items-center justify-center px-2.5 transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer ${styles.right}`}
         >
           <ChevronDown
-            className={`w-4 h-4 transition-transform duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            className={`w-4 h-4 transition-transform duration-[180ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
               open ? 'rotate-180' : ''
             }`}
           />
@@ -223,7 +230,7 @@ export const SplitFilterButton: React.FC<SplitFilterButtonProps> = ({
             }}
             className={`${
               coords.openUp ? 'animate-ui-pop-up' : 'animate-ui-pop'
-            } bg-white/95 backdrop-blur-sm rounded-2xl border border-black/[0.08] shadow-[0_16px_38px_-10px_rgba(15,23,42,0.18)] p-1.5 z-[9999] max-h-64 overflow-y-auto space-y-0.5`}
+            } bg-white/95 backdrop-blur-sm rounded-2xl border border-black/[0.14] shadow-[0_16px_38px_-10px_rgba(15,23,42,0.18)] p-1.5 z-[9999] max-h-64 overflow-y-auto space-y-0.5`}
           >
             {options.map((opt) => {
               const isSelected = opt.value === value;
@@ -234,10 +241,11 @@ export const SplitFilterButton: React.FC<SplitFilterButtonProps> = ({
                   role="option"
                   aria-selected={isSelected}
                   onClick={() => {
+                    playUiMotionSound('tick');
                     onChange(opt.value);
                     setOpen(false);
                   }}
-                  className={`w-full text-left px-3 py-2 rounded-xl text-[12.5px] flex items-center justify-between gap-2.5 transition-all duration-150 cursor-pointer ${
+                  className={`w-full text-left px-3 py-2 rounded-xl text-[12.5px] flex items-center justify-between gap-2.5 transition-all duration-[180ms] ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer ${
                     isSelected
                       ? styles.menuActive
                       : 'text-[#1C1D21] hover:bg-[#F4F5F8] font-medium'

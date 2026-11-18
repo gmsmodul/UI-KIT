@@ -269,12 +269,12 @@ export const OverviewPage: React.FC = () => {
                     <div
                       style={{ height: item.att }}
                       title={`Attendance: ${item.att}`}
-                      className="w-3.5 sm:w-5 bg-[#6C5DD3] rounded-t-md transition-all duration-300 hover:opacity-80"
+                      className="w-3.5 sm:w-5 bg-[#6C5DD3] rounded-t-md transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:opacity-80"
                     />
                     <div
                       style={{ height: item.sub }}
                       title={`Submissions: ${item.sub}`}
-                      className="w-3.5 sm:w-5 bg-[#ee2e65] rounded-t-md transition-all duration-300 hover:opacity-85"
+                      className="w-3.5 sm:w-5 bg-[#ee2e65] rounded-t-md transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:opacity-85"
                     />
                   </div>
                   <span className="text-[11.5px] font-medium text-[#6E717A] pb-2">{item.day}</span>

@@ -503,7 +503,7 @@ export const AttendancePage: React.FC = () => {
               ? { height: activeColConfig ? expandedHeight || baseHeight : baseHeight }
               : undefined
           }
-          transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.28, ease: [0.23, 1, 0.32, 1] }}
           className="md:col-span-7 lg:col-span-8 bg-white rounded-2xl border border-black/[0.07] overflow-hidden self-start relative"
         >
           {/* Base 3-Category Grid (always in steady flow so closing never jumps) */}
@@ -575,7 +575,7 @@ export const AttendancePage: React.FC = () => {
                     initial={{ clipPath: activeColConfig.clipFrom }}
                     animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
                     exit={{ clipPath: activeColConfig.clipFrom }}
-                    transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ duration: 0.28, ease: [0.23, 1, 0.32, 1] }}
                     className="absolute inset-x-0 top-0 min-h-full z-10 bg-white flex flex-col w-full"
                   >
                     <div ref={expandedMeasureRef} className="flex flex-col flex-none">
@@ -600,7 +600,7 @@ export const AttendancePage: React.FC = () => {
                           initial={{ left: activeColConfig.headerStartLeft, x: '-50%' }}
                           animate={{ left: '50%', x: '-50%' }}
                           exit={{ left: activeColConfig.headerStartLeft, x: '-50%' }}
-                          transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
+                          transition={{ duration: 0.28, ease: [0.23, 1, 0.32, 1] }}
                           className="absolute inset-y-0 flex items-center gap-2 whitespace-nowrap"
                         >
                           <ActiveIcon className={`w-4 h-4 shrink-0 ${activeColConfig.iconColor}`} />
@@ -624,7 +624,7 @@ export const AttendancePage: React.FC = () => {
                             className="flex select-none"
                             style={{ touchAction: totalSlides > 1 ? 'pan-y' : 'auto' }}
                             animate={{ x: `-${safeSlideIndex * 100}%` }}
-                            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                            transition={{ duration: 0.26, ease: [0.23, 1, 0.32, 1] }}
                             onPanEnd={(_event, info) => {
                               if (totalSlides <= 1) return;
                               if (info.offset.x < -45 || info.velocity.x < -300) {

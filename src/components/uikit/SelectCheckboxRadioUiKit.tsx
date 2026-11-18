@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import {
   Check,
@@ -9,6 +9,8 @@ import {
   Layers,
   Sparkles,
   ShieldCheck,
+  Search,
+  RotateCcw,
 } from 'lucide-react';
 import { UiDocPage, UiDocSection } from './UiDocBlock';
 import { CustomSelect } from '../ui/CustomSelect';
@@ -26,12 +28,15 @@ interface MultiOptionItem {
   label: string;
   meta?: string;
   disabled?: boolean;
+  disabledReason?: string;
+  clearBlockerLabel?: string;
 }
 
 interface PortalCoords {
   top: number;
   left: number;
   width: number;
+  maxHeight: number;
   openUp: boolean;
 }
 
@@ -41,14 +46,12 @@ const MULTI_SUBJECT_OPTIONS: MultiOptionItem[] = [
   { value: 'statistika', label: 'Statistika Terapan', meta: 'Data' },
   { value: 'kimia', label: 'Kimia Organik', meta: 'Praktikum' },
   { value: 'astronomi', label: 'Astronomi Dasar', meta: 'Pilihan' },
-];
-
-const DISABLED_MULTI_OPTIONS: MultiOptionItem[] = [
-  { value: 'ui-tokens', label: 'Design Tokens & Color', meta: 'Tersedia' },
-  { value: 'ui-motion', label: 'Motion & Springs', meta: 'Tersedia' },
-  { value: 'ui-legacy', label: 'Legacy Grid (Arsip)', meta: 'Terkunci', disabled: true },
-  { value: 'ui-mobile', label: 'Mobile Gestures', meta: 'Tersedia' },
-  { value: 'ui-beta', label: 'Experimental VR (Penuh)', meta: 'Penuh', disabled: true },
+  { value: 'aljabar', label: 'Aljabar Linear Matriks', meta: 'Wajib' },
+  { value: 'biologi', label: 'Biologi Molekuler', meta: 'Lab' },
+  { value: 'komputasi', label: 'Algoritma & Komputasi', meta: 'Studio' },
+  { value: 'ekonomi', label: 'Ekonomi Mikro Kuantitatif', meta: 'Pilihan' },
+  { value: 'desain', label: 'Visualisasi Data UI', meta: 'Studio' },
+  { value: 'etika', label: 'Etika Riset Akademik', meta: 'Umum' },
 ];
 
 const TOPIC_ITEMS = [
@@ -57,13 +60,19 @@ const TOPIC_ITEMS = [
   { id: 't3', label: 'Probabilitas & Distribusi' },
 ];
 
-function computePortalCoords(el: HTMLElement | null, itemCount: number): PortalCoords | null {
+function computePortalCoords(
+  el: HTMLElement | null,
+  itemCount: number,
+  extraChrome = 96
+): PortalCoords | null {
   if (!el) return null;
   const rect = el.getBoundingClientRect();
-  const estimatedHeight = Math.min(itemCount * 38 + 16, 260);
-  const spaceBelow = window.innerHeight - rect.bottom;
-  const openUp = spaceBelow < estimatedHeight + 12 && rect.top > estimatedHeight;
-  const width = Math.max(rect.width, 200);
+  const estimatedHeight = Math.min(itemCount * 38 + extraChrome, 310);
+  const spaceBelow = Math.max(0, window.innerHeight - rect.bottom - 12);
+  const spaceAbove = Math.max(0, rect.top - 12);
+  const openUp = spaceBelow < Math.min(estimatedHeight, 220) && spaceAbove > spaceBelow;
+  const maxHeight = Math.max(180, Math.min(310, openUp ? spaceAbove : spaceBelow));
+  const width = Math.max(rect.width, 260);
   let left = rect.left;
   if (left + width > window.innerWidth - 12) {
     left = Math.max(12, window.innerWidth - width - 12);
@@ -74,6 +83,7 @@ function computePortalCoords(el: HTMLElement | null, itemCount: number): PortalC
     top: openUp ? rect.top - 6 : rect.bottom + 6,
     left,
     width,
+    maxHeight,
     openUp,
   };
 }
@@ -83,17 +93,23 @@ export const SelectCheckboxRadioUiKit: React.FC<SelectCheckboxRadioUiKitProps> =
   const [basicVal, setBasicVal] = useState('302');
   const [smVal, setSmVal] = useState('weekly');
   const [pillVal, setPillVal] = useState('all');
+  const [quickPeriodSeg, setQuickPeriodSeg] = useState<'daily' | 'weekly' | 'monthly'>('weekly');
 
   const [multiOpen, setMultiOpen] = useState(false);
+  const [multiSearch, setMultiSearch] = useState('');
   const [multiSelected, setMultiSelected] = useState<string[]>(['kalkulus', 'statistika']);
   const [multiCoords, setMultiCoords] = useState<PortalCoords | null>(null);
   const multiTriggerRef = useRef<HTMLDivElement>(null);
   const multiMenuRef = useRef<HTMLDivElement>(null);
 
   const [disOptVal, setDisOptVal] = useState('302');
+  const [slot304Unlocked, setSlot304Unlocked] = useState(false);
+  const [archive306Unlocked, setArchive306Unlocked] = useState(false);
   const [disAllVal, setDisAllVal] = useState('locked');
   const [disMultiOpen, setDisMultiOpen] = useState(false);
-  const [disMultiSelected, setDisMultiSelected] = useState<string[]>(['ui-tokens', 'ui-legacy']);
+  const [disMultiSelected, setDisMultiSelected] = useState<string[]>(['ui-tokens']);
+  const [legacyUnlocked, setLegacyUnlocked] = useState(false);
+  const [vrSlotUnlocked, setVrSlotUnlocked] = useState(false);
   const [disMultiCoords, setDisMultiCoords] = useState<PortalCoords | null>(null);
   const disMultiTriggerRef = useRef<HTMLButtonElement>(null);
   const disMultiMenuRef = useRef<HTMLDivElement>(null);
@@ -112,15 +128,53 @@ export const SelectCheckboxRadioUiKit: React.FC<SelectCheckboxRadioUiKitProps> =
   const [radDisVal, setRadDisVal] = useState('active-a');
   const [radCardVal, setRadCardVal] = useState('classic');
 
+  const disabledMultiOptions: MultiOptionItem[] = useMemo(
+    () => [
+      { value: 'ui-tokens', label: 'Design Tokens & Color', meta: 'Tersedia' },
+      { value: 'ui-motion', label: 'Motion & Springs', meta: 'Tersedia' },
+      {
+        value: 'ui-legacy',
+        label: 'Legacy Grid (Arsip)',
+        meta: legacyUnlocked ? 'Dipulihkan' : 'Terkunci',
+        disabled: !legacyUnlocked,
+        disabledReason: 'Disembunyikan dari kurikulum Term 2026',
+        clearBlockerLabel: 'Pulihkan',
+      },
+      { value: 'ui-mobile', label: 'Mobile Gestures', meta: 'Tersedia' },
+      {
+        value: 'ui-beta',
+        label: 'Experimental VR Lab',
+        meta: vrSlotUnlocked ? 'Slot terbuka' : 'Penuh',
+        disabled: !vrSlotUnlocked,
+        disabledReason: 'Kuota lab penuh (20/20 kursi)',
+        clearBlockerLabel: 'Tambah slot',
+      },
+    ],
+    [legacyUnlocked, vrSlotUnlocked]
+  );
+
+  const filteredMultiSubjects = useMemo(() => {
+    const q = multiSearch.trim().toLowerCase();
+    if (!q) return MULTI_SUBJECT_OPTIONS;
+    return MULTI_SUBJECT_OPTIONS.filter(
+      (opt) =>
+        opt.label.toLowerCase().includes(q) ||
+        (opt.meta && opt.meta.toLowerCase().includes(q))
+    );
+  }, [multiSearch]);
+
   const updateMultiCoords = useCallback(() => {
-    setMultiCoords(computePortalCoords(multiTriggerRef.current, MULTI_SUBJECT_OPTIONS.length));
+    setMultiCoords(computePortalCoords(multiTriggerRef.current, MULTI_SUBJECT_OPTIONS.length, 108));
   }, []);
 
   const updateDisMultiCoords = useCallback(() => {
-    setDisMultiCoords(computePortalCoords(disMultiTriggerRef.current, DISABLED_MULTI_OPTIONS.length));
-  }, []);
+    setDisMultiCoords(computePortalCoords(disMultiTriggerRef.current, disabledMultiOptions.length, 92));
+  }, [disabledMultiOptions.length]);
 
   useEffect(() => {
+    if (!multiOpen) {
+      setMultiSearch('');
+    }
     if (!multiOpen && !disMultiOpen) return;
     if (multiOpen) updateMultiCoords();
     if (disMultiOpen) updateDisMultiCoords();
@@ -156,8 +210,8 @@ export const SelectCheckboxRadioUiKit: React.FC<SelectCheckboxRadioUiKitProps> =
       ) {
         return;
       }
-      setMultiOpen(false);
-      setDisMultiOpen(false);
+      if (multiOpen) updateMultiCoords();
+      if (disMultiOpen) updateDisMultiCoords();
     };
 
     document.addEventListener('mousedown', onPointerDown);
@@ -233,18 +287,20 @@ export const SelectCheckboxRadioUiKit: React.FC<SelectCheckboxRadioUiKitProps> =
           <UiDocSection
             id="sel-basic"
             title="Basic Select"
-            description="Single-value dropdown standar UI KIT dengan animasi popover, highlight Primary Rose, serta varian ukuran sm, md, dan pill."
-            classesHint="CustomSelect / size='sm' | 'md' / pill={true}"
-            codeSnippet={`<CustomSelect
+            description="Single-value dropdown UI KIT dengan Type-to-Filter otomatis (>= 10 opsi), portal collision-aware, serta alternatif Segmented Control jika opsi kurang dari 5."
+            classesHint="CustomSelect / size='sm' | 'md' / pill={true} / inline segmented (< 5 opsi)"
+            codeSnippet={`// Menu dipakai saat opsi >= 5; bila > 10 otomatis aktif search filter
+<CustomSelect
   value={value}
   onChange={setValue}
   placeholder="Pilih kelas..."
-  options={[
-    { value: '302', label: 'Class 302 — Kalkulus IV' },
-    { value: '303', label: 'Class 303 — Fisika Induksi' },
-    { value: '304', label: 'Class 304 — Seni Rupa Murni' },
-  ]}
-/>`}
+  options={classOptions} // >= 10 opsi otomatis Type-to-Filter
+/>
+
+// Bila opsi < 5, prioritaskan 1-tap Segmented Control:
+<div className="inline-flex rounded-lg border border-gray-300 bg-gray-100 p-0.5">
+  {['Harian', 'Mingguan', 'Bulanan'].map(opt => ...)}
+</div>`}
             actions={
               basicVal ? (
                 <button
@@ -257,59 +313,115 @@ export const SelectCheckboxRadioUiKit: React.FC<SelectCheckboxRadioUiKitProps> =
               ) : null
             }
           >
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-              <div className="space-y-1.5">
-                <label className="font-semibold text-gray-700 block">Default Select (md)</label>
-                <CustomSelect
-                  className="w-full"
-                  value={basicVal}
-                  onChange={setBasicVal}
-                  placeholder="Pilih kelas aktif..."
-                  ariaLabel="Default Select"
-                  options={[
-                    { value: '302', label: 'Class 302 — Kalkulus IV' },
-                    { value: '303', label: 'Class 303 — Fisika Induksi' },
-                    { value: '304', label: 'Class 304 — Seni Rupa Murni' },
-                    { value: '305', label: 'Class 305 — Statistika Data' },
-                  ]}
-                />
-                <p className="text-[11px] text-gray-500">
-                  Terpilih: <span className="font-semibold text-gray-800">{basicVal || 'Belum ada'}</span>
-                </p>
+            <div className="space-y-4 text-xs">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-1.5">
+                  <label className="font-semibold text-gray-700 block">
+                    Default Select (11 opsi · Auto Filter)
+                  </label>
+                  <CustomSelect
+                    className="w-full"
+                    value={basicVal}
+                    onChange={setBasicVal}
+                    placeholder="Pilih kelas aktif..."
+                    ariaLabel="Default Select"
+                    options={[
+                      { value: '302', label: 'Class 302 — Kalkulus IV' },
+                      { value: '303', label: 'Class 303 — Fisika Induksi' },
+                      { value: '304', label: 'Class 304 — Seni Rupa Murni' },
+                      { value: '305', label: 'Class 305 — Statistika Data' },
+                      { value: '306', label: 'Class 306 — Kimia Organik' },
+                      { value: '307', label: 'Class 307 — Astronomi Dasar' },
+                      { value: '308', label: 'Class 308 — Biologi Sel' },
+                      { value: '309', label: 'Class 309 — Algoritma Struktur Data' },
+                      { value: '310', label: 'Class 310 — Ekonomi Makro' },
+                      { value: '311', label: 'Class 311 — Desain Interaksi' },
+                      { value: '312', label: 'Class 312 — Etika Riset' },
+                    ]}
+                  />
+                  <p className="text-[11px] text-gray-500">
+                    Daftar &ge; 10 baris otomatis menampilkan kolom filter di atas menu. Terpilih:{' '}
+                    <span className="font-semibold text-gray-800">{basicVal || 'Belum ada'}</span>
+                  </p>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="font-semibold text-gray-700 block">Compact Select (sm)</label>
+                  <CustomSelect
+                    className="w-full"
+                    size="sm"
+                    value={smVal}
+                    onChange={setSmVal}
+                    ariaLabel="Compact Select"
+                    options={[
+                      { value: 'daily', label: 'Harian' },
+                      { value: 'weekly', label: 'Mingguan' },
+                      { value: 'monthly', label: 'Bulanan' },
+                      { value: 'quarterly', label: 'Triwulan' },
+                      { value: 'semester', label: 'Per Semester' },
+                      { value: 'yearly', label: 'Tahunan' },
+                    ]}
+                  />
+                  <p className="text-[11px] text-gray-500">Tinggi ringkas h-8 untuk toolbar tabel.</p>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="font-semibold text-gray-700 block">Pill Select (rounded-full)</label>
+                  <CustomSelect
+                    className="w-full"
+                    pill
+                    value={pillVal}
+                    onChange={setPillVal}
+                    ariaLabel="Pill Select"
+                    options={[
+                      { value: 'all', label: 'Semua Status' },
+                      { value: 'published', label: 'Terpublikasi' },
+                      { value: 'review', label: 'Menunggu Tinjauan' },
+                      { value: 'scheduled', label: 'Terjadwal Rilis' },
+                      { value: 'draft', label: 'Draf Internal' },
+                      { value: 'archived', label: 'Diarsipkan' },
+                    ]}
+                  />
+                  <p className="text-[11px] text-gray-500">Bentuk kapsul serasi dengan tombol aksi h-9.</p>
+                </div>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="font-semibold text-gray-700 block">Compact Select (sm)</label>
-                <CustomSelect
-                  className="w-full"
-                  size="sm"
-                  value={smVal}
-                  onChange={setSmVal}
-                  ariaLabel="Compact Select"
-                  options={[
-                    { value: 'daily', label: 'Harian' },
-                    { value: 'weekly', label: 'Mingguan' },
-                    { value: 'monthly', label: 'Bulanan' },
-                  ]}
-                />
-                <p className="text-[11px] text-gray-500">Tinggi ringkas h-8 untuk filter tabel.</p>
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="font-semibold text-gray-700 block">Pill Select (rounded-full)</label>
-                <CustomSelect
-                  className="w-full"
-                  pill
-                  value={pillVal}
-                  onChange={setPillVal}
-                  ariaLabel="Pill Select"
-                  options={[
-                    { value: 'all', label: 'Semua Status' },
-                    { value: 'published', label: 'Terpublikasi' },
-                    { value: 'draft', label: 'Draf Internal' },
-                  ]}
-                />
-                <p className="text-[11px] text-gray-500">Bentuk kapsul serasi dengan tombol aksi h-9.</p>
+              <div className="rounded-xl border border-gray-300/90 bg-gray-50/70 p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="space-y-0.5">
+                  <div className="font-semibold text-gray-900">Aturan 06 · Tidak Perlu Menu Jika Opsi &lt; 5</div>
+                  <p className="text-[11px] text-gray-600">
+                    Untuk 3 pilihan sederhana, tampilkan langsung sebagai Segmented Control agar selesai dalam 1 ketukan tanpa membuka menu.
+                  </p>
+                </div>
+                <div
+                  role="radiogroup"
+                  aria-label="Rentang Laporan Cepat"
+                  className="inline-flex items-center rounded-lg border border-gray-300 bg-white p-0.5 shrink-0"
+                >
+                  {(
+                    [
+                      { id: 'daily', label: 'Harian' },
+                      { id: 'weekly', label: 'Mingguan' },
+                      { id: 'monthly', label: 'Bulanan' },
+                    ] as const
+                  ).map((item) => {
+                    const active = quickPeriodSeg === item.id;
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => setQuickPeriodSeg(item.id)}
+                        className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+                          active
+                            ? 'bg-gray-900 text-white'
+                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                        }`}
+                      >
+                        {item.label}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </UiDocSection>
@@ -318,17 +430,21 @@ export const SelectCheckboxRadioUiKit: React.FC<SelectCheckboxRadioUiKitProps> =
           <UiDocSection
             id="sel-multiple"
             title="Multiple Select"
-            description="Pemilih banyak opsi sekaligus dengan tag chip yang dapat dihapus langsung, indikator jumlah aktif, dan daftar centang animatif."
-            classesHint="Multi-select trigger + pill tags + createPortal + animate-ui-pop + animate-ui-check"
+            description="Multi-select dengan pencarian cepat (>10 opsi), tetap terbuka saat memilih (stay open on pick), hitungan live, dan tombol Done eksplisit di footer."
+            classesHint="Stay open on pick + sticky search + checkbox rows + sticky footer (live count & Done CTA)"
             codeSnippet={`<div className="relative">
-  <div onClick={() => setOpen(!open)} className="w-full min-h-10 rounded-xl border px-3 py-1.5 flex flex-wrap gap-1.5">
-    {selected.map(item => (
-      <span key={item} className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#FEF1F5] text-[#9D113C] text-[11px] font-semibold">
-        {item} <X className="w-3 h-3" />
-      </span>
-    ))}
-  </div>
-  {open && createPortal(<div className="animate-ui-pop ...">{/* checkbox option rows */}</div>, document.body)}
+  <TriggerChips selected={selected} onToggle={() => setOpen(!open)} />
+  {open && createPortal(
+    <div className="flex flex-col rounded-xl border bg-white shadow-xl">
+      <SearchHeader value={q} onChange={setQ} />
+      <div className="overflow-y-auto p-1.5">{/* Stay open on pick */}</div>
+      <div className="border-t p-2 flex items-center justify-between">
+        <span className="tabular-nums">{selected.length} dipilih</span>
+        <button onClick={() => setOpen(false)}>Done</button>
+      </div>
+    </div>,
+    document.body
+  )}
 </div>`}
             actions={
               <div className="flex items-center gap-1.5">
@@ -366,12 +482,12 @@ export const SelectCheckboxRadioUiKit: React.FC<SelectCheckboxRadioUiKitProps> =
                   className={`min-h-10 w-full rounded-xl border px-3 py-1.5 flex items-center justify-between gap-2 bg-white transition-all duration-200 cursor-pointer ${
                     multiOpen
                       ? 'border-[#ee2e65] ring-2 ring-[#ee2e65]/15'
-                      : 'border-gray-200 hover:border-gray-300'
+                      : 'border-gray-300 hover:border-gray-400'
                   }`}
                 >
                   <div className="flex flex-wrap items-center gap-1.5 min-w-0 flex-1">
                     {multiSelected.length === 0 ? (
-                      <span className="text-gray-400">Pilih satu atau lebih mata pelajaran...</span>
+                      <span className="text-gray-500">Pilih satu atau lebih mata pelajaran...</span>
                     ) : (
                       multiSelected.map((val) => {
                         const opt = MULTI_SUBJECT_OPTIONS.find((o) => o.value === val);
@@ -397,11 +513,11 @@ export const SelectCheckboxRadioUiKit: React.FC<SelectCheckboxRadioUiKitProps> =
                     )}
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    <span className="px-1.5 py-0.5 rounded-md bg-gray-100 text-gray-600 text-[11px] font-semibold tabular-nums">
+                    <span className="px-1.5 py-0.5 rounded-md bg-gray-100 text-gray-700 text-[11px] font-semibold tabular-nums">
                       {multiSelected.length}
                     </span>
                     <ChevronDown
-                      className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                      className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
                         multiOpen ? 'rotate-180 text-[#ee2e65]' : ''
                       }`}
                     />
@@ -418,45 +534,101 @@ export const SelectCheckboxRadioUiKit: React.FC<SelectCheckboxRadioUiKitProps> =
                         top: multiCoords.top,
                         left: multiCoords.left,
                         width: multiCoords.width,
+                        maxHeight: multiCoords.maxHeight,
                         transform: multiCoords.openUp ? 'translateY(-100%)' : undefined,
                       }}
                       className={`${
                         multiCoords.openUp ? 'animate-ui-pop-up' : 'animate-ui-pop'
-                      } rounded-xl border border-gray-200/90 bg-white/95 backdrop-blur-sm p-1.5 shadow-[0_16px_38px_-10px_rgba(15,23,42,0.16)] z-[9999] max-h-64 overflow-y-auto space-y-0.5`}
+                      } flex flex-col rounded-xl border border-gray-300 bg-white/95 backdrop-blur-sm shadow-[0_16px_38px_-10px_rgba(15,23,42,0.16)] z-[9999] overflow-hidden`}
                     >
-                      {MULTI_SUBJECT_OPTIONS.map((opt) => {
-                        const active = multiSelected.includes(opt.value);
-                        return (
-                          <button
-                            key={opt.value}
-                            type="button"
-                            onClick={() => toggleMultiValue(opt.value)}
-                            className={`w-full px-2.5 py-2 rounded-lg flex items-center justify-between gap-2 text-left text-xs transition-colors cursor-pointer ${
-                              active
-                                ? 'bg-[#FEF1F5] text-[#9D113C] font-semibold'
-                                : 'text-gray-700 hover:bg-gray-50 font-medium'
-                            }`}
-                          >
-                            <div className="flex items-center gap-2.5 min-w-0">
-                              <span
-                                className={`w-4 h-4 rounded flex items-center justify-center border transition-colors shrink-0 ${
+                      <div className="p-1.5 border-b border-gray-200 bg-white shrink-0">
+                        <div className="relative flex items-center">
+                          <Search className="w-3.5 h-3.5 text-gray-500 absolute left-2.5 pointer-events-none" />
+                          <input
+                            type="text"
+                            value={multiSearch}
+                            onChange={(e) => setMultiSearch(e.target.value)}
+                            placeholder="Ketik untuk filter mata pelajaran..."
+                            className="w-full h-8 pl-8 pr-7 rounded-lg border border-gray-300 bg-gray-50/70 text-xs text-gray-800 placeholder:text-gray-500 focus:bg-white focus:outline-none focus:border-primary-500"
+                          />
+                          {multiSearch && (
+                            <button
+                              type="button"
+                              onClick={() => setMultiSearch('')}
+                              aria-label="Hapus pencarian"
+                              className="absolute right-1.5 p-1 rounded text-gray-500 hover:text-gray-800 cursor-pointer"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="p-1.5 overflow-y-auto space-y-0.5 flex-1">
+                        {filteredMultiSubjects.length === 0 ? (
+                          <div className="px-3 py-4 text-center text-xs text-gray-500">
+                            Tidak ada mata pelajaran yang cocok.
+                          </div>
+                        ) : (
+                          filteredMultiSubjects.map((opt) => {
+                            const active = multiSelected.includes(opt.value);
+                            return (
+                              <button
+                                key={opt.value}
+                                type="button"
+                                onClick={() => toggleMultiValue(opt.value)}
+                                className={`w-full px-2.5 py-2 rounded-lg flex items-center justify-between gap-2 text-left text-xs transition-colors cursor-pointer ${
                                   active
-                                    ? 'bg-[#ee2e65] border-[#ee2e65] text-white'
-                                    : 'bg-white border-gray-300'
+                                    ? 'bg-[#FEF1F5] text-[#9D113C] font-semibold'
+                                    : 'text-gray-700 hover:bg-gray-50 font-medium'
                                 }`}
                               >
-                                {active && <Check className="w-3 h-3 animate-ui-check" />}
-                              </span>
-                              <span className="truncate">{opt.label}</span>
-                            </div>
-                            {opt.meta && (
-                              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/80 text-gray-500 border border-gray-200/80 shrink-0">
-                                {opt.meta}
-                              </span>
-                            )}
-                          </button>
-                        );
-                      })}
+                                <div className="flex items-center gap-2.5 min-w-0">
+                                  <span
+                                    className={`w-4 h-4 rounded flex items-center justify-center border transition-colors shrink-0 ${
+                                      active
+                                        ? 'bg-[#ee2e65] border-[#ee2e65] text-white'
+                                        : 'bg-white border-gray-300'
+                                    }`}
+                                  >
+                                    {active && <Check className="w-3 h-3 animate-ui-check" />}
+                                  </span>
+                                  <span className="truncate">{opt.label}</span>
+                                </div>
+                                {opt.meta && (
+                                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/80 text-gray-600 border border-gray-300/80 shrink-0">
+                                    {opt.meta}
+                                  </span>
+                                )}
+                              </button>
+                            );
+                          })
+                        )}
+                      </div>
+
+                      <div className="px-2.5 py-2 border-t border-gray-200 bg-gray-50/90 flex items-center justify-between gap-2 shrink-0">
+                        <div className="flex items-center gap-2 text-[11px]">
+                          <span className="font-semibold text-gray-800 tabular-nums">
+                            {multiSelected.length} dipilih
+                          </span>
+                          {multiSelected.length > 0 && (
+                            <button
+                              type="button"
+                              onClick={() => setMultiSelected([])}
+                              className="text-gray-500 hover:text-gray-900 underline cursor-pointer"
+                            >
+                              Kosongkan
+                            </button>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setMultiOpen(false)}
+                          className="px-3 py-1 rounded-lg bg-gray-900 hover:bg-black text-white text-[11px] font-semibold whitespace-nowrap shrink-0 cursor-pointer transition-colors"
+                        >
+                          Done
+                        </button>
+                      </div>
                     </div>,
                     document.body
                   )}
@@ -474,55 +646,90 @@ export const SelectCheckboxRadioUiKit: React.FC<SelectCheckboxRadioUiKitProps> =
           {/* 3. Disabling Option */}
           <UiDocSection
             id="sel-disabled"
-            title="Disabling Option"
-            description="Tiga skenario penonaktifan: menonaktifkan opsi tertentu di dalam menu, menonaktifkan seluruh kontrol Select, dan mengunci opsi pada Multiple Select."
-            classesHint="options: [{ value, label, disabled: true }] | <CustomSelect disabled />"
-            codeSnippet={`// 1. Disabling specific options inside Select
-<CustomSelect
+            title="Disabling Option (Reasons, Not Grey)"
+            description="Menampilkan alasan pemblokiran secara inline beserta tombol aksi 1-klik untuk membuka blokir (bukan sekadar teks abu-abu tanpa konteks)."
+            classesHint="options: [{ value, label, disabled, disabledReason, clearBlockerLabel, onClearBlocker }]"
+            actions={
+              slot304Unlocked || archive306Unlocked || legacyUnlocked || vrSlotUnlocked ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSlot304Unlocked(false);
+                    setArchive306Unlocked(false);
+                    setLegacyUnlocked(false);
+                    setVrSlotUnlocked(false);
+                  }}
+                  className={ACTION_BTN_SECONDARY}
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>Reset Blocker</span>
+                </button>
+              ) : null
+            }
+            codeSnippet={`<CustomSelect
   value={val}
   onChange={setVal}
   options={[
     { value: '302', label: 'Class 302 — Tersedia' },
-    { value: '304', label: 'Class 304 — Penuh (Disabled)', disabled: true },
-    { value: '306', label: 'Class 306 — Arsip (Disabled)', disabled: true },
+    {
+      value: '304',
+      label: 'Class 304 — Seni Rupa',
+      disabled: !slotUnlocked,
+      disabledReason: 'Kuota penuh (30/30 kursi)',
+      clearBlockerLabel: 'Tambah 5 slot',
+      onClearBlocker: () => setSlotUnlocked(true),
+    },
   ]}
-/>
-
-// 2. Disabling entire Select control
-<CustomSelect disabled value="locked" onChange={() => {}} options={...} />`}
+/>`}
           >
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 text-xs">
-              {/* Specific Disabled Options */}
-              <div className="rounded-xl border border-gray-200/80 bg-gray-50/50 p-3.5 space-y-2">
+              {/* Specific Disabled Options with Inline Reasons + 1-click fix */}
+              <div className="rounded-xl border border-gray-300/90 bg-gray-50/50 p-3.5 space-y-2">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="font-semibold text-gray-800">Option-Level Disabled</span>
-                  <span className="px-2 py-0.5 rounded-full bg-gray-200/70 text-gray-600 text-[10px] font-semibold">
-                    disabled: true
+                  <span className="font-semibold text-gray-800">Option + Inline Blocker</span>
+                  <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-semibold">
+                    Reasons + Fix
                   </span>
                 </div>
                 <CustomSelect
                   className="w-full"
                   value={disOptVal}
                   onChange={setDisOptVal}
-                  ariaLabel="Select with Disabled Options"
+                  ariaLabel="Select with Blocker Reasons"
                   options={[
                     { value: '302', label: 'Class 302 — Tersedia' },
                     { value: '303', label: 'Class 303 — Tersedia' },
-                    { value: '304', label: 'Class 304 — Penuh (Disabled)', disabled: true },
+                    {
+                      value: '304',
+                      label: 'Class 304 — Seni Rupa',
+                      meta: slot304Unlocked ? '+5 slot' : undefined,
+                      disabled: !slot304Unlocked,
+                      disabledReason: 'Kuota penuh (30/30 kursi)',
+                      clearBlockerLabel: 'Tambah 5 slot',
+                      onClearBlocker: () => setSlot304Unlocked(true),
+                    },
                     { value: '305', label: 'Class 305 — Tersedia' },
-                    { value: '306', label: 'Class 306 — Arsip (Disabled)', disabled: true },
+                    {
+                      value: '306',
+                      label: 'Class 306 — Arsip Term Lalu',
+                      meta: archive306Unlocked ? 'Aktif' : undefined,
+                      disabled: !archive306Unlocked,
+                      disabledReason: 'Arsip semester 2025 belum diaktifkan',
+                      clearBlockerLabel: 'Aktifkan',
+                      onClearBlocker: () => setArchive306Unlocked(true),
+                    },
                   ]}
                 />
                 <p className="text-[11px] text-gray-500">
-                  Opsi Class 304 &amp; Class 306 tidak dapat diklik (cursor-not-allowed).
+                  Klik buka menu untuk melihat alasan blokir &amp; tombol pembuka langsung.
                 </p>
               </div>
 
               {/* Whole Select Disabled */}
-              <div className="rounded-xl border border-gray-200/80 bg-gray-50/50 p-3.5 space-y-2">
+              <div className="rounded-xl border border-gray-300/90 bg-gray-50/50 p-3.5 space-y-2">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="font-semibold text-gray-800">Control-Level Disabled</span>
-                  <span className="px-2 py-0.5 rounded-full bg-gray-200/70 text-gray-600 text-[10px] font-semibold">
+                  <span className="font-semibold text-gray-800">Control-Level Lock</span>
+                  <span className="px-2 py-0.5 rounded-full bg-gray-200/70 text-gray-700 text-[10px] font-semibold">
                     Read-only lock
                   </span>
                 </div>
@@ -537,15 +744,15 @@ export const SelectCheckboxRadioUiKit: React.FC<SelectCheckboxRadioUiKitProps> =
                   ]}
                 />
                 <p className="text-[11px] text-gray-500">
-                  Seluruh trigger memakai bg-gray-100 text-gray-400 dan menu tidak terbuka.
+                  Alasan kunci: periode akademik sudah disahkan oleh admin pusat.
                 </p>
               </div>
 
-              {/* Multiple Select with Disabled Option */}
-              <div className="rounded-xl border border-gray-200/80 bg-gray-50/50 p-3.5 space-y-2">
+              {/* Multiple Select with Disabled Option + Inline Resolver + Done CTA */}
+              <div className="rounded-xl border border-gray-300/90 bg-gray-50/50 p-3.5 space-y-2">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="font-semibold text-gray-800">Multi-Select + Disabled Item</span>
-                  <Lock className="w-3.5 h-3.5 text-gray-400" />
+                  <span className="font-semibold text-gray-800">Multi-Select + Blocker Fix</span>
+                  <Lock className="w-3.5 h-3.5 text-amber-600" />
                 </div>
 
                 <div className="relative">
@@ -553,13 +760,13 @@ export const SelectCheckboxRadioUiKit: React.FC<SelectCheckboxRadioUiKitProps> =
                     ref={disMultiTriggerRef}
                     type="button"
                     onClick={() => setDisMultiOpen((v) => !v)}
-                    className="w-full h-9 px-3 rounded-lg border border-gray-200 bg-white hover:border-gray-300 flex items-center justify-between gap-2 text-left cursor-pointer"
+                    className="w-full h-9 px-3 rounded-lg border border-gray-300 bg-white hover:border-gray-400 flex items-center justify-between gap-2 text-left cursor-pointer"
                   >
-                    <span className="truncate text-gray-700 font-medium">
-                      {disMultiSelected.length} modul dipilih (2 dikunci)
+                    <span className="truncate text-gray-700 font-medium tabular-nums">
+                      {disMultiSelected.length} modul dipilih
                     </span>
                     <ChevronDown
-                      className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${
+                      className={`w-3.5 h-3.5 text-gray-500 transition-transform duration-200 ${
                         disMultiOpen ? 'rotate-180 text-[#ee2e65]' : ''
                       }`}
                     />
@@ -574,59 +781,94 @@ export const SelectCheckboxRadioUiKit: React.FC<SelectCheckboxRadioUiKitProps> =
                           position: 'fixed',
                           top: disMultiCoords.top,
                           left: disMultiCoords.left,
-                          width: disMultiCoords.width,
+                          width: Math.max(disMultiCoords.width, 290),
+                          maxHeight: disMultiCoords.maxHeight,
                           transform: disMultiCoords.openUp ? 'translateY(-100%)' : undefined,
                         }}
                         className={`${
                           disMultiCoords.openUp ? 'animate-ui-pop-up' : 'animate-ui-pop'
-                        } rounded-xl border border-gray-200 bg-white/95 backdrop-blur-sm p-1.5 shadow-[0_16px_38px_-10px_rgba(15,23,42,0.16)] z-[9999] max-h-64 overflow-y-auto space-y-0.5`}
+                        } flex flex-col rounded-xl border border-gray-300 bg-white/95 backdrop-blur-sm shadow-[0_16px_38px_-10px_rgba(15,23,42,0.16)] z-[9999] overflow-hidden`}
                       >
-                        {DISABLED_MULTI_OPTIONS.map((opt) => {
-                          const active = disMultiSelected.includes(opt.value);
-                          return (
-                            <button
-                              key={opt.value}
-                              type="button"
-                              disabled={opt.disabled}
-                              onClick={() => toggleDisMultiValue(opt.value, opt.disabled)}
-                              className={`w-full px-2.5 py-1.5 rounded-lg flex items-center justify-between gap-2 text-left text-xs ${
-                                opt.disabled
-                                  ? 'text-gray-300 cursor-not-allowed bg-gray-50/50'
-                                  : active
-                                  ? 'bg-[#FEF1F5] text-[#9D113C] font-semibold cursor-pointer'
-                                  : 'text-gray-700 hover:bg-gray-50 cursor-pointer'
-                              }`}
-                            >
-                              <div className="flex items-center gap-2 min-w-0">
-                                <span
-                                  className={`w-3.5 h-3.5 rounded flex items-center justify-center border shrink-0 ${
-                                    opt.disabled
-                                      ? 'bg-gray-100 border-gray-200 text-gray-400'
-                                      : active
-                                      ? 'bg-[#ee2e65] border-[#ee2e65] text-white'
-                                      : 'bg-white border-gray-300'
-                                  }`}
+                        <div className="p-1.5 overflow-y-auto space-y-1 flex-1">
+                          {disabledMultiOptions.map((opt) => {
+                            const active = disMultiSelected.includes(opt.value);
+                            if (opt.disabled) {
+                              return (
+                                <div
+                                  key={opt.value}
+                                  className="w-full px-2.5 py-2 rounded-lg bg-gray-50 border border-gray-200/90 flex items-start justify-between gap-2 text-xs"
                                 >
-                                  {opt.disabled ? (
-                                    <Lock className="w-2.5 h-2.5" />
-                                  ) : active ? (
-                                    <Check className="w-2.5 h-2.5 animate-ui-check" />
-                                  ) : null}
-                                </span>
-                                <span className="truncate">{opt.label}</span>
-                              </div>
-                              {opt.meta && (
-                                <span className="text-[10px] text-gray-400 shrink-0">{opt.meta}</span>
-                              )}
-                            </button>
-                          );
-                        })}
+                                  <div className="flex items-start gap-2 min-w-0">
+                                    <Lock className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+                                    <div className="min-w-0">
+                                      <div className="font-semibold text-gray-700 truncate">{opt.label}</div>
+                                      <div className="text-[11px] text-gray-600 leading-snug">
+                                        {opt.disabledReason}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      if (opt.value === 'ui-legacy') setLegacyUnlocked(true);
+                                      if (opt.value === 'ui-beta') setVrSlotUnlocked(true);
+                                    }}
+                                    className="px-2 py-1 rounded-md bg-white hover:bg-primary-50 text-primary-700 border border-primary-300 text-[11px] font-semibold whitespace-nowrap shrink-0 cursor-pointer"
+                                  >
+                                    {opt.clearBlockerLabel}
+                                  </button>
+                                </div>
+                              );
+                            }
+
+                            return (
+                              <button
+                                key={opt.value}
+                                type="button"
+                                onClick={() => toggleDisMultiValue(opt.value, false)}
+                                className={`w-full px-2.5 py-1.5 rounded-lg flex items-center justify-between gap-2 text-left text-xs cursor-pointer ${
+                                  active
+                                    ? 'bg-[#FEF1F5] text-[#9D113C] font-semibold'
+                                    : 'text-gray-700 hover:bg-gray-50'
+                                }`}
+                              >
+                                <div className="flex items-center gap-2 min-w-0">
+                                  <span
+                                    className={`w-3.5 h-3.5 rounded flex items-center justify-center border shrink-0 ${
+                                      active
+                                        ? 'bg-[#ee2e65] border-[#ee2e65] text-white'
+                                        : 'bg-white border-gray-300'
+                                    }`}
+                                  >
+                                    {active && <Check className="w-2.5 h-2.5 animate-ui-check" />}
+                                  </span>
+                                  <span className="truncate">{opt.label}</span>
+                                </div>
+                                {opt.meta && (
+                                  <span className="text-[10px] text-gray-500 shrink-0">{opt.meta}</span>
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <div className="px-2.5 py-1.5 border-t border-gray-200 bg-gray-50 flex items-center justify-between text-[11px] shrink-0">
+                          <span className="text-gray-600 font-semibold tabular-nums">
+                            {disMultiSelected.length} aktif
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setDisMultiOpen(false)}
+                            className="px-2.5 py-1 rounded-md bg-gray-900 hover:bg-black text-white font-semibold cursor-pointer"
+                          >
+                            Done
+                          </button>
+                        </div>
                       </div>,
                       document.body
                     )}
                 </div>
                 <p className="text-[11px] text-gray-500">
-                  Item bertanda gembok tetap terkunci dan tidak dapat diubah pengguna.
+                  Item terkunci menjelaskan penyebabnya dan dapat dibuka 1-klik.
                 </p>
               </div>
             </div>
@@ -664,7 +906,7 @@ export const SelectCheckboxRadioUiKit: React.FC<SelectCheckboxRadioUiKitProps> =
 </label>`}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-              <div className="rounded-xl border border-gray-200/80 bg-gray-50/50 p-4 space-y-3">
+              <div className="rounded-xl border border-gray-300/90 bg-gray-50/50 p-4 space-y-3">
                 <span className="font-semibold text-gray-800 block">Native Tactile Sizing (SM / MD / LG)</span>
                 <label className="flex items-center gap-2.5 cursor-pointer select-none">
                   <input
@@ -695,7 +937,7 @@ export const SelectCheckboxRadioUiKit: React.FC<SelectCheckboxRadioUiKitProps> =
                 </label>
               </div>
 
-              <div className="rounded-xl border border-gray-200/80 bg-gray-50/50 p-4 space-y-3">
+              <div className="rounded-xl border border-gray-300/90 bg-gray-50/50 p-4 space-y-3">
                 <span className="font-semibold text-gray-800 block">Custom Animated Box (.animate-ui-check)</span>
                 {[
                   { label: 'Izinkan unduh PDF materi', state: chkSm, toggle: () => setChkSm((v) => !v) },
@@ -739,8 +981,8 @@ useEffect(() => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
               {/* Parent / Child Indeterminate */}
-              <div className="rounded-xl border border-gray-200/80 bg-white p-4 space-y-2.5">
-                <label className="flex items-center justify-between gap-2 pb-2 border-b border-gray-100 cursor-pointer select-none">
+              <div className="rounded-xl border border-gray-300/90 bg-white p-4 space-y-2.5">
+                <label className="flex items-center justify-between gap-2 pb-2 border-b border-gray-300 cursor-pointer select-none">
                   <div className="flex items-center gap-2.5">
                     <input
                       ref={masterChkRef}
@@ -779,7 +1021,7 @@ useEffect(() => {
               </div>
 
               {/* Disabled Variants */}
-              <div className="rounded-xl border border-gray-200/80 bg-gray-50/70 p-4 space-y-3">
+              <div className="rounded-xl border border-gray-300/90 bg-gray-50/70 p-4 space-y-3">
                 <span className="font-semibold text-gray-800 block">Disabled States</span>
                 <label className="flex items-center gap-2.5 cursor-not-allowed opacity-60 select-none">
                   <input type="checkbox" disabled className="w-4 h-4 rounded cursor-not-allowed" />
@@ -811,8 +1053,8 @@ useEffect(() => {
             id="chk-cards"
             title="Checkbox Card Group"
             description="Kartu pilihan ganda dengan sorotan Primary Rose (#ee2e65) dan tinta lembut (#FEF1F5) saat aktif."
-            classesHint="border-[#ee2e65] bg-[#FEF1F5] / border-gray-200 bg-white"
-            codeSnippet={`<label className={active ? 'border-[#ee2e65] bg-[#FEF1F5]' : 'border-gray-200 bg-white'}>
+            classesHint="border-[#ee2e65] bg-[#FEF1F5] / border-gray-300 bg-white"
+            codeSnippet={`<label className={active ? 'border-[#ee2e65] bg-[#FEF1F5]' : 'border-gray-300 bg-white'}>
   <input type="checkbox" className="accent-[#ee2e65]" />
   ...
 </label>`}
@@ -848,12 +1090,12 @@ useEffect(() => {
                     className={`rounded-xl border p-3.5 text-left transition-all duration-200 cursor-pointer flex items-start justify-between gap-2.5 ${
                       active
                         ? 'border-[#ee2e65] bg-[#FEF1F5] shadow-xs'
-                        : 'border-gray-200 bg-white hover:border-gray-300'
+                        : 'border-gray-300 bg-white hover:border-gray-400'
                     }`}
                   >
                     <div className="space-y-1 min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <Icon className={`w-3.5 h-3.5 ${active ? 'text-[#ee2e65]' : 'text-gray-400'}`} />
+                        <Icon className={`w-3.5 h-3.5 ${active ? 'text-[#ee2e65]' : 'text-gray-500'}`} />
                         <span className={`font-semibold ${active ? 'text-[#9D113C]' : 'text-gray-900'}`}>
                           {card.title}
                         </span>
@@ -907,7 +1149,7 @@ useEffect(() => {
 </label>`}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-              <div className="rounded-xl border border-gray-200/80 bg-gray-50/50 p-4 space-y-3">
+              <div className="rounded-xl border border-gray-300/90 bg-gray-50/50 p-4 space-y-3">
                 <span className="font-semibold text-gray-800 block">Radio Sizing (SM / MD / LG)</span>
                 {(
                   [
@@ -930,7 +1172,7 @@ useEffect(() => {
                 ))}
               </div>
 
-              <div className="rounded-xl border border-gray-200/80 bg-gray-50/50 p-4 space-y-3">
+              <div className="rounded-xl border border-gray-300/90 bg-gray-50/50 p-4 space-y-3">
                 <span className="font-semibold text-gray-800 block">Custom Animated Ring Radio</span>
                 {(
                   [
@@ -977,7 +1219,7 @@ useEffect(() => {
 </div>`}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-              <div className="rounded-xl border border-gray-200/80 bg-white p-4 space-y-3">
+              <div className="rounded-xl border border-gray-300/90 bg-white p-4 space-y-3">
                 <span className="font-semibold text-gray-800 block">Horizontal Inline Group</span>
                 <div className="flex flex-wrap items-center gap-4">
                   {[
@@ -1003,7 +1245,7 @@ useEffect(() => {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-gray-200/80 bg-gray-50/70 p-4 space-y-2.5">
+              <div className="rounded-xl border border-gray-300/90 bg-gray-50/70 p-4 space-y-2.5">
                 <span className="font-semibold text-gray-800 block">Vertical + Disabled Options</span>
                 <label className="flex items-center gap-2.5 cursor-pointer select-none">
                   <input
@@ -1044,7 +1286,7 @@ useEffect(() => {
             title="Radio Option Cards"
             description="Pilihan tunggal berbentuk kartu interaktif dengan indikator lingkar aktif dan highlight Primary Rose."
             classesHint="border-[#ee2e65] bg-[#FEF1F5] | ring indicator"
-            codeSnippet={`<button onClick={() => setValue(opt.id)} className={active ? 'border-[#ee2e65] bg-[#FEF1F5]' : 'border-gray-200 bg-white'}>
+            codeSnippet={`<button onClick={() => setValue(opt.id)} className={active ? 'border-[#ee2e65] bg-[#FEF1F5]' : 'border-gray-300 bg-white'}>
   ...
 </button>`}
           >
@@ -1075,7 +1317,7 @@ useEffect(() => {
                     className={`rounded-xl border p-3.5 text-left transition-all duration-200 cursor-pointer flex items-start justify-between gap-2.5 ${
                       active
                         ? 'border-[#ee2e65] bg-[#FEF1F5] shadow-xs'
-                        : 'border-gray-200 bg-white hover:border-gray-300'
+                        : 'border-gray-300 bg-white hover:border-gray-400'
                     }`}
                   >
                     <div className="space-y-1 min-w-0">

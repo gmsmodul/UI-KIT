@@ -32,6 +32,8 @@ import { HorizontalSlideTrack } from '../ui/HorizontalSlideTrack';
 import { VerticalScrollTrack, VerticalScrollAccent } from '../ui/VerticalScrollTrack';
 import { ElasticPullToRefresh } from '../ui/ElasticPullToRefresh';
 import { MotionUiKit } from './MotionUiKit';
+import { AppOptimizationUiKit } from './AppOptimizationUiKit';
+import { GanttChartUiKit } from './GanttChartUiKit';
 
 interface OtherMultimediaUiKitProps {
   activeSubJump?: string;
@@ -182,8 +184,8 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
           <UiDocSection
             id="cht-bar"
             title="Rata-rata Skor per Kelas (Bar Chart)"
-            classesHint="h-48 flex items-end justify-between gap-4 border-b border-gray-100"
-            codeSnippet={`<div className="h-48 flex items-end justify-between gap-4 border-b border-gray-100">\n  {data.map(col => <div style={{ height: \`\${col.score}%\` }} className="bg-[#ee2e65] rounded-t-lg" />)}\n</div>`}
+            classesHint="h-48 flex items-end justify-between gap-4 border-b border-gray-300"
+            codeSnippet={`<div className="h-48 flex items-end justify-between gap-4 border-b border-gray-300">\n  {data.map(col => <div style={{ height: \`\${col.score}%\` }} className="bg-[#ee2e65] rounded-t-lg" />)}\n</div>`}
             actions={
               <div className="flex items-center gap-1 text-xs text-emerald-600 font-bold tabular-nums">
                 <TrendingUp className="w-4 h-4" />
@@ -192,7 +194,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
             }
           >
             <div className="space-y-4">
-              <div className="h-48 flex items-end justify-between gap-4 pt-4 px-2 border-b border-gray-100">
+              <div className="h-48 flex items-end justify-between gap-4 pt-4 px-2 border-b border-gray-300">
                 {[
                   { cls: 'Class 302', score: 92, h: 'h-[92%]', color: 'bg-[#ee2e65]' },
                   { cls: 'Class 303', score: 86, h: 'h-[86%]', color: 'bg-[#F59E0B]' },
@@ -201,12 +203,12 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                 ].map((col) => (
                   <div key={col.cls} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
                     <span className="text-xs font-bold text-gray-700 tabular-nums">{col.score}%</span>
-                    <div className={`w-full max-w-[72px] ${col.h} ${col.color} rounded-t-lg transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] origin-bottom hover:scale-y-[1.04] hover:brightness-105 cursor-pointer`} />
+                    <div className={`w-full max-w-[72px] ${col.h} ${col.color} rounded-t-lg transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] origin-bottom hover:scale-y-[1.04] hover:brightness-105 cursor-pointer`} />
                     <span className="text-xs text-gray-500 truncate w-full text-center mt-1">{col.cls}</span>
                   </div>
                 ))}
               </div>
-              <div className="flex justify-between items-center text-xs text-gray-400">
+              <div className="flex justify-between items-center text-xs text-gray-500">
                 <span className="tabular-nums">Total 88 Siswa Dinilai</span>
                 <span className="text-primary-600 font-semibold">Bar Chart · Term 1 2026</span>
               </div>
@@ -221,8 +223,8 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
           >
             <div className="h-48 flex flex-col justify-between pt-2">
               <svg viewBox="0 0 320 120" className="w-full h-36 overflow-visible">
-                <line x1="0" y1="30" x2="320" y2="30" stroke="#F3F4F6" strokeDasharray="3 3" />
-                <line x1="0" y1="70" x2="320" y2="70" stroke="#F3F4F6" strokeDasharray="3 3" />
+                <line x1="0" y1="30" x2="320" y2="30" stroke="#D1D5DB" strokeDasharray="3 3" />
+                <line x1="0" y1="70" x2="320" y2="70" stroke="#D1D5DB" strokeDasharray="3 3" />
                 <polyline
                   fill="none"
                   stroke="#ee2e65"
@@ -239,10 +241,10 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                   [255, 32],
                   [305, 18],
                 ].map(([x, y], i) => (
-                  <circle key={i} cx={x} cy={y} r="4" fill="#111827" stroke="#ffffff" strokeWidth="2" className="transition-transform duration-200 ease-[cubic-bezier(0.22,1.28,0.36,1)] origin-center hover:scale-125 cursor-pointer" />
+                  <circle key={i} cx={x} cy={y} r="4" fill="#111827" stroke="#ffffff" strokeWidth="2" className="transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] origin-center hover:scale-125 cursor-pointer" />
                 ))}
               </svg>
-              <div className="flex justify-between text-[11px] text-gray-400 px-2">
+              <div className="flex justify-between text-[11px] text-gray-500 px-2">
                 <span>Mgg 1</span>
                 <span>Mgg 2</span>
                 <span>Mgg 3</span>
@@ -263,7 +265,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
               <div className="w-32 h-32 rounded-full border-8 border-primary-600 border-t-emerald-500 border-r-amber-500 flex items-center justify-center text-center">
                 <div>
                   <div className="text-xl font-bold text-gray-900 tabular-nums">94%</div>
-                  <div className="text-[11px] text-gray-400 font-semibold">Tuntas</div>
+                  <div className="text-[11px] text-gray-500 font-semibold">Tuntas</div>
                 </div>
               </div>
               <div className="space-y-2 text-xs tabular-nums">
@@ -298,7 +300,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
               <div className="relative w-32 h-32 rounded-full border-8 border-primary-600 border-t-emerald-500 border-r-amber-500 flex items-center justify-center text-center">
                 <div>
                   <div className="text-xl font-bold text-gray-900 tabular-nums">96%</div>
-                  <div className="text-[10px] text-gray-400 uppercase font-semibold">Tepat Waktu</div>
+                  <div className="text-[10px] text-gray-500 uppercase font-semibold">Tepat Waktu</div>
                 </div>
               </div>
 
@@ -319,6 +321,10 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
             </div>
           </UiDocSection>
         </UiDocPage>
+      )}
+
+      {(category === 'all' || category === 'charts') && isVisible('ganttchart') && (
+        <GanttChartUiKit />
       )}
 
       {/* ========================================================= */}
@@ -343,7 +349,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                   <MapPin className="w-4 h-4" />
                 </div>
                 <div className="font-bold text-sm">Studio UI KIT Design Center</div>
-                <div className="text-xs text-slate-400">North Wing Floor 2 · Room 301</div>
+                <div className="text-xs text-slate-300">North Wing Floor 2 · Room 301</div>
               </div>
             </div>
           </UiDocSection>
@@ -433,11 +439,11 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
             classesHint="flex items-center gap-2 bg-gray-50 px-3.5 py-2.5 rounded-lg"
             codeSnippet={`<nav className="flex items-center gap-2 text-xs text-gray-500 bg-gray-50 px-3.5 py-2.5 rounded-lg">\n  <Home className="w-3.5 h-3.5" />\n  <ChevronRight className="w-3.5 h-3.5" />\n  <span className="font-bold text-gray-900">Class Materials</span>\n</nav>`}
           >
-            <nav className="max-w-lg flex items-center gap-2 text-xs text-gray-500 bg-gray-50 px-3.5 py-2.5 rounded-lg border border-gray-100">
+            <nav className="max-w-lg flex items-center gap-2 text-xs text-gray-500 bg-gray-50 px-3.5 py-2.5 rounded-lg border border-gray-300">
               <Home className="w-3.5 h-3.5 text-gray-500" />
-              <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
+              <ChevronRight className="w-3.5 h-3.5 text-gray-500" />
               <span>Kurikulum 2026</span>
-              <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
+              <ChevronRight className="w-3.5 h-3.5 text-gray-500" />
               <span className="font-bold text-gray-900">Class Materials</span>
             </nav>
           </UiDocSection>
@@ -450,9 +456,9 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
           >
             <nav className="flex items-center gap-2 text-xs text-gray-500">
               <span>UI KIT</span>
-              <span className="text-gray-300">/</span>
+              <span className="text-gray-500">/</span>
               <span>Matematika</span>
-              <span className="text-gray-300">/</span>
+              <span className="text-gray-500">/</span>
               <span className="font-semibold text-primary-600">Bab 4 Turunan Rantai</span>
             </nav>
           </UiDocSection>
@@ -473,7 +479,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
           <UiDocSection
             id="drp-basic"
             title="Basic Dropdown"
-            classesHint="relative inline-block / absolute shadow-lg border border-gray-200"
+            classesHint="relative inline-block / absolute shadow-lg border border-gray-300"
             codeSnippet={`<div className="relative inline-block">\n  <button onClick={() => setOpen(!open)}>Basic Dropdown</button>\n  {open && <div className="absolute mt-1 w-56 rounded-xl border bg-white shadow-lg">...</div>}\n</div>`}
           >
             <div className="pb-32 text-xs">
@@ -483,25 +489,25 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                   className="px-3.5 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 font-semibold flex items-center gap-2 cursor-pointer"
                 >
                   <span>Basic Dropdown</span>
-                  <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${dropdownOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-3.5 h-3.5 text-gray-500 transition-transform duration-[180ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${dropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
                 {dropdownOpen && (
-                  <div className="absolute left-0 top-full mt-1.5 w-56 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 p-1.5 z-30 text-xs space-y-0.5 animate-ui-pop">
-                    <div className="px-2 py-1 text-[10px] font-bold uppercase text-gray-400">Dropdown Header</div>
+                  <div className="absolute left-0 top-full mt-1.5 w-56 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-300 p-1.5 z-30 text-xs space-y-0.5 animate-ui-pop">
+                    <div className="px-2 py-1 text-[10px] font-bold uppercase text-gray-500">Dropdown Header</div>
                     <button
                       onClick={() => setDropdownOpen(false)}
-                      className="w-full text-left p-2 rounded-lg hover:bg-gray-100 hover:translate-x-0.5 flex items-center justify-between transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer"
+                      className="w-full text-left p-2 rounded-lg hover:bg-gray-100 flex items-center justify-between transition-colors duration-200 cursor-pointer"
                     >
                       <span>Ekspor PDF</span>
                       <span className="px-1.5 py-0.5 rounded-full bg-primary-50 text-primary-700 text-[10px]">Baru</span>
                     </button>
-                    <button disabled className="w-full text-left p-2 rounded-lg text-gray-300 cursor-not-allowed">
+                    <button disabled className="w-full text-left p-2 rounded-lg text-gray-500 cursor-not-allowed">
                       Disabled Menu Item
                     </button>
-                    <div className="h-[1px] bg-gray-100 my-1" />
+                    <div className="h-[1px] bg-gray-200 my-1" />
                     <button
                       onClick={() => setDropdownOpen(false)}
-                      className="w-full text-left p-2 rounded-lg hover:bg-rose-50 hover:translate-x-0.5 text-rose-600 font-semibold transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer"
+                      className="w-full text-left p-2 rounded-lg hover:bg-rose-50 text-rose-600 font-semibold transition-colors duration-200 cursor-pointer"
                     >
                       Arsipkan Modul
                     </button>
@@ -532,7 +538,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                     onClick={() => setSplitDarkDropdownOpen(!splitDarkDropdownOpen)}
                     className="px-2.5 py-2 bg-gray-800 text-white hover:bg-black cursor-pointer border-l border-gray-700"
                   >
-                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${splitDarkDropdownOpen ? 'rotate-180' : ''}`} />
+                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-[180ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${splitDarkDropdownOpen ? 'rotate-180' : ''}`} />
                   </button>
                 </div>
                 {splitDarkDropdownOpen && (
@@ -543,7 +549,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                         setSplitDarkDropdownOpen(false);
                         triggerToast('Duplikat', 'Salinan modul dibuat.', 'info');
                       }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-gray-800 hover:translate-x-0.5 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer"
+                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-gray-800 transition-colors duration-200 cursor-pointer"
                     >
                       Duplikat Modul
                     </button>
@@ -553,7 +559,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                         setSplitDarkDropdownOpen(false);
                         triggerToast('Ekspor', 'Mengekspor paket SCORM.', 'success');
                       }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-gray-800 hover:translate-x-0.5 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer"
+                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-gray-800 transition-colors duration-200 cursor-pointer"
                     >
                       Ekspor Paket (.zip)
                     </button>
@@ -561,7 +567,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                     <button
                       type="button"
                       onClick={() => setSplitDarkDropdownOpen(false)}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-rose-950/70 hover:translate-x-0.5 text-rose-400 font-semibold transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer"
+                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-rose-950/70 text-rose-400 font-semibold transition-colors duration-200 cursor-pointer"
                     >
                       Hapus Draft
                     </button>
@@ -585,15 +591,15 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                   className="px-3.5 py-2 rounded-lg bg-primary-50 text-primary-700 border border-primary-200 font-semibold flex items-center gap-1.5 cursor-pointer"
                 >
                   <span>Dropup</span>
-                  <ChevronUp className={`w-3.5 h-3.5 transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${dropDirOpen === 'up' ? 'rotate-180' : ''}`} />
+                  <ChevronUp className={`w-3.5 h-3.5 transition-transform duration-[180ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${dropDirOpen === 'up' ? 'rotate-180' : ''}`} />
                 </button>
                 {dropDirOpen === 'up' && (
-                  <div className="absolute bottom-full mb-1.5 left-0 w-44 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 p-2 z-30 text-xs animate-ui-pop-up">
+                  <div className="absolute bottom-full mb-1.5 left-0 w-44 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-300 p-2 z-30 text-xs animate-ui-pop-up">
                     <div className="p-1.5 font-semibold text-gray-800">Arah: Dropup</div>
                     <button
                       type="button"
                       onClick={() => setDropDirOpen(null)}
-                      className="w-full text-left p-1.5 rounded-lg hover:bg-gray-100 hover:translate-x-0.5 text-gray-600 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer"
+                      className="w-full text-left p-1.5 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors duration-200 cursor-pointer"
                     >
                       Tutup Menu
                     </button>
@@ -617,15 +623,15 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                   className="px-3.5 py-2 rounded-lg bg-gray-100 text-gray-800 font-semibold flex items-center gap-1.5 cursor-pointer"
                 >
                   <span>Dropright</span>
-                  <ChevronRight className={`w-3.5 h-3.5 transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${dropDirOpen === 'right' ? 'translate-x-0.5' : ''}`} />
+                  <ChevronRight className={`w-3.5 h-3.5 transition-transform duration-[180ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${dropDirOpen === 'right' ? 'translate-x-0.5' : ''}`} />
                 </button>
                 {dropDirOpen === 'right' && (
-                  <div className="absolute left-full ml-1.5 top-0 w-44 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 p-2 z-30 text-xs animate-ui-pop-right">
+                  <div className="absolute left-full ml-1.5 top-0 w-44 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-300 p-2 z-30 text-xs animate-ui-pop-right">
                     <div className="p-1.5 font-semibold text-gray-800">Arah: Dropright</div>
                     <button
                       type="button"
                       onClick={() => setDropDirOpen(null)}
-                      className="w-full text-left p-1.5 rounded-lg hover:bg-gray-100 hover:translate-x-0.5 text-gray-600 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer"
+                      className="w-full text-left p-1.5 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors duration-200 cursor-pointer"
                     >
                       Tutup Menu
                     </button>
@@ -638,10 +644,10 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
           <UiDocSection
             id="drp-form"
             title="Inline Form Inside Dropdown Menu"
-            classesHint="p-3.5 rounded-xl border border-gray-200 bg-gray-50/70"
+            classesHint="p-3.5 rounded-xl border border-gray-300 bg-gray-50/70"
             codeSnippet={`<div className="p-3 rounded-xl border bg-gray-50 flex gap-2">\n  <input placeholder="Filter item..." />\n  <button>Go</button>\n</div>`}
           >
-            <div className="max-w-xs p-3.5 rounded-xl border border-gray-200 bg-gray-50/70 space-y-2 text-xs">
+            <div className="max-w-xs p-3.5 rounded-xl border border-gray-300 bg-gray-50/70 space-y-2 text-xs">
               <div className="font-bold text-gray-800">Inline Form inside Dropdown Menu</div>
               <div className="flex gap-2">
                 <input type="text" placeholder="Filter item..." className="flex-1 px-2.5 py-1.5 rounded-md border border-gray-300 bg-white" />
@@ -692,14 +698,14 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
           <UiDocSection
             id="nav-vert"
             title="Vertical Navigation"
-            classesHint="relative grid grid-rows-3 border border-gray-200 rounded-xl divide-y"
-            codeSnippet={`<div className="border border-gray-200 rounded-xl divide-y">\n  {items.map(v => <button className="block w-full text-left px-3 py-2">{v}</button>)}\n</div>`}
+            classesHint="relative grid grid-rows-3 border border-gray-300 rounded-xl divide-y"
+            codeSnippet={`<div className="border border-gray-300 rounded-xl divide-y">\n  {items.map(v => <button className="block w-full text-left px-3 py-2">{v}</button>)}\n</div>`}
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg text-xs">
-              <div className="relative grid grid-rows-3 border border-gray-200 rounded-xl divide-y divide-gray-100 overflow-hidden bg-white">
+              <div className="relative grid grid-rows-3 border border-gray-300 rounded-xl divide-y divide-gray-200 overflow-hidden bg-white">
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute inset-x-0 top-0 h-1/3 bg-primary-50/90 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  className="pointer-events-none absolute inset-x-0 top-0 h-1/3 bg-primary-50/90 transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
                   style={{
                     transform: `translate3d(0, ${Math.max(0, ['Profil Kelas', 'Materi Video', 'Jadwal Ujian'].indexOf(activeVertNav)) * 100}%, 0)`,
                   }}
@@ -710,15 +716,15 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                   <button
                     key={v}
                     onClick={() => setActiveVertNav(v)}
-                    className={`relative z-10 block w-full text-left px-3.5 py-2.5 transition-colors duration-200 cursor-pointer ${
-                      activeVertNav === v ? 'text-primary-700 font-bold' : 'text-gray-600 hover:text-gray-900 font-medium'
+                    className={`relative z-10 block w-full text-left px-3.5 py-2.5 font-semibold transition-colors duration-200 cursor-pointer ${
+                      activeVertNav === v ? 'text-primary-700' : 'text-gray-600 hover:text-gray-900'
                     }`}
                   >
                     {v}
                   </button>
                 ))}
               </div>
-              <div className="p-3 rounded-xl bg-gray-50 border border-gray-200 text-gray-600 flex items-center">
+              <div className="p-3 rounded-xl bg-gray-50 border border-gray-300 text-gray-600 flex items-center">
                 <span key={activeVertNav} className="animate-ui-fade">
                   Nav Vertical Aktif: <strong className="text-gray-900">{activeVertNav}</strong>
                 </span>
@@ -743,13 +749,13 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                   <button
                     key={it.name}
                     onClick={() => setActiveNavItem(it.name)}
-                    className={`group p-3 rounded-xl border flex flex-col items-center gap-1.5 cursor-pointer transition-colors ${
+                    className={`group p-3 rounded-xl border flex flex-col items-center gap-1.5 font-semibold cursor-pointer transition-colors ${
                       activeNavItem === it.name
-                        ? 'bg-primary-50 border-primary-300 text-primary-800 font-bold'
-                        : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+                        ? 'bg-primary-50 border-primary-300 text-primary-800'
+                        : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
                     }`}
                   >
-                    <IconComp className="w-4 h-4 transition-transform duration-200 ease-[cubic-bezier(0.22,1.28,0.36,1)] group-hover:-translate-y-0.5" />
+                    <IconComp className="w-4 h-4" />
                     <span>{it.name}</span>
                     <span className="px-1.5 py-0.5 rounded-full bg-primary-600 text-white text-[10px] tabular-nums">
                       {it.count}
@@ -775,15 +781,15 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
             id="tab-underline"
             title="Underline Tabs"
             classesHint="border-b-2 border-primary-600"
-            codeSnippet={`<div className="flex items-center gap-5 border-b border-gray-200">\n  <button className="pb-2.5 border-b-2 border-primary-600 font-semibold">Ringkasan</button>\n</div>`}
+            codeSnippet={`<div className="flex items-center gap-5 border-b border-gray-300">\n  <button className="pb-2.5 border-b-2 border-primary-600 font-semibold">Ringkasan</button>\n</div>`}
           >
-            <div className="relative max-w-md inline-grid grid-cols-3 border-b border-gray-200 text-xs font-semibold">
+            <div className="relative max-w-md inline-grid grid-cols-3 border-b border-gray-300 text-xs font-semibold">
               {['Ringkasan', 'Lembar Kerja', 'Riwayat'].map((t) => (
                 <button
                   key={t}
                   onClick={() => setActiveTabItem(t)}
                   className={`px-4 pb-2.5 text-center transition-colors duration-200 cursor-pointer ${
-                    activeTabItem === t ? 'text-gray-900' : 'text-gray-400 hover:text-gray-700'
+                    activeTabItem === t ? 'text-gray-900' : 'text-gray-500 hover:text-gray-800'
                   }`}
                 >
                   {t}
@@ -791,7 +797,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
               ))}
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute bottom-0 left-0 w-1/3 h-0.5 bg-primary-600 rounded-full transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                className="pointer-events-none absolute bottom-0 left-0 w-1/3 h-0.5 bg-primary-600 rounded-full transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
                 style={{
                   transform: `translate3d(${Math.max(0, ['Ringkasan', 'Lembar Kerja', 'Riwayat'].indexOf(activeTabItem)) * 100}%, 0, 0)`,
                 }}
@@ -808,7 +814,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
             <div className="relative inline-grid grid-cols-3 rounded-lg bg-gray-100 p-1 text-xs">
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-y-1 left-1 w-[calc((100%-0.5rem)/3)] rounded-md bg-white shadow-2xs transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                className="pointer-events-none absolute inset-y-1 left-1 w-[calc((100%-0.5rem)/3)] rounded-md bg-white shadow-2xs transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
                 style={{
                   transform: `translate3d(${Math.max(0, ['Ringkasan', 'Lembar Kerja', 'Riwayat'].indexOf(activeTabItem)) * 100}%, 0, 0)`,
                 }}
@@ -837,7 +843,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
               <div className="relative grid grid-rows-3 rounded-xl bg-gray-100/80 p-1 w-36 shrink-0">
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute inset-x-1 top-1 h-[calc((100%-0.5rem)/3)] rounded-lg bg-gray-900 shadow-xs transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  className="pointer-events-none absolute inset-x-1 top-1 h-[calc((100%-0.5rem)/3)] rounded-lg bg-gray-900 shadow-xs transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
                   style={{
                     transform: `translate3d(0, ${Math.max(0, ['Ringkasan', 'Lembar Kerja', 'Riwayat'].indexOf(activeTabItem)) * 100}%, 0)`,
                   }}
@@ -854,7 +860,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                   </button>
                 ))}
               </div>
-              <div className="flex-1 p-4 rounded-xl bg-gray-50 border border-gray-200 text-gray-600 flex items-center">
+              <div className="flex-1 p-4 rounded-xl bg-gray-50 border border-gray-300 text-gray-600 flex items-center">
                 <span key={activeTabItem} className="animate-ui-fade">
                   Panel Vertical Tab: <strong className="text-gray-900">{activeTabItem}</strong>
                 </span>
@@ -884,11 +890,11 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                   key={s}
                   onClick={() => setWizardActiveStep(s)}
                   className={`flex items-center gap-2 cursor-pointer ${
-                    wizardActiveStep >= s ? 'text-primary-700 font-bold' : 'text-gray-400'
+                    wizardActiveStep >= s ? 'text-primary-700 font-bold' : 'text-gray-500'
                   }`}
                 >
                   <span
-                    className={`w-6 h-6 rounded-full flex items-center justify-center text-xs tabular-nums transition-all duration-300 ease-[cubic-bezier(0.22,1.28,0.36,1)] ${
+                    className={`w-6 h-6 rounded-full flex items-center justify-center text-xs tabular-nums transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] ${
                       wizardActiveStep >= s ? 'bg-primary-600 text-white scale-105' : 'bg-gray-200 text-gray-700'
                     }`}
                   >
@@ -906,10 +912,10 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
             classesHint="relative grid grid-rows-3 / bg-primary-50 text-primary-800"
             codeSnippet={`<div className="grid grid-rows-3 p-1.5 rounded-xl border">\n  <button className="w-full text-left px-3 py-2 rounded-lg">...</button>\n</div>`}
           >
-            <div className="relative grid grid-rows-3 max-w-sm p-1.5 rounded-xl border border-gray-200/80 bg-white text-xs">
+            <div className="relative grid grid-rows-3 max-w-sm p-1.5 rounded-xl border border-gray-300 bg-white text-xs">
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-x-1.5 top-1.5 h-[calc((100%-0.75rem)/3)] rounded-lg bg-primary-50/95 border border-primary-100 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                className="pointer-events-none absolute inset-x-1.5 top-1.5 h-[calc((100%-0.75rem)/3)] rounded-lg bg-primary-50/95 border border-primary-100 transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
                 style={{
                   transform: `translate3d(0, ${Math.max(0, wizardActiveStep - 1) * 100}%, 0)`,
                 }}
@@ -924,14 +930,14 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                 <button
                   key={item.s}
                   onClick={() => setWizardActiveStep(item.s)}
-                  className={`relative z-10 w-full text-left px-3 py-2.5 rounded-lg flex items-center gap-2.5 transition-colors duration-200 cursor-pointer ${
+                  className={`relative z-10 w-full text-left px-3 py-2.5 rounded-lg flex items-center gap-2.5 font-semibold transition-colors duration-200 cursor-pointer ${
                     wizardActiveStep === item.s
-                      ? 'text-primary-800 font-bold'
-                      : 'text-gray-600 hover:text-gray-900 font-medium'
+                      ? 'text-primary-800'
+                      : 'text-gray-600 hover:text-gray-900'
                   }`}
                 >
                   <span
-                    className={`w-5 h-5 rounded-full text-[10px] flex items-center justify-center tabular-nums transition-all duration-300 ease-[cubic-bezier(0.22,1.28,0.36,1)] ${
+                    className={`w-5 h-5 rounded-full text-[10px] flex items-center justify-center tabular-nums transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] ${
                       wizardActiveStep === item.s
                         ? 'bg-primary-600 text-white scale-105'
                         : 'bg-gray-900 text-white'
@@ -967,7 +973,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
               <button
                 disabled={paginationPage === 1}
                 onClick={() => setPaginationPage((p) => Math.max(1, p - 1))}
-                className="px-2.5 py-1.5 rounded-md border border-gray-200 text-gray-600 disabled:opacity-40 cursor-pointer"
+                className="px-2.5 py-1.5 rounded-md border border-gray-300 text-gray-600 disabled:opacity-40 cursor-pointer"
               >
                 «
               </button>
@@ -978,7 +984,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                   className={`px-3 py-1.5 rounded-md font-bold cursor-pointer ${
                     paginationPage === p
                       ? 'bg-gray-900 text-white'
-                      : 'border border-gray-200 text-gray-700 hover:bg-gray-100'
+                      : 'border border-gray-300 text-gray-700 hover:bg-gray-100'
                   }`}
                 >
                   {p}
@@ -987,7 +993,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
               <button
                 disabled={paginationPage === 4}
                 onClick={() => setPaginationPage((p) => Math.min(4, p + 1))}
-                className="px-2.5 py-1.5 rounded-md border border-gray-200 text-gray-600 disabled:opacity-40 cursor-pointer"
+                className="px-2.5 py-1.5 rounded-md border border-gray-300 text-gray-600 disabled:opacity-40 cursor-pointer"
               >
                 »
               </button>
@@ -1004,7 +1010,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
               <button
                 disabled={paginationPage === 1}
                 onClick={() => setPaginationPage((p) => Math.max(1, p - 1))}
-                className="w-8 h-8 rounded-full border border-gray-200 text-gray-600 disabled:opacity-40 cursor-pointer flex items-center justify-center"
+                className="w-8 h-8 rounded-full border border-gray-300 text-gray-600 disabled:opacity-40 cursor-pointer flex items-center justify-center"
               >
                 «
               </button>
@@ -1015,7 +1021,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                   className={`w-8 h-8 rounded-full font-bold cursor-pointer flex items-center justify-center ${
                     paginationPage === p
                       ? 'bg-gray-900 text-white'
-                      : 'border border-gray-200 text-gray-700 hover:bg-gray-100'
+                      : 'border border-gray-300 text-gray-700 hover:bg-gray-100'
                   }`}
                 >
                   {p}
@@ -1024,7 +1030,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
               <button
                 disabled={paginationPage === 4}
                 onClick={() => setPaginationPage((p) => Math.min(4, p + 1))}
-                className="w-8 h-8 rounded-full border border-gray-200 text-gray-600 disabled:opacity-40 cursor-pointer flex items-center justify-center"
+                className="w-8 h-8 rounded-full border border-gray-300 text-gray-600 disabled:opacity-40 cursor-pointer flex items-center justify-center"
               >
                 »
               </button>
@@ -1039,7 +1045,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
           >
             <div className="space-y-2.5 text-xs">
               <div className="flex items-center gap-1.5 tabular-nums">
-                <span className="text-[11px] font-bold text-gray-400 w-14">Small:</span>
+                <span className="text-[11px] font-bold text-gray-500 w-14">Small:</span>
                 {[1, 2, 3, 4].map((p) => (
                   <button
                     key={p}
@@ -1047,7 +1053,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                     className={`px-2.5 py-1 text-[11px] rounded-md font-bold cursor-pointer ${
                       paginationPage === p
                         ? 'bg-gray-900 text-white'
-                        : 'border border-gray-200 text-gray-700 hover:bg-gray-100'
+                        : 'border border-gray-300 text-gray-700 hover:bg-gray-100'
                     }`}
                   >
                     {p}
@@ -1055,7 +1061,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                 ))}
               </div>
               <div className="flex items-center gap-1.5 tabular-nums">
-                <span className="text-[11px] font-bold text-gray-400 w-14">Large:</span>
+                <span className="text-[11px] font-bold text-gray-500 w-14">Large:</span>
                 {[1, 2, 3, 4].map((p) => (
                   <button
                     key={p}
@@ -1063,7 +1069,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                     className={`px-4 py-2 text-sm rounded-md font-bold cursor-pointer ${
                       paginationPage === p
                         ? 'bg-gray-900 text-white'
-                        : 'border border-gray-200 text-gray-700 hover:bg-gray-100'
+                        : 'border border-gray-300 text-gray-700 hover:bg-gray-100'
                     }`}
                   >
                     {p}
@@ -1093,7 +1099,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                 }}
                 className="w-14 px-2 py-1 rounded-md border border-gray-300 text-center font-mono tabular-nums"
               />
-              <span className="text-gray-400">(Halaman aktif: {paginationPage})</span>
+              <span className="text-gray-500">(Halaman aktif: {paginationPage})</span>
             </div>
           </UiDocSection>
         </UiDocPage>
@@ -1156,7 +1162,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                     className="group p-1 rounded hover:bg-gray-800 text-gray-300 cursor-pointer"
                     title="Reset Query"
                   >
-                    <RotateCcw className="w-3.5 h-3.5 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-rotate-90" />
+                    <RotateCcw className="w-3.5 h-3.5 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:-rotate-90" />
                   </button>
                 </div>
               </div>
@@ -1203,7 +1209,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
             codeSnippet={`const switchTab = (tab: string) => {\n  setActiveTab(tab);\n  history.push(basePath + '#' + tab);\n};`}
           >
             <div className="max-w-xl space-y-3 text-xs">
-              <div className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg border border-gray-200 bg-gray-50">
+              <div className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg border border-gray-300 bg-gray-50">
                 <div className="flex items-center gap-2 min-w-0">
                   <button
                     type="button"
@@ -1215,10 +1221,10 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                       const lastHash = next[next.length - 1].split('#')[1] as 'ringkasan' | 'silabus' | 'peserta';
                       if (lastHash) setUrlHashTab(lastHash);
                     }}
-                    className="group p-1 rounded border border-gray-200 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                    className="group p-1 rounded border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                     title="Back History"
                   >
-                    <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-x-0.5" />
+                    <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:-translate-x-0.5" />
                   </button>
                   <span key={urlHashTab} className="font-mono text-gray-800 truncate animate-ui-fade">
                     /kelas/302#<strong className="text-primary-600">{urlHashTab}</strong>
@@ -1229,10 +1235,10 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                 </span>
               </div>
 
-              <div className="relative inline-grid grid-cols-3 rounded-lg border border-gray-200 bg-gray-100 p-1">
+              <div className="relative inline-grid grid-cols-3 rounded-lg border border-gray-300 bg-gray-100 p-1">
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute inset-y-1 left-1 w-[calc((100%-0.5rem)/3)] rounded-md bg-white shadow-2xs transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  className="pointer-events-none absolute inset-y-1 left-1 w-[calc((100%-0.5rem)/3)] rounded-md bg-white shadow-2xs transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
                   style={{
                     transform: `translate3d(${Math.max(0, ['ringkasan', 'silabus', 'peserta'].indexOf(urlHashTab)) * 100}%, 0, 0)`,
                   }}
@@ -1303,7 +1309,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                       className={`w-7 h-7 rounded-md font-semibold cursor-pointer ${
                         urlTablePage === p
                           ? 'bg-primary-600 text-white'
-                          : 'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
+                          : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
                       }`}
                     >
                       {p}
@@ -1329,14 +1335,14 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => triggerToast('Toolbar', 'Filter toolbar diklik.', 'info')}
-                  className="p-1.5 rounded hover:bg-white hover:scale-105 text-gray-700 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer"
+                  className="p-1.5 rounded hover:bg-white hover:scale-105 text-gray-700 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer"
                 >
                   <SlidersHorizontal className="w-4 h-4" />
                 </button>
-                <button className="p-1.5 rounded hover:bg-white hover:scale-105 text-gray-700 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer">
+                <button className="p-1.5 rounded hover:bg-white hover:scale-105 text-gray-700 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer">
                   <Menu className="w-4 h-4" />
                 </button>
-                <button className="p-1.5 rounded hover:bg-white hover:scale-105 text-gray-700 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer">
+                <button className="p-1.5 rounded hover:bg-white hover:scale-105 text-gray-700 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer">
                   <ExternalLink className="w-4 h-4" />
                 </button>
               </div>
@@ -1344,7 +1350,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                 onClick={() => triggerToast('Tambah Item', 'Aksi baru dari toolbar.', 'success')}
                 className="group px-3 py-1.5 rounded-md bg-gray-900 hover:bg-black text-white text-xs font-semibold flex items-center gap-1 cursor-pointer"
               >
-                <Plus className="w-3.5 h-3.5 transition-transform duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:rotate-90" />
+                <Plus className="w-3.5 h-3.5 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:rotate-90" />
                 <span>Baru</span>
               </button>
             </div>
@@ -1361,6 +1367,10 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
       {/* ========================================================= */}
       {(category === 'all' || category === 'behavioral') && isVisible('motionanimations') && (
         <MotionUiKit />
+      )}
+
+      {(category === 'all' || category === 'behavioral') && isVisible('appoptimization') && (
+        <AppOptimizationUiKit />
       )}
 
       {(category === 'all' || category === 'behavioral') && isVisible('scrollspy') && (
@@ -1382,7 +1392,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
               <div className="relative inline-grid grid-cols-3 rounded-lg bg-gray-100 p-1">
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute inset-y-1 left-1 w-[calc((100%-0.5rem)/3)] rounded-md bg-gray-900 shadow-xs transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  className="pointer-events-none absolute inset-y-1 left-1 w-[calc((100%-0.5rem)/3)] rounded-md bg-gray-900 shadow-xs transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
                   style={{
                     transform: `translate3d(${Math.max(0, ['Bab 1', 'Bab 2', 'Bab 3'].indexOf(spyActiveSection)) * 100}%, 0, 0)`,
                   }}
@@ -1400,17 +1410,17 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
               </div>
               <div
                 onScroll={handleScrollSpyScroll}
-                className="h-40 overflow-y-auto border border-gray-200 rounded-xl p-3 text-gray-600 space-y-3 bg-gray-50/50"
+                className="h-40 overflow-y-auto border border-gray-300 rounded-xl p-3 text-gray-600 space-y-3 bg-gray-50/50"
               >
-                <div className="p-3 bg-white rounded-lg border border-gray-100">
+                <div className="p-3 bg-white rounded-lg border border-gray-200">
                   <strong className="text-gray-900 block">Bab 1: Limit & Kontinuitas</strong>
                   <span className="text-xs">Definisi variabel kontinu dan batas kiri-kanan fungsi real.</span>
                 </div>
-                <div className="p-3 bg-white rounded-lg border border-gray-100">
+                <div className="p-3 bg-white rounded-lg border border-gray-200">
                   <strong className="text-gray-900 block">Bab 2: Teorema Nilai Rata-Rata</strong>
                   <span className="text-xs">Penerapan turunan parsial pada fungsi dua variabel.</span>
                 </div>
-                <div className="p-3 bg-white rounded-lg border border-gray-100">
+                <div className="p-3 bg-white rounded-lg border border-gray-200">
                   <strong className="text-gray-900 block">Bab 3: Integral Lipat Tiga</strong>
                   <span className="text-xs">Evaluasi volume ruang dalam koordinat silinder dan bola.</span>
                 </div>
@@ -1430,15 +1440,15 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
             classesHint="sticky top-0 z-10"
             codeSnippet={`<div className="h-48 overflow-y-auto">\n  <div className="sticky top-0 bg-primary-600 text-white p-2.5">Sticky Header</div>\n</div>`}
           >
-            <div className="max-w-lg h-48 overflow-y-auto border border-gray-200 rounded-xl p-3 text-xs text-gray-600 space-y-2 bg-gray-50/50 relative">
+            <div className="max-w-lg h-48 overflow-y-auto border border-gray-300 rounded-xl p-3 text-xs text-gray-600 space-y-2 bg-gray-50/50 relative">
               <div className="sticky top-0 bg-primary-600 text-white font-bold p-2.5 rounded-lg flex items-center justify-between">
                 <span>Sticky Header Panel</span>
                 <span className="text-[11px] bg-white/20 px-2 py-0.5 rounded font-mono">position: sticky</span>
               </div>
-              <div className="p-2.5 bg-white rounded-lg border border-gray-100">Baris Materi #1 · Pengenalan Modul</div>
-              <div className="p-2.5 bg-white rounded-lg border border-gray-100">Baris Materi #2 · Latihan Mandiri</div>
-              <div className="p-2.5 bg-white rounded-lg border border-gray-100">Baris Materi #3 · Diskusi Kelompok</div>
-              <div className="p-2.5 bg-white rounded-lg border border-gray-100">Baris Materi #4 · Evaluasi Kuis</div>
+              <div className="p-2.5 bg-white rounded-lg border border-gray-200">Baris Materi #1 · Pengenalan Modul</div>
+              <div className="p-2.5 bg-white rounded-lg border border-gray-200">Baris Materi #2 · Latihan Mandiri</div>
+              <div className="p-2.5 bg-white rounded-lg border border-gray-200">Baris Materi #3 · Diskusi Kelompok</div>
+              <div className="p-2.5 bg-white rounded-lg border border-gray-200">Baris Materi #4 · Evaluasi Kuis</div>
             </div>
           </UiDocSection>
         </UiDocPage>
@@ -1469,24 +1479,24 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                     setDraggableItems(copy);
                     setDragIdx(null);
                   }}
-                  className="p-2.5 bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-between font-medium text-gray-800 cursor-grab hover:-translate-y-0.5 hover:shadow-xs transition-all duration-250 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  className="p-2.5 bg-gray-50 rounded-lg border border-gray-300 flex items-center justify-between font-medium text-gray-800 cursor-grab hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]"
                 >
                   <div className="flex items-center gap-2 truncate">
-                    <GripVertical className="w-4 h-4 text-gray-400 shrink-0" />
+                    <GripVertical className="w-4 h-4 text-gray-500 shrink-0" />
                     <span className="truncate">{item}</span>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     <button
                       disabled={idx === 0}
                       onClick={() => handleMoveDraggable(idx, -1)}
-                      className="px-1.5 py-0.5 rounded border bg-white disabled:opacity-30 text-[10px] cursor-pointer"
+                      className="px-1.5 py-0.5 rounded border border-gray-300 bg-white disabled:opacity-40 text-[10px] cursor-pointer"
                     >
                       ▲
                     </button>
                     <button
                       disabled={idx === draggableItems.length - 1}
                       onClick={() => handleMoveDraggable(idx, 1)}
-                      className="px-1.5 py-0.5 rounded border bg-white disabled:opacity-30 text-[10px] cursor-pointer"
+                      className="px-1.5 py-0.5 rounded border border-gray-300 bg-white disabled:opacity-40 text-[10px] cursor-pointer"
                     >
                       ▼
                     </button>
@@ -1510,7 +1520,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
           <UiDocSection
             id="scr-custom-scrollbar"
             title="Custom Floating Pill Scrollbar (Modal & Matrix Table)"
-            description="Scrollbar vertikal kapsul 6px mengambang dengan trek pastel halus dan thumb bulat yang dapat digeser (drag), diklik di sepanjang rel, atau digulir dengan roda mouse/sentuhan."
+            description="Scrollbar vertikal kapsul 5px mengambang dengan trek pastel halus dan thumb bulat yang dapat digeser (drag), diklik di sepanjang rel, atau digulir dengan roda mouse/sentuhan."
             classesHint="VerticalScrollTrack | .ui-scrollbar-violet | .ui-scrollbar-rose | .ui-scrollbar-dark"
             codeSnippet={`<VerticalScrollTrack accent="violet" className="h-80">
   <table className="w-full text-xs">...</table>
@@ -1545,14 +1555,14 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
           >
             <div className="space-y-5">
               {/* Interactive Modal + Table Preview matching uploaded screenshot */}
-              <div className="rounded-2xl border border-gray-200/90 bg-white shadow-[0_18px_40px_-14px_rgba(15,23,42,0.12)] overflow-hidden">
+              <div className="rounded-2xl border border-gray-300 bg-white shadow-[0_18px_40px_-14px_rgba(15,23,42,0.12)] overflow-hidden">
                 {/* Modal Top Header */}
                 <div className="px-4 sm:px-5 pt-4 pb-2 flex items-center justify-between">
                   <div>
                     <h4 className="text-xs sm:text-sm font-semibold text-[#111827]">
                       Role Permissions Matrix
                     </h4>
-                    <p className="text-[11px] text-gray-400">
+                    <p className="text-[11px] text-gray-500">
                       Gulir vertikal atau seret kapsul scrollbar di sisi kanan
                     </p>
                   </div>
@@ -1574,7 +1584,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                     contentClassName="pr-4 overflow-x-auto"
                     railInsetClass="top-1 bottom-1 right-0"
                   >
-                    <div className="min-w-[520px] rounded-xl border border-gray-100 bg-white">
+                    <div className="min-w-[520px] rounded-xl border border-gray-300 bg-white">
                       <table className="w-full text-xs border-collapse">
                         <thead className="sticky top-0 z-10 bg-[#F3F4F6] text-[#4B5563]">
                           <tr>
@@ -1587,7 +1597,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                             <th className="py-2.5 px-3 text-center font-medium">Access</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100">
+                        <tbody className="divide-y divide-gray-200">
                           {scrollMatrixRows.map((row, idx) => (
                             <tr key={row.name} className="hover:bg-gray-50/60 transition-colors">
                               <td className="py-3 px-3 font-medium text-gray-700 whitespace-nowrap">
@@ -1654,7 +1664,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                 </div>
 
                 {/* Modal Bottom Footer matching screenshot */}
-                <div className="px-4 sm:px-5 py-3 bg-white border-t border-gray-100 flex items-center justify-end gap-2">
+                <div className="px-4 sm:px-5 py-3 bg-white border-t border-gray-200 flex items-center justify-end gap-2">
                   <button
                     type="button"
                     onClick={() => {
@@ -1671,7 +1681,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                       );
                       triggerToast('Reload Matrix', 'Status izin dikembalikan ke default.', 'info');
                     }}
-                    className="h-8 px-3.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-xs font-medium text-gray-800 cursor-pointer transition-colors"
+                    className="h-8 px-3.5 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 text-xs font-medium text-gray-800 cursor-pointer transition-colors"
                   >
                     Reload
                   </button>
@@ -1706,7 +1716,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                     badge: 'bg-gray-100 text-gray-800',
                   },
                 ].map((variant) => (
-                  <div key={variant.cls} className="rounded-xl border border-gray-200/80 bg-gray-50/50 p-3 space-y-2">
+                  <div key={variant.cls} className="rounded-xl border border-gray-300 bg-gray-50/50 p-3 space-y-2">
                     <span className={`inline-block px-2 py-0.5 rounded-md text-[11px] font-semibold ${variant.badge}`}>
                       {variant.title}
                     </span>
@@ -1714,7 +1724,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                       {[1, 2, 3, 4, 5, 6].map((n) => (
                         <div
                           key={n}
-                          className="px-2.5 py-1.5 rounded-lg bg-white border border-gray-100 text-[11px] text-gray-600"
+                          className="px-2.5 py-1.5 rounded-lg bg-white border border-gray-200 text-[11px] text-gray-600"
                         >
                           Baris konten scroll #{n}
                         </div>
@@ -1730,13 +1740,13 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
             id="scr-container"
             title="Fixed-Height Scrollable Container"
             classesHint="h-48 overflow-y-auto custom-sidebar-scrollbar"
-            codeSnippet={`<div className="h-48 overflow-y-auto border border-gray-200 rounded-xl p-3 space-y-2">\n  {logs.map(n => <div>Log #{n}</div>)}\n</div>`}
+            codeSnippet={`<div className="h-48 overflow-y-auto border border-gray-300 rounded-xl p-3 space-y-2">\n  {logs.map(n => <div>Log #{n}</div>)}\n</div>`}
           >
-            <div className="max-w-lg h-48 overflow-y-auto border border-gray-200 rounded-xl p-3 text-xs text-gray-600 space-y-2 bg-gray-50/40 custom-sidebar-scrollbar">
+            <div className="max-w-lg h-48 overflow-y-auto border border-gray-300 rounded-xl p-3 text-xs text-gray-600 space-y-2 bg-gray-50/40 custom-sidebar-scrollbar">
               {[1, 2, 3, 4, 5, 6].map((n) => (
-                <div key={n} className="p-2.5 bg-white rounded-lg border border-gray-100 flex items-center justify-between">
+                <div key={n} className="p-2.5 bg-white rounded-lg border border-gray-200 flex items-center justify-between">
                   <span className="font-medium text-gray-800">Catatan Revisi Silabus #{n}</span>
-                  <span className="text-[11px] text-gray-400">Terverifikasi</span>
+                  <span className="text-[11px] text-gray-500">Terverifikasi</span>
                 </div>
               ))}
             </div>
@@ -1749,7 +1759,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
             classesHint="no-scrollbar overflow-x-auto / slide-indicator-thumb"
             codeSnippet={`<HorizontalSlideTrack activeKey={selectedMonth} accent="dark">\n  {months.map(m => (\n    <button data-slide-active={selectedMonth === m ? 'true' : undefined} className="rounded-full shrink-0">{m}</button>\n  ))}\n</HorizontalSlideTrack>`}
           >
-            <div className="max-w-sm bg-white border border-gray-200 rounded-2xl p-4 space-y-3 shadow-2xs">
+            <div className="max-w-sm bg-white border border-gray-300 rounded-2xl p-4 space-y-3 shadow-2xs">
               <HorizontalSlideTrack
                 activeKey={slideMonthDemo}
                 trackClassName="flex items-center gap-2 pb-1 select-none"
@@ -1765,7 +1775,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                     className={`px-4 py-1.5 rounded-full text-[12.5px] font-medium transition-all duration-200 active:scale-95 shrink-0 cursor-pointer ${
                       slideMonthDemo === m
                         ? 'bg-[#1C1D21] text-white shadow-2xs'
-                        : 'bg-[#F4F5F8] text-[#6E717A] hover:text-[#1C1D21]'
+                        : 'bg-[#F4F5F8] text-[#5A5D67] hover:text-[#1C1D21]'
                     }`}
                   >
                     {m}
@@ -1804,10 +1814,10 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
               </button>
             }
           >
-            <div className="max-w-sm rounded-[24px] border border-gray-200 bg-white overflow-hidden shadow-xs select-none">
-              <div className="px-4 py-2.5 border-b border-black/[0.05] flex items-center justify-between bg-[#FAFBFD]">
+            <div className="max-w-sm rounded-[24px] border border-gray-300 bg-white overflow-hidden shadow-xs select-none">
+              <div className="px-4 py-2.5 border-b border-black/[0.12] flex items-center justify-between bg-[#FAFBFD]">
                 <span className="text-[12.5px] font-semibold text-[#1C1D21]">Jadwal & Aktivitas</span>
-                <span className="text-[11px] text-[#8A8D98] tabular-nums">
+                <span className="text-[11px] text-[#646772] tabular-nums">
                   Sync #{ptrSyncCount} · {ptrLastSync}
                 </span>
               </div>
@@ -1828,7 +1838,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                 className="h-64 bg-white"
               >
                 <div className="flex-1 overflow-y-auto p-3.5 space-y-2.5">
-                  <div className="text-[11px] font-medium text-[#8A8D98] px-1">
+                  <div className="text-[11px] font-medium text-[#646772] px-1">
                     Tarik ke bawah di area ini untuk melihat efek Elastic Header
                   </div>
                   {[
@@ -1838,7 +1848,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                   ].map((item) => (
                     <div
                       key={item.code}
-                      className="p-3 rounded-2xl bg-[#FAFBFD] border border-black/[0.04] flex items-center justify-between gap-3"
+                      className="p-3 rounded-2xl bg-[#FAFBFD] border border-black/[0.12] flex items-center justify-between gap-3"
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
                         <span className={`px-2.5 py-1 rounded-xl text-[11px] font-bold shrink-0 ${item.tint}`}>
@@ -1848,10 +1858,10 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                           <div className="text-[12.5px] font-semibold text-[#1C1D21] truncate">
                             {item.title}
                           </div>
-                          <div className="text-[11px] text-[#8A8D98]">{item.time}</div>
+                          <div className="text-[11px] text-[#646772]">{item.time}</div>
                         </div>
                       </div>
-                      <TrendingUp className="w-3.5 h-3.5 text-[#8A8D98] shrink-0" />
+                      <TrendingUp className="w-3.5 h-3.5 text-[#646772] shrink-0" />
                     </div>
                   ))}
                 </div>
@@ -1870,12 +1880,12 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
             classesHint="sticky bottom-0 p-3 bg-gray-900 text-white"
             codeSnippet={`<div className="h-48 overflow-y-auto flex flex-col justify-between">\n  <div>...scrollable body...</div>\n  <div className="sticky bottom-0 bg-gray-900 text-white p-3">Simpan</div>\n</div>`}
           >
-            <div className="max-w-lg h-48 overflow-y-auto border border-gray-200 rounded-xl text-xs text-gray-600 flex flex-col justify-between bg-gray-50/40 relative">
+            <div className="max-w-lg h-48 overflow-y-auto border border-gray-300 rounded-xl text-xs text-gray-600 flex flex-col justify-between bg-gray-50/40 relative">
               <div className="p-3 space-y-2">
-                <div className="p-2.5 bg-white rounded-lg border border-gray-100">Draft Soal Ujian Akhir Semester #1</div>
-                <div className="p-2.5 bg-white rounded-lg border border-gray-100">Draft Soal Ujian Akhir Semester #2</div>
-                <div className="p-2.5 bg-white rounded-lg border border-gray-100">Draft Soal Ujian Akhir Semester #3</div>
-                <div className="p-2.5 bg-white rounded-lg border border-gray-100">Draft Soal Ujian Akhir Semester #4</div>
+                <div className="p-2.5 bg-white rounded-lg border border-gray-200">Draft Soal Ujian Akhir Semester #1</div>
+                <div className="p-2.5 bg-white rounded-lg border border-gray-200">Draft Soal Ujian Akhir Semester #2</div>
+                <div className="p-2.5 bg-white rounded-lg border border-gray-200">Draft Soal Ujian Akhir Semester #3</div>
+                <div className="p-2.5 bg-white rounded-lg border border-gray-200">Draft Soal Ujian Akhir Semester #4</div>
               </div>
               <div className="sticky bottom-0 p-3 bg-gray-900 text-white flex items-center justify-between">
                 <span className="font-semibold">Fixed Action Footer</span>
@@ -1904,7 +1914,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
             <div className="max-w-lg space-y-3 text-xs">
               <div className="space-y-2">
                 {Array.from({ length: loadMoreCount }).map((_, i) => (
-                  <div key={i} className="p-2.5 rounded-lg bg-gray-50 border border-gray-100 text-gray-700 tabular-nums animate-ui-slide-down">
+                  <div key={i} className="p-2.5 rounded-lg bg-gray-50 border border-gray-300 text-gray-700 tabular-nums animate-ui-slide-down">
                     Entri Log Modul Pembelajaran #{i + 1} (Disetujui)
                   </div>
                 ))}
@@ -1938,13 +1948,13 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
           <UiDocSection
             id="mnu-classic"
             title="Classic Vertical Sidebar Menu"
-            classesHint="relative grid grid-rows-3 w-56 p-1.5 rounded-xl bg-gray-100/80 border border-gray-200"
+            classesHint="relative grid grid-rows-3 w-56 p-1.5 rounded-xl bg-gray-100/80 border border-gray-300"
             codeSnippet={`<div className="w-56 p-1.5 rounded-xl bg-gray-100 border grid grid-rows-3">\n  <button className="px-3 py-2 rounded-lg bg-gray-900 text-white font-semibold">Dashboard</button>\n  <button className="px-3 py-2 rounded-lg text-gray-700">Materials</button>\n</div>`}
           >
-            <div className="relative grid grid-rows-3 w-56 p-1.5 rounded-xl bg-gray-100/80 border border-gray-200 text-xs">
+            <div className="relative grid grid-rows-3 w-56 p-1.5 rounded-xl bg-gray-100/80 border border-gray-300 text-xs">
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-x-1.5 top-1.5 h-[calc((100%-0.75rem)/3)] rounded-lg bg-gray-900 shadow-xs transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                className="pointer-events-none absolute inset-x-1.5 top-1.5 h-[calc((100%-0.75rem)/3)] rounded-lg bg-gray-900 shadow-xs transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
                 style={{
                   transform: `translate3d(0, ${Math.max(0, ['Dashboard', 'Materials', 'UI Kit'].indexOf(activeClassicMenu)) * 100}%, 0)`,
                 }}
@@ -1954,8 +1964,8 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                   key={m}
                   type="button"
                   onClick={() => setActiveClassicMenu(m)}
-                  className={`relative z-10 w-full text-left px-3 py-2 rounded-lg transition-colors duration-200 cursor-pointer ${
-                    activeClassicMenu === m ? 'text-white font-semibold' : 'text-gray-700 hover:text-gray-950 font-medium'
+                  className={`relative z-10 w-full text-left px-3 py-2 rounded-lg font-semibold transition-colors duration-200 cursor-pointer ${
+                    activeClassicMenu === m ? 'text-white' : 'text-gray-700 hover:text-gray-950'
                   }`}
                 >
                   {m}
@@ -1970,7 +1980,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
             classesHint="flex items-center gap-2 p-2.5 rounded-xl bg-gray-50 border"
             codeSnippet={`<div className="flex items-center gap-2 p-2 rounded-xl bg-gray-50 border">\n  <span className="px-3 py-1 rounded bg-gray-900 text-white font-semibold">Overview</span>\n  <span>Courses</span>\n</div>`}
           >
-            <div className="max-w-md flex items-center gap-2 p-2.5 rounded-xl bg-gray-50 border border-gray-200 text-xs">
+            <div className="max-w-md flex items-center gap-2 p-2.5 rounded-xl bg-gray-50 border border-gray-300 text-xs">
               <span className="px-3 py-1 rounded-md bg-gray-900 text-white font-semibold">Overview</span>
               <span className="px-3 py-1 rounded-md text-gray-700 hover:bg-white cursor-pointer">Courses</span>
               <span className="px-3 py-1 rounded-md text-gray-700 hover:bg-white cursor-pointer">Grades</span>
@@ -2007,7 +2017,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
             classesHint="p-3 rounded-xl bg-white border flex items-center justify-between"
             codeSnippet={`<header className="p-3 rounded-xl bg-white border flex items-center justify-between">\n  <span className="font-bold">UI KIT</span>\n  <input placeholder="Navbar search..." />\n</header>`}
           >
-            <div className="p-3 rounded-xl bg-white border border-gray-200 flex items-center justify-between gap-2 text-xs">
+            <div className="p-3 rounded-xl bg-white border border-gray-300 flex items-center justify-between gap-2 text-xs">
               <div className="flex items-center gap-2 font-bold text-gray-900">
                 <span className="w-6 h-6 rounded-md bg-primary-600 text-white flex items-center justify-center text-[10px]">
                   UI
@@ -2015,8 +2025,8 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
                 <span>UI KIT</span>
               </div>
               <div className="relative flex-1 max-w-[200px]">
-                <Search className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
-                <input type="text" placeholder="Navbar search..." className="w-full pl-8 pr-2.5 py-1.5 rounded-md border border-gray-200 text-xs" />
+                <Search className="w-3.5 h-3.5 text-gray-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                <input type="text" placeholder="Navbar search..." className="w-full pl-8 pr-2.5 py-1.5 rounded-md border border-gray-300 text-xs" />
               </div>
             </div>
           </UiDocSection>
@@ -2029,7 +2039,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
           >
             <div className="p-3.5 bg-gray-900 text-white rounded-xl flex items-center justify-between text-xs">
               <span className="font-bold">UI KIT Dark Navbar</span>
-              <span className="text-[11px] text-gray-400">Signed in as Design System</span>
+              <span className="text-[11px] text-gray-300">Signed in as Design System</span>
             </div>
           </UiDocSection>
 
@@ -2060,7 +2070,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
             classesHint="bg-gray-900 text-white rounded-lg"
             codeSnippet={`<button onClick={() => setActiveDrawerSpec({ dir: 'right', type: 'offcanvas' })}>Buka Offcanvas</button>`}
           >
-            <div className="p-3 bg-gray-50 rounded-xl border border-gray-200 flex items-center justify-between text-xs">
+            <div className="p-3 bg-gray-50 rounded-xl border border-gray-300 flex items-center justify-between text-xs">
               <span className="font-semibold text-gray-700">UI KIT Responsive Navbar</span>
               <button
                 onClick={() => setActiveDrawerSpec({ dir: 'right', type: 'offcanvas' })}
@@ -2082,7 +2092,7 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
             classesHint="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
             codeSnippet={`<div className="p-4 rounded-xl bg-gray-50 border flex items-center justify-between">\n  <div><span>Ruang Kelas Aktif</span><h3>Class 302 · Matematika</h3></div>\n  <div className="flex gap-2"><button>Ekspor</button><button>Mulai Sesi</button></div>\n</div>`}
           >
-            <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="p-4 rounded-xl bg-gray-50 border border-gray-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <span className="text-xs font-semibold text-primary-700">Ruang Kelas Aktif</span>
                 <h3 className="text-base font-bold text-gray-900">Class 302 · Matematika</h3>
@@ -2106,10 +2116,10 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
         >
           <UiDocSection
             title="Standard Application Footer Bar"
-            classesHint="flex items-center justify-between p-4 bg-gray-100 rounded-xl border border-gray-200"
-            codeSnippet={`<footer className="p-4 bg-gray-100 rounded-xl flex justify-between text-xs text-gray-500">\n  <span>© 2026 UI KIT Design System</span>\n  <div className="flex gap-4"><a>Privasi</a><a>Bantuan</a></div>\n</footer>`}
+            classesHint="flex items-center justify-between p-4 bg-gray-100 rounded-xl border border-gray-300"
+            codeSnippet={`<footer className="p-4 bg-gray-100 rounded-xl flex justify-between text-xs text-gray-600">\n  <span>© 2026 UI KIT Design System</span>\n  <div className="flex gap-4"><a>Privasi</a><a>Bantuan</a></div>\n</footer>`}
           >
-            <div className="p-4 bg-gray-100 rounded-xl flex flex-wrap items-center justify-between gap-2 text-xs text-gray-500 border border-gray-200">
+            <div className="p-4 bg-gray-100 rounded-xl flex flex-wrap items-center justify-between gap-2 text-xs text-gray-600 border border-gray-300">
               <span>© 2026 UI KIT · Design System</span>
               <div className="flex gap-4 text-primary-600 font-semibold">
                 <span className="cursor-pointer hover:underline">Privasi</span>

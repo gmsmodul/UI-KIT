@@ -16,6 +16,7 @@ import { PASTEL_THEMES } from '../../constants/theme';
 import { useBottomSheetMotion } from '../../hooks/useBottomSheetMotion';
 import { UI_KIT_CATALOG, UiKitSubSection } from '../uikit/uiKitCatalog';
 import { getUiKitCategoryIcon } from '../uikit/uiKitIcons';
+import { playUiMotionSound } from '../../utils/uiMotionSound';
 
 interface MobileSearchEntry {
   key: string;
@@ -44,28 +45,32 @@ export const MobileBottomNav: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const menuCloseTimerRef = useRef<number | null>(null);
+  const drawerNavScrollRef = useRef<HTMLDivElement>(null);
   const pillBarRef = useRef<HTMLDivElement>(null);
   const slotRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [indicator, setIndicator] = useState({ left: 0, width: 0, ready: false });
+  const [drawerPeekHeight, setDrawerPeekHeight] = useState<number | null>(null);
 
   const openMenuSmoothly = () => {
     if (menuCloseTimerRef.current) {
       window.clearTimeout(menuCloseTimerRef.current);
       menuCloseTimerRef.current = null;
     }
+    playUiMotionSound('pop');
     setMenuClosing(false);
     setMenuOpen(true);
   };
 
   const closeMenuSmoothly = () => {
     if (!menuOpen || menuClosing) return;
+    playUiMotionSound('tick');
     setMenuClosing(true);
     menuCloseTimerRef.current = window.setTimeout(() => {
       setMenuOpen(false);
       setMenuClosing(false);
       menuCloseTimerRef.current = null;
-    }, 220);
+    }, 200);
   };
 
   useEffect(() => {
@@ -139,8 +144,53 @@ export const MobileBottomNav: React.FC = () => {
   useEffect(() => {
     if (!menuOpen) {
       setMenuSubview('nav');
+      setDrawerPeekHeight(null);
     }
   }, [menuOpen]);
+
+  useLayoutEffect(() => {
+    if (!menuOpen || menuSubview !== 'nav') {
+      setDrawerPeekHeight(null);
+      return;
+    }
+
+    const computeDrawerPeek = () => {
+      const scroller = drawerNavScrollRef.current;
+      if (!scroller) return;
+
+      const capHeight = Math.max(180, window.innerHeight - 156);
+      if (scroller.scrollHeight <= capHeight + 2) {
+        setDrawerPeekHeight((prev) => (prev !== null ? null : prev));
+        return;
+      }
+
+      const items = Array.from(
+        scroller.querySelectorAll<HTMLElement>('[data-drawer-item="true"]')
+      );
+      let targetMid: number | null = null;
+      for (const item of items) {
+        const midInContent = item.offsetTop + item.offsetHeight * 0.5;
+        if (midInContent <= capHeight) {
+          targetMid = Math.round(midInContent);
+        } else {
+          break;
+        }
+      }
+
+      setDrawerPeekHeight((prev) => (prev !== targetMid ? targetMid : prev));
+    };
+
+    computeDrawerPeek();
+    const scroller = drawerNavScrollRef.current;
+    const ro =
+      typeof ResizeObserver !== 'undefined' ? new ResizeObserver(computeDrawerPeek) : null;
+    if (ro && scroller) ro.observe(scroller);
+    window.addEventListener('resize', computeDrawerPeek);
+    return () => {
+      ro?.disconnect();
+      window.removeEventListener('resize', computeDrawerPeek);
+    };
+  }, [menuOpen, menuSubview]);
 
   useEffect(() => {
     if (isUiMobileSearchOpen) {
@@ -227,15 +277,15 @@ export const MobileBottomNav: React.FC = () => {
             menuClosing ? 'animate-ui-fade-out' : 'animate-ui-fade'
           } fixed inset-0 z-40 bg-black/30 backdrop-blur-[2px] md:hidden no-print`}
         >
-          <div className="fixed bottom-[68px] inset-x-4 max-w-[352px] mx-auto pointer-events-none">
+          <div className="fixed bottom-[calc(4.25rem+env(safe-area-inset-bottom,0px))] inset-x-4 max-w-[352px] mx-auto pointer-events-none">
             <div
               onClick={(e) => e.stopPropagation()}
               className={`${
                 menuClosing ? 'animate-menu-fold-down' : 'animate-menu-fold-up'
-              } pointer-events-auto w-[min(280px,100%)] max-h-[calc(100vh-92px)] bg-white rounded-[24px] shadow-[0_20px_48px_-12px_rgba(15,23,42,0.28)] border border-black/[0.06] flex flex-col overflow-hidden`}
+              } pointer-events-auto w-[min(280px,100%)] max-h-[calc(100vh-92px)] bg-white rounded-[24px] shadow-[0_20px_48px_-12px_rgba(15,23,42,0.28)] border border-black/[0.14] flex flex-col overflow-hidden`}
             >
               {/* Top UI KIT Brand Header */}
-              <div className="px-3.5 pt-3 pb-2.5 border-b border-black/[0.05] flex items-center justify-between gap-2 shrink-0">
+              <div className="px-3.5 pt-3 pb-2.5 border-b border-black/[0.12] flex items-center justify-between gap-2 shrink-0">
                 <button
                   type="button"
                   onClick={() => handleSelectCategory('utilities', 'Grid')}
@@ -248,7 +298,7 @@ export const MobileBottomNav: React.FC = () => {
                     <div className="text-[13px] font-semibold text-[#1C1D21] truncate group-hover:text-[#ee2e65] transition-colors">
                       UI KIT
                     </div>
-                    <div className="text-[10px] text-[#8A8D98] leading-tight">
+                    <div className="text-[10px] text-[#646772] leading-tight">
                       Design System
                     </div>
                   </div>
@@ -285,65 +335,77 @@ export const MobileBottomNav: React.FC = () => {
 
               {/* Subview: UI KIT Categories List */}
               {menuSubview === 'nav' && (
-                <div className="overflow-y-auto p-2 space-y-0.5 overscroll-contain">
-                  {popupCategories.map((group) => {
-                    const Icon = getUiKitCategoryIcon(group.id);
-                    const isCurrent = uiCategory === group.id;
-                    return (
-                      <button
-                        key={group.id}
-                        type="button"
-                        onClick={() => handleSelectCategory(group.id)}
-                        className={`w-full flex items-center justify-between px-3 py-2 rounded-full text-left transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer ${
-                          isCurrent
-                            ? 'bg-[#ee2e65] text-white font-semibold shadow-[0_6px_16px_-6px_rgba(238,46,101,0.55)]'
-                            : 'text-[#1C1D21] hover:bg-[#F4F5F8] font-medium'
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <Icon
-                            className={`w-4 h-4 shrink-0 ${
-                              isCurrent ? 'text-white stroke-[2.2px]' : 'text-[#1C1D21] stroke-[1.8px]'
-                            }`}
-                          />
-                          <span className="text-[13px] truncate">{group.label}</span>
-                        </div>
-
-                        <span
-                          className={`min-w-[22px] h-[20px] px-1.5 rounded-full text-[10.5px] font-bold flex items-center justify-center shrink-0 tabular-nums ${
+                <div
+                  ref={drawerNavScrollRef}
+                  style={
+                    drawerPeekHeight !== null
+                      ? { maxHeight: `${drawerPeekHeight}px` }
+                      : { maxHeight: 'calc(100vh - 156px)' }
+                  }
+                  className="relative overflow-y-auto overflow-x-hidden no-scrollbar px-2 pt-2 overscroll-contain"
+                >
+                  <div className="space-y-0.5 pb-2">
+                    {popupCategories.map((group) => {
+                      const Icon = getUiKitCategoryIcon(group.id);
+                      const isCurrent = uiCategory === group.id;
+                      return (
+                        <button
+                          key={group.id}
+                          type="button"
+                          data-drawer-item="true"
+                          onClick={() => handleSelectCategory(group.id)}
+                          className={`w-full flex items-center justify-between px-3 py-2 rounded-full text-left font-semibold transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer ${
                             isCurrent
-                              ? 'bg-white text-[#ee2e65]'
-                              : 'bg-gray-100 text-gray-600'
+                              ? 'bg-[#ee2e65] text-white shadow-[0_6px_16px_-6px_rgba(238,46,101,0.55)]'
+                              : 'text-[#1C1D21] hover:bg-[#F4F5F8]'
                           }`}
                         >
-                          {group.items.length}
-                        </span>
-                      </button>
-                    );
-                  })}
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <Icon
+                              className={`w-4 h-4 shrink-0 ${
+                                isCurrent ? 'text-white stroke-[2.2px]' : 'text-[#1C1D21] stroke-[1.8px]'
+                              }`}
+                            />
+                            <span className="text-[13px] truncate">{group.label}</span>
+                          </div>
 
-                  <div className="my-1 border-t border-black/[0.06] mx-2" />
-                  <button
-                    type="button"
-                    onClick={() => setMenuSubview('updates')}
-                    className="w-full flex items-center justify-between px-3 py-2 rounded-full text-left text-[#1C1D21] hover:bg-[#F4F5F8] font-medium transition-all duration-200 cursor-pointer"
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <Bell className="w-4 h-4 shrink-0 text-[#1C1D21] stroke-[1.8px]" />
-                      <span className="text-[13px] truncate">UI KIT Updates</span>
-                    </div>
-                    {unreadUiUpdatesCount > 0 && (
-                      <span className="min-w-[22px] h-[20px] px-1.5 rounded-full bg-[#ee2e65] text-white text-[10.5px] font-bold flex items-center justify-center shrink-0 tabular-nums">
-                        {unreadUiUpdatesCount}
-                      </span>
-                    )}
-                  </button>
+                          <span
+                            className={`min-w-[22px] h-[20px] px-1.5 rounded-full text-[10.5px] font-bold flex items-center justify-center shrink-0 tabular-nums ${
+                              isCurrent
+                                ? 'bg-white text-[#ee2e65]'
+                                : 'bg-gray-100 text-gray-600'
+                            }`}
+                          >
+                            {group.items.length}
+                          </span>
+                        </button>
+                      );
+                    })}
+
+                    <div className="my-1 border-t border-black/[0.12] mx-2" />
+                    <button
+                      type="button"
+                      data-drawer-item="true"
+                      onClick={() => setMenuSubview('updates')}
+                      className="w-full flex items-center justify-between px-3 py-2 rounded-full text-left text-[#1C1D21] hover:bg-[#F4F5F8] font-semibold transition-all duration-200 cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <Bell className="w-4 h-4 shrink-0 text-[#1C1D21] stroke-[1.8px]" />
+                        <span className="text-[13px] truncate">UI KIT Updates</span>
+                      </div>
+                      {unreadUiUpdatesCount > 0 && (
+                        <span className="min-w-[22px] h-[20px] px-1.5 rounded-full bg-[#ee2e65] text-white text-[10.5px] font-bold flex items-center justify-center shrink-0 tabular-nums">
+                          {unreadUiUpdatesCount}
+                        </span>
+                      )}
+                    </button>
+                  </div>
                 </div>
               )}
 
               {/* Subview: UI KIT Updates Drawer View */}
               {menuSubview === 'updates' && (
-                <div className="overflow-y-auto p-3 space-y-2.5 overscroll-contain">
+                <div className="overflow-y-auto overflow-x-hidden no-scrollbar p-3 space-y-2.5 overscroll-contain">
                   <div className="flex items-center justify-between px-1">
                     <button
                       type="button"
@@ -378,13 +440,13 @@ export const MobileBottomNav: React.FC = () => {
                           }}
                           className={`w-full text-left p-3 rounded-2xl border transition-all flex items-start gap-2.5 cursor-pointer ${
                             item.unread
-                              ? `${theme.bg} border-black/[0.05]`
-                              : 'bg-[#FAFBFD] border-black/[0.04] hover:bg-gray-100/70'
+                              ? `${theme.bg} border-black/[0.12]`
+                              : 'bg-[#FAFBFD] border-black/[0.12] hover:bg-gray-100/70'
                           }`}
                         >
                           <span
                             className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
-                              item.unread ? theme.dot : 'bg-gray-300'
+                              item.unread ? theme.dot : 'bg-gray-400'
                             }`}
                           />
                           <div className="min-w-0 flex-1">
@@ -392,7 +454,7 @@ export const MobileBottomNav: React.FC = () => {
                               <span className="text-[12.5px] font-semibold text-[#1C1D21] truncate">
                                 {item.title}
                               </span>
-                              <span className="text-[10.5px] text-[#8A8D98] shrink-0">
+                              <span className="text-[10.5px] text-[#646772] shrink-0">
                                 {item.time}
                               </span>
                             </div>
@@ -412,17 +474,17 @@ export const MobileBottomNav: React.FC = () => {
       )}
 
       {/* Compact One-Handed Floating Bottom Navigation Bar + Detached Search Button */}
-      <div className="fixed bottom-3 inset-x-4 max-w-[352px] mx-auto z-40 md:hidden flex items-center gap-2 no-print">
+      <div className="fixed bottom-[calc(0.75rem+env(safe-area-inset-bottom,0px))] inset-x-4 max-w-[352px] mx-auto z-40 md:hidden flex items-center gap-2 no-print">
         {/* Main Floating Pill Dock */}
         <nav
           ref={pillBarRef}
           aria-label="UI KIT mobile navigation"
-          className="relative flex-1 bg-white/95 backdrop-blur-md rounded-full p-1 shadow-[0_10px_28px_-8px_rgba(15,23,42,0.18)] border border-black/[0.06] flex items-center justify-between"
+          className="relative flex-1 bg-white/95 backdrop-blur-md rounded-full p-1 shadow-[0_10px_28px_-8px_rgba(15,23,42,0.18)] border border-black/[0.14] flex items-center justify-between"
         >
           {/* Gliding Brand-Primary Active Pill */}
           <span
             aria-hidden="true"
-            className={`pointer-events-none absolute top-1 bottom-1 left-0 rounded-full bg-[#ee2e65] shadow-[0_5px_14px_-4px_rgba(238,46,101,0.55)] transition-[transform,width,opacity] duration-300 ease-[cubic-bezier(0.22,1.24,0.36,1)] ${
+            className={`pointer-events-none absolute top-1 bottom-1 left-0 rounded-full bg-[#ee2e65] shadow-[0_5px_14px_-4px_rgba(238,46,101,0.55)] transition-[transform,width,opacity] duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
               indicator.ready ? 'opacity-100' : 'opacity-0'
             }`}
             style={{
@@ -474,15 +536,15 @@ export const MobileBottomNav: React.FC = () => {
             aria-label="Open UI KIT categories"
             aria-expanded={menuOpen && !menuClosing}
             onClick={() => (menuOpen && !menuClosing ? closeMenuSmoothly() : openMenuSmoothly())}
-            className={`relative z-10 h-10 rounded-full flex items-center justify-center gap-1 transition-colors duration-200 cursor-pointer ${
-              isOverflowActive ? 'flex-[1.28] px-2.5 text-white' : 'flex-1 text-[#1C1D21] hover:text-[#ee2e65]'
+            className={`relative z-10 flex-1 h-10 rounded-full flex items-center justify-center gap-1 transition-colors duration-200 cursor-pointer ${
+              isOverflowActive ? 'text-white' : 'text-[#1C1D21] hover:text-[#ee2e65]'
             }`}
           >
             {isOverflowActive && ActiveOverflowIcon && (
               <ActiveOverflowIcon className="w-[17px] h-[17px] stroke-[2.1px] shrink-0" />
             )}
             <ChevronsUpDown
-              className={`w-[15px] h-[15px] stroke-[2.1px] shrink-0 transition-transform duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              className={`w-[15px] h-[15px] stroke-[2.1px] shrink-0 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] ${
                 menuOpen && !menuClosing ? 'scale-110' : ''
               }`}
             />
@@ -500,7 +562,7 @@ export const MobileBottomNav: React.FC = () => {
           className={`w-12 h-12 shrink-0 rounded-full backdrop-blur-md shadow-[0_10px_28px_-8px_rgba(15,23,42,0.18)] border flex items-center justify-center transition-all duration-200 active:scale-95 cursor-pointer ${
             isUiMobileSearchOpen
               ? 'bg-[#ee2e65] text-white border-[#ee2e65]'
-              : 'bg-white/95 text-[#1C1D21] border-black/[0.06] hover:text-[#ee2e65]'
+              : 'bg-white/95 text-[#1C1D21] border-black/[0.14] hover:text-[#ee2e65]'
           }`}
         >
           <Search className="w-[18px] h-[18px] stroke-[2px]" />
@@ -517,31 +579,32 @@ export const MobileBottomNav: React.FC = () => {
           <div
             ref={setSearchSheetEl}
             {...searchGestureProps}
-            className="w-full bg-white rounded-t-[28px] p-5 pb-7 space-y-4 shadow-2xl max-h-[82vh] flex flex-col animate-bottom-sheet"
+            className="w-full bg-white rounded-t-[28px] p-5 pb-[calc(1.75rem+env(safe-area-inset-bottom,0px))] space-y-4 shadow-2xl max-h-[82vh] flex flex-col animate-bottom-sheet"
           >
             <div
               data-sheet-handle="true"
               className="flex justify-center py-2 -mt-3 -mb-1 cursor-grab active:cursor-grabbing touch-none shrink-0"
             >
-              <div className="w-10 h-1 bg-black/15 rounded-full animate-sheet-handle" />
+              <div className="w-10 h-1 bg-black/20 rounded-full animate-sheet-handle" />
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
-              <div className="flex-1 flex items-center gap-2.5 bg-[#F4F5F8] rounded-full px-4 py-2.5 border border-black/[0.04] focus-within:border-[#ee2e65] focus-within:bg-white transition-colors">
-                <Search className="w-4 h-4 text-[#8A8D98] shrink-0" />
+              <div className="flex-1 flex items-center gap-2.5 bg-[#F4F5F8] rounded-full px-4 py-2.5 border border-black/[0.14] focus-within:border-[#ee2e65] focus-within:bg-white transition-colors">
+                <Search className="w-4 h-4 text-[#646772] shrink-0" />
                 <input
                   ref={searchInputRef}
                   type="text"
+                  enterKeyHint="search"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Cari kategori, komponen, atau token UI..."
-                  className="w-full bg-transparent text-[13.5px] text-[#1C1D21] placeholder:text-[#8A8D98] outline-none"
+                  className="w-full bg-transparent text-base sm:text-[13.5px] text-[#1C1D21] placeholder:text-[#646772] outline-none"
                 />
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={() => setSearchQuery('')}
-                    className="text-[#8A8D98] hover:text-[#1C1D21] cursor-pointer"
+                    className="text-[#646772] hover:text-[#1C1D21] cursor-pointer"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -551,7 +614,7 @@ export const MobileBottomNav: React.FC = () => {
                 type="button"
                 aria-label="Close search"
                 onClick={animateCloseSearch}
-                className="w-9 h-9 rounded-full hover:bg-[#F4F5F8] flex items-center justify-center text-[#6E717A] shrink-0 cursor-pointer"
+                className="w-9 h-9 rounded-full hover:bg-[#F4F5F8] flex items-center justify-center text-[#5A5D67] shrink-0 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -561,7 +624,7 @@ export const MobileBottomNav: React.FC = () => {
               {/* Matched UI KIT Elements */}
               {searchResults.matchedElements.length > 0 && (
                 <div className="space-y-1.5">
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-[#8A8D98] px-1">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-[#646772] px-1">
                     Komponen & Bagian
                   </div>
                   <div className="space-y-1">
@@ -573,17 +636,17 @@ export const MobileBottomNav: React.FC = () => {
                           selectUiNode(res.groupId, res.itemLabel, res.section?.id);
                           animateCloseSearch();
                         }}
-                        className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl bg-[#FAFBFD] hover:bg-[#FEF1F5] text-left transition-colors cursor-pointer"
+                        className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl bg-[#FAFBFD] hover:bg-[#FEF1F5] border border-black/[0.10] text-left transition-colors cursor-pointer"
                       >
                         <div className="min-w-0 pr-2">
                           <div className="text-[13px] font-semibold text-[#1C1D21] truncate">
                             {res.section ? res.section.title : res.itemLabel}
                           </div>
-                          <div className="text-[11px] text-[#8A8D98] truncate">
+                          <div className="text-[11px] text-[#646772] truncate">
                             {res.groupLabel} · {res.itemLabel}
                           </div>
                         </div>
-                        <ChevronRight className="w-4 h-4 text-[#B4B6C1] shrink-0" />
+                        <ChevronRight className="w-4 h-4 text-[#5A5D67] shrink-0" />
                       </button>
                     ))}
                   </div>
@@ -593,7 +656,7 @@ export const MobileBottomNav: React.FC = () => {
               {/* Categories */}
               {searchResults.matchedGroups.length > 0 && (
                 <div className="space-y-1.5">
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-[#8A8D98] px-1">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-[#646772] px-1">
                     {searchQuery ? 'Kategori' : 'Akses Cepat Kategori UI KIT'}
                   </div>
                   <div className="space-y-1">
@@ -608,10 +671,10 @@ export const MobileBottomNav: React.FC = () => {
                             selectUiNode(group.id);
                             animateCloseSearch();
                           }}
-                          className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl transition-colors text-left cursor-pointer ${
+                          className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl border transition-colors text-left cursor-pointer ${
                             isCurrent
-                              ? 'bg-[#ee2e65] text-white font-semibold'
-                              : 'bg-[#FAFBFD] hover:bg-[#F4F5F8] text-[#1C1D21] font-medium'
+                              ? 'bg-[#ee2e65] border-[#ee2e65] text-white font-semibold'
+                              : 'bg-[#FAFBFD] border-black/[0.10] hover:bg-[#F4F5F8] text-[#1C1D21] font-medium'
                           }`}
                         >
                           <div className="flex items-center gap-3 min-w-0">
@@ -620,7 +683,7 @@ export const MobileBottomNav: React.FC = () => {
                           </div>
                           <ChevronRight
                             className={`w-4 h-4 shrink-0 ${
-                              isCurrent ? 'text-white/80' : 'text-[#B4B6C1]'
+                              isCurrent ? 'text-white/80' : 'text-[#5A5D67]'
                             }`}
                           />
                         </button>
@@ -633,7 +696,7 @@ export const MobileBottomNav: React.FC = () => {
               {searchQuery &&
                 searchResults.matchedGroups.length === 0 &&
                 searchResults.matchedElements.length === 0 && (
-                  <div className="py-8 text-center text-[12.5px] text-[#8A8D98]">
+                  <div className="py-8 text-center text-[12.5px] text-[#646772]">
                     Tidak ada komponen untuk &ldquo;{searchQuery}&rdquo;
                   </div>
                 )}

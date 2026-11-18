@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback, useId } from 'react';
 import { ArrowDown, RefreshCw, Check } from 'lucide-react';
+import { playUiMotionSound } from '../../utils/uiMotionSound';
 
 type PullStatus = 'idle' | 'pulling' | 'ready' | 'refreshing' | 'done';
 
@@ -100,6 +101,14 @@ export const ElasticPullToRefresh: React.FC<ElasticPullToRefreshProps> = ({
   const refreshRunRef = useRef(0);
 
   const setPullStatus = useCallback((next: PullStatus) => {
+    const prev = physRef.current.status;
+    if (prev !== next) {
+      if (next === 'ready' && prev === 'pulling') {
+        playUiMotionSound('pop');
+      } else if (next === 'done') {
+        playUiMotionSound('success');
+      }
+    }
     physRef.current.status = next;
     setStatus(next);
   }, []);
@@ -451,7 +460,7 @@ export const ElasticPullToRefresh: React.FC<ElasticPullToRefreshProps> = ({
             }}
           >
             <div
-              className={`bg-white/95 backdrop-blur-xs rounded-full shadow-[0_8px_22px_-4px_rgba(238,46,101,0.42)] flex items-center transition-all duration-200 ${
+              className={`bg-white/95 backdrop-blur-xs rounded-full shadow-[0_8px_22px_-4px_rgba(238,46,101,0.42)] flex items-center transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] ${
                 showBadgeText ? 'p-1 pr-3 gap-2' : 'p-1'
               } ${status === 'ready' ? 'scale-105' : 'scale-100'}`}
             >

@@ -121,7 +121,7 @@ export const AssignmentsPage: React.FC = () => {
                     </span>
                   </div>
                   <div className="w-full h-1.5 bg-black/[0.06] rounded-full overflow-hidden">
-                    <div className={`h-full ${theme.dot} rounded-full transition-all duration-300`} style={{ width: `${pct}%` }} />
+                    <div className={`h-full ${theme.dot} rounded-full transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)]`} style={{ width: `${pct}%` }} />
                   </div>
                 </div>
               </div>

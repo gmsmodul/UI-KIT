@@ -1,4 +1,5 @@
 import React, { useRef, useCallback } from 'react';
+import { playUiMotionSound } from '../utils/uiMotionSound';
 
 interface UseBottomSheetMotionOptions {
   onClose: () => void;
@@ -52,25 +53,27 @@ export function useBottomSheetMotion({
     const isMobileSheet = isBottomSheetViewport();
     sheetEl.style.willChange = 'transform, opacity, filter';
     sheetEl.style.transition = isMobileSheet
-      ? 'transform 260ms cubic-bezier(0.32, 0.72, 0, 1), opacity 220ms ease'
-      : 'transform 220ms cubic-bezier(0.32, 0.72, 0, 1), opacity 190ms ease, filter 190ms ease';
+      ? 'transform 240ms cubic-bezier(0.23, 1, 0.32, 1), opacity 200ms cubic-bezier(0.23, 1, 0.32, 1)'
+      : 'transform 200ms cubic-bezier(0.23, 1, 0.32, 1), opacity 180ms cubic-bezier(0.23, 1, 0.32, 1), filter 180ms cubic-bezier(0.23, 1, 0.32, 1)';
     sheetEl.style.transform = isMobileSheet
       ? 'translate3d(0, 105%, 0)'
-      : 'translate3d(0, 16px, 0) scale(0.945)';
-    sheetEl.style.opacity = isMobileSheet ? '0.45' : '0';
+      : 'translate3d(0, 14px, 0) scale(0.95)';
+    sheetEl.style.opacity = '0';
     if (!isMobileSheet) {
-      sheetEl.style.filter = 'blur(2px)';
+      sheetEl.style.filter = 'blur(3px)';
     }
 
     if (backdropEl) {
-      backdropEl.style.transition = 'opacity 230ms cubic-bezier(0.22, 1, 0.36, 1)';
+      backdropEl.style.transition = 'opacity 200ms cubic-bezier(0.23, 1, 0.32, 1)';
       backdropEl.style.opacity = '0';
     }
+
+    playUiMotionSound('tick', true);
 
     window.setTimeout(() => {
       closingRef.current = false;
       onClose();
-    }, isMobileSheet ? 250 : 210);
+    }, isMobileSheet ? 240 : 200);
   }, [onClose, alwaysBottomSheet]);
 
   const onPointerDown = useCallback(
@@ -171,17 +174,18 @@ export function useBottomSheetMotion({
       return;
     }
 
-    // Spring back cleanly to resting position
+    // Snap back cleanly to resting position (< 300ms Emil Kowalski ease-out)
     const sheetEl = sheetRef.current;
     const backdropEl = backdropRef.current;
     if (sheetEl) {
       sheetEl.style.transition =
-        'transform 420ms cubic-bezier(0.22, 1.24, 0.36, 1), opacity 240ms ease';
+        'transform 260ms cubic-bezier(0.23, 1, 0.32, 1), opacity 200ms cubic-bezier(0.23, 1, 0.32, 1)';
       sheetEl.style.transform = 'translate3d(0, 0, 0) scale(1)';
       sheetEl.style.opacity = '1';
+      playUiMotionSound('land', true);
     }
     if (backdropEl) {
-      backdropEl.style.transition = 'opacity 300ms cubic-bezier(0.22, 1, 0.36, 1)';
+      backdropEl.style.transition = 'opacity 220ms cubic-bezier(0.23, 1, 0.32, 1)';
       backdropEl.style.opacity = '1';
     }
   }, [animateClose]);

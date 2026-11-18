@@ -1,10 +1,26 @@
 export type UiSoundKind = 'pop' | 'land' | 'tick' | 'success';
 
 let sharedAudioCtx: AudioContext | null = null;
+let userHasInteracted = false;
+
+if (typeof window !== 'undefined') {
+  const markInteracted = () => {
+    userHasInteracted = true;
+  };
+  window.addEventListener('pointerdown', markInteracted, { once: true, capture: true, passive: true });
+  window.addEventListener('keydown', markInteracted, { once: true, capture: true, passive: true });
+}
 
 function getAudioContext(): AudioContext | null {
   if (typeof window === 'undefined') return null;
   if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return null;
+  const active =
+    userHasInteracted ||
+    (typeof navigator !== 'undefined' &&
+      (navigator as Navigator & { userActivation?: { hasBeenActive?: boolean } }).userActivation
+        ?.hasBeenActive === true);
+  if (!active) return null;
+
   const Ctor =
     window.AudioContext ||
     (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;

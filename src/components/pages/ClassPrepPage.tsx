@@ -161,7 +161,7 @@ export const ClassPrepPage: React.FC = () => {
                   <div className="mt-3.5 space-y-1.5">
                     <div className="w-full h-1.5 bg-black/[0.06] rounded-full overflow-hidden">
                       <div
-                        className={`h-full ${theme.dot} rounded-full transition-all duration-300`}
+                        className={`h-full ${theme.dot} rounded-full transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)]`}
                         style={{ width: `${plan.progress}%` }}
                       />
                     </div>

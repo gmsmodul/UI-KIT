@@ -14,6 +14,7 @@ import { PASTEL_THEMES } from '../../constants/theme';
 import { getOrderedDirection } from '../ui/PageTransition';
 import { UI_KIT_CATALOG } from '../uikit/uiKitCatalog';
 import { getUiKitCategoryIcon } from '../uikit/uiKitIcons';
+import { playUiMotionSound } from '../../utils/uiMotionSound';
 
 const UI_KIT_ORDER = UI_KIT_CATALOG.flatMap((g) =>
   g.items.map((item) => `${g.id}::${item.label}`)
@@ -113,17 +114,22 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="relative z-30 h-16 px-4 sm:px-7 border-b border-black/[0.05] flex items-center justify-between gap-3 sm:gap-4 shrink-0 bg-white/80 backdrop-blur-sm no-print">
+    <header className="relative z-30 h-16 px-4 sm:px-7 border-b border-black/[0.12] flex items-center justify-between gap-3 sm:gap-4 shrink-0 bg-white/80 backdrop-blur-sm no-print">
       <div className="relative flex items-center gap-3 min-w-0 flex-1 overflow-hidden">
         {/* Mobile Header Left: Clean Category Icon + Active Component Title (no breadcrumb, no photo) */}
         <div className="flex md:hidden items-center min-w-0 flex-1 relative">
           <AnimatePresence mode="popLayout" initial={false}>
             <motion.div
               key={`mobile-header-${uiCategory}-${uiSubJump}`}
-              initial={{ opacity: 0, x: direction * 14 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: direction * -12 }}
-              transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, x: direction * 14, scale: 0.95, filter: 'blur(3px)' }}
+              animate={{ opacity: 1, x: 0, scale: 1, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, x: direction * -10, scale: 0.95, filter: 'blur(2px)' }}
+              transition={{
+                x: { type: 'spring', stiffness: 420, damping: 28, mass: 0.8 },
+                scale: { type: 'spring', stiffness: 420, damping: 26 },
+                opacity: { duration: 0.18, ease: [0.23, 1, 0.32, 1] },
+                filter: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
+              }}
               className="flex items-center gap-2 min-w-0 w-full"
             >
               <ActiveCategoryIcon className="w-[18px] h-[18px] text-[#ee2e65] shrink-0" />
@@ -144,23 +150,28 @@ export const Header: React.FC = () => {
             <Layers className="w-3.5 h-3.5 text-[#ee2e65]" />
             <span>UI KIT</span>
           </button>
-          <ChevronRight className="w-3.5 h-3.5 text-[#B4B6C1] shrink-0" />
+          <ChevronRight className="w-3.5 h-3.5 text-[#5A5D67] shrink-0" />
           <button
             type="button"
             onClick={() => selectUiNode(activeGroup.id)}
-            className="text-[#6E717A] hover:text-[#1C1D21] font-medium truncate transition-colors cursor-pointer"
+            className="text-[#5A5D67] hover:text-[#1C1D21] font-medium truncate transition-colors cursor-pointer"
           >
             {activeGroup.label}
           </button>
-          <ChevronRight className="w-3.5 h-3.5 text-[#B4B6C1] shrink-0" />
+          <ChevronRight className="w-3.5 h-3.5 text-[#5A5D67] shrink-0" />
           <div className="relative flex items-center min-w-0 overflow-hidden py-0.5">
             <AnimatePresence mode="popLayout" initial={false}>
               <motion.div
                 key={`desktop-crumb-${uiCategory}-${uiSubJump}`}
-                initial={{ opacity: 0, y: direction * 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: direction * -8 }}
-                transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                initial={{ opacity: 0, y: direction * 8, scale: 0.95, filter: 'blur(3px)' }}
+                animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, y: direction * -8, scale: 0.95, filter: 'blur(2px)' }}
+                transition={{
+                  y: { type: 'spring', stiffness: 420, damping: 28, mass: 0.8 },
+                  scale: { type: 'spring', stiffness: 420, damping: 26 },
+                  opacity: { duration: 0.18, ease: [0.23, 1, 0.32, 1] },
+                  filter: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
+                }}
                 className="flex items-center gap-1.5 font-semibold text-[#1C1D21] min-w-0"
               >
                 <ActiveCategoryIcon className="w-4 h-4 text-[#ee2e65] shrink-0" />
@@ -176,13 +187,18 @@ export const Header: React.FC = () => {
         {/* UI KIT Updates Popover Trigger */}
         <div ref={notifWrapperRef} className="relative">
           <button
-            onClick={() => setUpdatesOpen(!updatesOpen)}
+            onClick={() =>
+              setUpdatesOpen((prev) => {
+                playUiMotionSound(!prev ? 'pop' : 'tick');
+                return !prev;
+              })
+            }
             aria-label="UI KIT Updates"
             title="UI KIT Changelog & Updates"
             className={`w-9 h-9 rounded-full border flex items-center justify-center transition-colors relative cursor-pointer ${
               updatesOpen
                 ? 'bg-[#FEF1F5] text-[#9D113C] border-[#FBC2D4]'
-                : 'border-black/[0.07] text-[#1C1D21] hover:bg-[#F4F5F8]'
+                : 'border-black/[0.14] text-[#1C1D21] hover:bg-[#F4F5F8]'
             }`}
           >
             <Bell className="w-4 h-4" />
@@ -203,7 +219,7 @@ export const Header: React.FC = () => {
                   right: popoverCoords.isSm ? popoverCoords.right : 12,
                   left: popoverCoords.isSm ? undefined : 12,
                 }}
-                className="fixed sm:w-[380px] bg-white rounded-[24px] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.22)] border border-black/[0.08] p-4 z-[9999] space-y-3 animate-ui-pop"
+                className="fixed sm:w-[380px] bg-white rounded-[24px] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.22)] border border-black/[0.14] p-4 z-[9999] space-y-3 animate-ui-pop"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -230,9 +246,9 @@ export const Header: React.FC = () => {
                     <button
                       key={tab}
                       onClick={() => setUpdatesFilter(tab)}
-                      className={`flex-1 py-1 rounded-md text-xs font-medium transition-all cursor-pointer ${
+                      className={`flex-1 py-1 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
                         updatesFilter === tab
-                          ? 'bg-white text-gray-900 shadow-2xs font-semibold'
+                          ? 'bg-white text-gray-900 shadow-2xs'
                           : 'text-gray-500 hover:text-gray-900'
                       }`}
                     >
@@ -254,15 +270,15 @@ export const Header: React.FC = () => {
                         }}
                         className={`w-full text-left p-3 rounded-xl border transition-all flex items-start gap-3 cursor-pointer ${
                           item.unread
-                            ? `${theme.bg} border-black/[0.05]`
-                            : 'bg-gray-50 border-gray-100 hover:bg-gray-100/70'
+                            ? `${theme.bg} border-black/[0.12]`
+                            : 'bg-gray-50 border-gray-300 hover:bg-gray-100/70'
                         }`}
                       >
-                        <span className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${item.unread ? theme.dot : 'bg-gray-300'}`} />
+                        <span className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${item.unread ? theme.dot : 'bg-gray-400'}`} />
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center justify-between gap-2">
                             <span className="text-sm font-semibold text-gray-900 truncate">{item.title}</span>
-                            <span className="text-xs text-gray-400 shrink-0">{item.time}</span>
+                            <span className="text-xs text-gray-500 shrink-0">{item.time}</span>
                           </div>
                           <p className="text-xs text-gray-600 mt-0.5 line-clamp-2">{item.desc}</p>
                           <span className="inline-block mt-1.5 text-xs font-semibold px-2 py-0.5 rounded-full bg-white text-gray-900 shadow-2xs">
@@ -288,7 +304,7 @@ export const Header: React.FC = () => {
           onClick={handleHeaderSearch}
           title="Search UI KIT Components (/)"
           aria-label="Search UI KIT Components"
-          className="w-9 h-9 rounded-full border border-black/[0.07] flex items-center justify-center text-[#1C1D21] hover:bg-[#FEF1F5] hover:text-[#ee2e65] hover:border-[#FBC2D4] transition-colors cursor-pointer"
+          className="w-9 h-9 rounded-full border border-black/[0.14] flex items-center justify-center text-[#1C1D21] hover:bg-[#FEF1F5] hover:text-[#ee2e65] hover:border-[#FBC2D4] transition-colors cursor-pointer"
         >
           <Search className="w-4 h-4" />
         </button>
@@ -298,7 +314,7 @@ export const Header: React.FC = () => {
           onClick={handlePrintPdf}
           title="Export Component Sheet PDF"
           aria-label="Export Component Sheet PDF"
-          className="hidden sm:flex w-9 h-9 rounded-full border border-black/[0.07] items-center justify-center text-[#1C1D21] hover:bg-[#FEF1F5] hover:text-[#ee2e65] hover:border-[#FBC2D4] transition-colors cursor-pointer"
+          className="hidden sm:flex w-9 h-9 rounded-full border border-black/[0.14] items-center justify-center text-[#1C1D21] hover:bg-[#FEF1F5] hover:text-[#ee2e65] hover:border-[#FBC2D4] transition-colors cursor-pointer"
         >
           <Download className="w-4 h-4" />
         </button>

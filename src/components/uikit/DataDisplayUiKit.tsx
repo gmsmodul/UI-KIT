@@ -27,8 +27,11 @@ import {
 import { AnimatePresence, motion } from 'motion/react';
 import { useApp } from '../../context/AppContext';
 import { UiDocPage, UiDocSection } from './UiDocBlock';
+import { KanbanBoardUiKit } from './KanbanBoardUiKit';
+import { TimelineUiKit } from './TimelineUiKit';
 import { PASTEL_THEMES } from '../../constants/theme';
 import { ACTION_BTN_PRIMARY, ACTION_BTN_SECONDARY } from '../../constants/buttonStyles';
+import { playUiMotionSound } from '../../utils/uiMotionSound';
 import cardOverlayImg from '../../assets/images/card_overlay_calculus_1794562505077.jpg';
 
 interface DataDisplayUiKitProps {
@@ -70,43 +73,43 @@ const ACCORDION_VARIANTS: {
     key: 'Basic Example',
     id: 'acc-basic',
     desc: 'Gaya akordion dasar berbingkai penuh dengan pemisah baris tipis dan satu item terbuka pada satu waktu.',
-    classesHint: 'rounded-xl border border-gray-200 divide-y divide-gray-200 bg-white',
-    codeSnippet: `<div className="rounded-xl border border-gray-200 divide-y divide-gray-200 overflow-hidden">\n  <button onClick={toggle} className="w-full px-4 py-3 flex justify-between font-semibold">Bab 1: Konsep Limit</button>\n  <div className="px-4 py-3 text-sm text-gray-600">Penjelasan materi silabus...</div>\n</div>`,
+    classesHint: 'rounded-xl border border-gray-300 divide-y divide-gray-200 bg-white',
+    codeSnippet: `<div className="rounded-xl border border-gray-300 divide-y divide-gray-200 overflow-hidden">\n  <button onClick={toggle} className="w-full px-4 py-3 flex justify-between font-semibold">Bab 1: Konsep Limit</button>\n  <div className="px-4 py-3 text-sm text-gray-600">Penjelasan materi silabus...</div>\n</div>`,
   },
   {
     key: 'Flush',
     id: 'acc-flush',
     desc: 'Akordion tanpa batas tepi luar atau sudut membulat agar menyatu langsung dengan kontainer induk.',
-    classesHint: 'divide-y divide-gray-200 border-y border-gray-200',
-    codeSnippet: `<div className="divide-y divide-gray-200 border-y border-gray-200">\n  <button className="w-full py-3 flex justify-between font-semibold">Item Flush</button>\n</div>`,
+    classesHint: 'divide-y divide-gray-200 border-y border-gray-300',
+    codeSnippet: `<div className="divide-y divide-gray-200 border-y border-gray-300">\n  <button className="w-full py-3 flex justify-between font-semibold">Item Flush</button>\n</div>`,
   },
   {
     key: 'Card',
     id: 'acc-card',
     desc: 'Setiap panel akordion berdiri sebagai kartu terpisah dengan jarak antar item.',
-    classesHint: 'space-y-2.5 / rounded-xl border border-gray-200 bg-white',
-    codeSnippet: `<div className="space-y-2.5">\n  <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">...</div>\n</div>`,
+    classesHint: 'space-y-2.5 / rounded-xl border border-gray-300 bg-white',
+    codeSnippet: `<div className="space-y-2.5">\n  <div className="rounded-xl border border-gray-300 bg-white overflow-hidden">...</div>\n</div>`,
   },
   {
     key: 'Card shadow',
     id: 'acc-card-shadow',
     desc: 'Varian kartu terpisah dilengkapi elevasi bayangan lembut pada tiap item.',
-    classesHint: 'space-y-2.5 / rounded-xl border border-gray-200 shadow-sm',
-    codeSnippet: `<div className="rounded-xl border border-gray-200 shadow-sm bg-white overflow-hidden">...</div>`,
+    classesHint: 'space-y-2.5 / rounded-xl border border-gray-300 shadow-sm',
+    codeSnippet: `<div className="rounded-xl border border-gray-300 shadow-sm bg-white overflow-hidden">...</div>`,
   },
   {
     key: 'Card bold',
     id: 'acc-card-bold',
     desc: 'Kartu akordion dengan tipografi judul tebal (font-bold) dan kontras tinggi.',
-    classesHint: 'rounded-xl border border-gray-200 font-bold text-gray-950',
+    classesHint: 'rounded-xl border border-gray-300 font-bold text-gray-950',
     codeSnippet: `<button className="w-full px-4 py-3 font-bold text-gray-950">Judul Tebal</button>`,
   },
   {
     key: 'Card bold shadow',
     id: 'acc-card-bold-shadow',
     desc: 'Kombinasi kartu terpisah, judul tebal, dan bayangan elevasi untuk sorotan silabus utama.',
-    classesHint: 'rounded-xl border border-gray-200 shadow-sm font-bold',
-    codeSnippet: `<div className="rounded-xl border border-gray-200 shadow-sm font-bold">...</div>`,
+    classesHint: 'rounded-xl border border-gray-300 shadow-sm font-bold',
+    codeSnippet: `<div className="rounded-xl border border-gray-300 shadow-sm font-bold">...</div>`,
   },
   {
     key: 'Soft',
@@ -155,14 +158,14 @@ const ACCORDION_VARIANTS: {
     id: 'acc-soft-content-card',
     desc: 'Kartu terpisah dengan area isi berwarna lembut ketika panel dibuka.',
     classesHint: 'space-y-2.5 rounded-xl border / bg-[#FEF1F5]/50',
-    codeSnippet: `<div className="rounded-xl border border-gray-200"><div className="bg-[#FEF1F5]/50 p-4">...</div></div>`,
+    codeSnippet: `<div className="rounded-xl border border-gray-300"><div className="bg-[#FEF1F5]/50 p-4">...</div></div>`,
   },
   {
     key: 'Soft content card shadow',
     id: 'acc-soft-content-card-shadow',
     desc: 'Kartu berbayang lembut dengan isi konten berwarna pastel saat aktif.',
     classesHint: 'rounded-xl border shadow-sm / bg-[#FEF1F5]/50',
-    codeSnippet: `<div className="rounded-xl border border-gray-200 shadow-sm"><div className="bg-[#FEF1F5]/50 p-4">...</div></div>`,
+    codeSnippet: `<div className="rounded-xl border border-gray-300 shadow-sm"><div className="bg-[#FEF1F5]/50 p-4">...</div></div>`,
   },
   {
     key: 'Simple',
@@ -176,28 +179,28 @@ const ACCORDION_VARIANTS: {
     id: 'acc-simple-flush',
     desc: 'Kombinasi indikator plus/minus (+ / −) dengan gaya flush tanpa garis tepi luar.',
     classesHint: 'divide-y divide-gray-200 + / −',
-    codeSnippet: `<div className="divide-y divide-gray-200 border-y border-gray-200">...</div>`,
+    codeSnippet: `<div className="divide-y divide-gray-200 border-y border-gray-300">...</div>`,
   },
   {
     key: 'Simple card',
     id: 'acc-simple-card',
     desc: 'Kartu terpisah dengan tombol indikator (+ / −) yang ringan dan bersih.',
     classesHint: 'space-y-2.5 rounded-xl border + / −',
-    codeSnippet: `<div className="rounded-xl border border-gray-200">...</div>`,
+    codeSnippet: `<div className="rounded-xl border border-gray-300">...</div>`,
   },
   {
     key: 'Simple card Shadow',
     id: 'acc-simple-card-shadow',
     desc: 'Kartu indikator (+ / −) dilengkapi bayangan elevasi lembut.',
     classesHint: 'rounded-xl border shadow-sm + / −',
-    codeSnippet: `<div className="rounded-xl border border-gray-200 shadow-sm">...</div>`,
+    codeSnippet: `<div className="rounded-xl border border-gray-300 shadow-sm">...</div>`,
   },
   {
     key: 'Simple card bold',
     id: 'acc-simple-card-bold',
     desc: 'Kartu indikator (+ / −) dengan teks judul tebal untuk daftar FAQ utama.',
     classesHint: 'rounded-xl border font-bold + / −',
-    codeSnippet: `<div className="rounded-xl border border-gray-200 font-bold">...</div>`,
+    codeSnippet: `<div className="rounded-xl border border-gray-300 font-bold">...</div>`,
   },
   {
     key: 'Icon',
@@ -211,7 +214,7 @@ const ACCORDION_VARIANTS: {
     id: 'acc-icon-card-bold',
     desc: 'Kartu terpisah berikon depan dengan judul tebal untuk navigasi modul utama.',
     classesHint: 'rounded-xl border font-bold flex items-center gap-2.5',
-    codeSnippet: `<div className="rounded-xl border border-gray-200 font-bold"><BookOpen className="w-4 h-4" /> ...</div>`,
+    codeSnippet: `<div className="rounded-xl border border-gray-300 font-bold"><BookOpen className="w-4 h-4" /> ...</div>`,
   },
   {
     key: 'Always open',
@@ -265,8 +268,8 @@ const AccordionVariantPreview: React.FC<{ variant: AccordionVariantKey }> = ({ v
         isCard
           ? 'space-y-2.5'
           : isFlush
-          ? 'divide-y divide-gray-200 border-y border-gray-200'
-          : 'rounded-xl border border-gray-200 divide-y divide-gray-200 overflow-hidden'
+          ? 'divide-y divide-gray-200 border-y border-gray-300'
+          : 'rounded-xl border border-gray-300 divide-y divide-gray-200 overflow-hidden'
       } text-sm`}
     >
       {items.map((item, idx) => {
@@ -274,7 +277,7 @@ const AccordionVariantPreview: React.FC<{ variant: AccordionVariantKey }> = ({ v
         return (
           <div
             key={item.title}
-            className={`${isCard ? 'rounded-xl border border-gray-200 overflow-hidden' : ''} ${
+            className={`${isCard ? 'rounded-xl border border-gray-300 overflow-hidden' : ''} ${
               isShadow ? 'shadow-sm' : ''
             } ${isSoft ? 'bg-primary-50/40' : 'bg-white'}`}
           >
@@ -291,7 +294,7 @@ const AccordionVariantPreview: React.FC<{ variant: AccordionVariantKey }> = ({ v
               </span>
               {isSimple ? (
                 <span
-                  className={`font-mono text-base text-gray-500 leading-none transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  className={`font-mono text-base text-gray-500 leading-none transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] ${
                     isOpen ? 'rotate-180 text-primary-600' : ''
                   }`}
                 >
@@ -299,20 +302,20 @@ const AccordionVariantPreview: React.FC<{ variant: AccordionVariantKey }> = ({ v
                 </span>
               ) : (
                 <ChevronRight
-                  className={`w-4 h-4 text-gray-400 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] shrink-0 ${
+                  className={`w-4 h-4 text-gray-500 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] shrink-0 ${
                     isOpen ? 'rotate-90 text-primary-600' : ''
                   }`}
                 />
               )}
             </button>
             <div
-              className={`grid transition-[grid-template-rows,opacity] duration-[340ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              className={`grid transition-[grid-template-rows,opacity] duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
                 isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
               }`}
             >
               <div className="overflow-hidden">
                 <div
-                  className={`px-4 pb-3.5 pt-2.5 text-xs leading-relaxed border-t border-gray-100 ${
+                  className={`px-4 pb-3.5 pt-2.5 text-xs leading-relaxed border-t border-gray-200 ${
                     isSoftContent ? 'bg-[#FEF1F5]/55 text-[#9D113C]' : 'text-gray-600 bg-gray-50/40'
                   }`}
                 >
@@ -512,7 +515,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                   <div className={`${s.cls} rounded-full bg-primary-600 text-white font-bold flex items-center justify-center mx-auto`}>
                     JW
                   </div>
-                  <span className="text-gray-400 font-mono tabular-nums block">{s.label}</span>
+                  <span className="text-gray-500 font-mono tabular-nums block">{s.label}</span>
                 </div>
               ))}
             </div>
@@ -631,11 +634,11 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           <UiDocSection
             id="av-logo"
             title="Avatar with logo"
-            classesHint="w-10 h-10 rounded-xl bg-white border border-gray-200 font-black"
-            codeSnippet={`<div className="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center font-black text-primary-600">S·OS</div>`}
+            classesHint="w-10 h-10 rounded-xl bg-white border border-gray-300 font-black"
+            codeSnippet={`<div className="w-10 h-10 rounded-xl bg-white border border-gray-300 flex items-center justify-center font-black text-primary-600">S·OS</div>`}
           >
             <div className="flex flex-wrap items-center gap-4 text-xs">
-              <div className="w-11 h-11 rounded-xl bg-white border border-gray-200 flex items-center justify-center font-black text-primary-600 shadow-2xs">S·OS</div>
+              <div className="w-11 h-11 rounded-xl bg-white border border-gray-300 flex items-center justify-center font-black text-primary-600 shadow-2xs">S·OS</div>
               <div className="w-11 h-11 rounded-xl bg-gray-900 text-white flex items-center justify-center font-black">302</div>
               <div className="w-11 h-11 rounded-full bg-[#FEF1F5] text-[#9D113C] border border-[#FDE0E9] flex items-center justify-center font-black">LAB</div>
             </div>
@@ -684,14 +687,15 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           <UiDocSection
             id="acc-motion"
             title="Motion Accordion (AnimatePresence)"
-            description="Pola akordion modern berbasis Motion AnimatePresence (height: 0 -> 'auto' dengan cubic-bezier fluid) dan state settled untuk membuka overflow-visible setelah transisi selesai."
-            classesHint="AnimatePresence initial={false} / motion.div height: 'auto' + overflow toggle"
-            codeSnippet={`<AnimatePresence initial={false}>\n  {isOpen && (\n    <motion.div\n      initial={{ opacity: 0, height: 0 }}\n      animate={{ opacity: 1, height: 'auto' }}\n      exit={{ opacity: 0, height: 0 }}\n      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}\n      onAnimationComplete={() => setSettled(true)}\n      style={{ overflow: settled ? 'visible' : 'hidden' }}\n    >\n      {children}\n    </motion.div>\n  )}\n</AnimatePresence>`}
+            description="Pola akordion modern berbasis Motion AnimatePresence (height: 0 -> 'auto' dengan Spring physics + blur settle + --ease-out) dan state settled untuk membuka overflow-visible setelah transisi selesai."
+            classesHint="AnimatePresence initial={false} / motion.div height: 'auto' + Spring & overflow toggle"
+            codeSnippet={`<AnimatePresence initial={false}>\n  {isOpen && (\n    <motion.div\n      initial={{ opacity: 0, height: 0, filter: 'blur(3px)' }}\n      animate={{\n        opacity: 1,\n        height: 'auto',\n        filter: 'blur(0px)',\n        transition: {\n          height: { type: 'spring', stiffness: 420, damping: 30, mass: 0.8 },\n          opacity: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },\n        },\n      }}\n      exit={{ opacity: 0, height: 0, transition: { duration: 0.18, ease: [0.23, 1, 0.32, 1] } }}\n      onAnimationComplete={() => setSettled(true)}\n      style={{ overflow: settled ? 'visible' : 'hidden' }}\n    >\n      {children}\n    </motion.div>\n  )}\n</AnimatePresence>`}
           >
-            <div className="max-w-lg rounded-2xl border border-black/[0.08] bg-white overflow-hidden shadow-2xs">
+            <div className="max-w-lg rounded-2xl border border-black/[0.12] bg-white overflow-hidden shadow-2xs">
               <button
                 type="button"
                 onClick={() => {
+                  playUiMotionSound('tick');
                   if (motionAccOpen) setMotionAccSettled(false);
                   setMotionAccOpen((v) => !v);
                 }}
@@ -706,13 +710,13 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                     <div className="text-[13.5px] font-semibold text-[#1C1D21] truncate">
                       Join Live Session via Code
                     </div>
-                    <div className="text-[11px] text-[#8A8D98] truncate">
+                    <div className="text-[11px] text-[#646772] truncate">
                       Height spring auto-measure · {motionAccSettled ? 'overflow: visible' : 'animating'}
                     </div>
                   </div>
                 </div>
                 <ChevronRight
-                  className={`w-4 h-4 text-[#8A8D98] shrink-0 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  className={`w-4 h-4 text-[#646772] shrink-0 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] ${
                     motionAccOpen ? 'rotate-90 text-[#ee2e65]' : ''
                   }`}
                 />
@@ -721,29 +725,33 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
               <AnimatePresence initial={false}>
                 {motionAccOpen && (
                   <motion.div
-                    initial={{ opacity: 0, height: 0 }}
+                    initial={{ opacity: 0, height: 0, filter: 'blur(3px)' }}
                     animate={{
                       opacity: 1,
                       height: 'auto',
+                      filter: 'blur(0px)',
                       transition: {
-                        height: { duration: 0.28, ease: [0.22, 1, 0.36, 1] },
-                        opacity: { duration: 0.2, ease: 'easeOut' },
+                        height: { type: 'spring', stiffness: 420, damping: 30, mass: 0.8 },
+                        opacity: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
+                        filter: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
                       },
                     }}
                     exit={{
                       opacity: 0,
                       height: 0,
+                      filter: 'blur(2px)',
                       transition: {
-                        height: { duration: 0.22, ease: [0.32, 0.72, 0, 1] },
-                        opacity: { duration: 0.14, ease: 'easeIn' },
+                        height: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
+                        opacity: { duration: 0.14, ease: [0.23, 1, 0.32, 1] },
+                        filter: { duration: 0.14, ease: [0.23, 1, 0.32, 1] },
                       },
                     }}
                     onAnimationStart={() => setMotionAccSettled(false)}
                     onAnimationComplete={() => setMotionAccSettled(true)}
                     style={{ overflow: motionAccSettled ? 'visible' : 'hidden' }}
                   >
-                    <div className="px-4 py-3.5 border-t border-black/[0.06] flex flex-wrap items-center justify-between gap-2 text-xs">
-                      <span className="text-[#6E717A]">
+                    <div className="px-4 py-3.5 border-t border-black/[0.12] flex flex-wrap items-center justify-between gap-2 text-xs">
+                      <span className="text-[#5A5D67]">
                         Masukkan kode 6-digit untuk bergabung secara real-time.
                       </span>
                       <button
@@ -859,7 +867,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           </UiDocSection>
 
           <UiDocSection id="bdg-ind-sizes" title="Badge indicator sizes" classesHint="w-1.5..w-4 rounded-full" codeSnippet={`<span className="w-2 h-2 rounded-full bg-primary-600" />\n<span className="w-4 h-4 rounded-full bg-primary-600" />`}>
-            <div className="flex items-center gap-4 text-xs text-gray-400 font-mono">
+            <div className="flex items-center gap-4 text-xs text-gray-500 font-mono">
               <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-primary-600" />xs</span>
               <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-primary-600" />sm</span>
               <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-primary-600" />md</span>
@@ -925,29 +933,29 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
             codeSnippet={`<span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold">\n  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />\n  <span>Aktif</span>\n</span>`}
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-              <div className="p-3 rounded-xl border border-gray-200 bg-white space-y-2">
+              <div className="p-3 rounded-xl border border-gray-300 bg-white space-y-2">
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                   <span>Aktif</span>
                 </span>
                 <p className="text-[11px] text-gray-500">Materi sudah dipublikasikan dan dapat dibuka siswa.</p>
               </div>
-              <div className="p-3 rounded-xl border border-gray-200 bg-white space-y-2">
+              <div className="p-3 rounded-xl border border-gray-300 bg-white space-y-2">
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-50 text-amber-900 border border-amber-200 font-semibold">
                   <Clock className="w-3.5 h-3.5 text-amber-600" />
                   <span>Menunggu Review</span>
                 </span>
                 <p className="text-[11px] text-gray-500">Draf soal sedang diperiksa oleh koordinator bidang.</p>
               </div>
-              <div className="p-3 rounded-xl border border-gray-200 bg-white space-y-2">
+              <div className="p-3 rounded-xl border border-gray-300 bg-white space-y-2">
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-primary-50 text-primary-800 border border-primary-200 font-semibold">
                   <FileText className="w-3.5 h-3.5 text-primary-600" />
                   <span>Selesai</span>
                 </span>
                 <p className="text-[11px] text-gray-500">Seluruh rangkaian latihan dan kuis telah dituntaskan.</p>
               </div>
-              <div className="p-3 rounded-xl border border-gray-200 bg-white space-y-2">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-gray-100 text-gray-700 border border-gray-200 font-semibold">
+              <div className="p-3 rounded-xl border border-gray-300 bg-white space-y-2">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-gray-100 text-gray-700 border border-gray-300 font-semibold">
                   <Archive className="w-3.5 h-3.5 text-gray-500" />
                   <span>Diarsipkan</span>
                 </span>
@@ -960,11 +968,11 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
             id="adv-notif"
             title="Jumlah Notifikasi (Counter)"
             classesHint="relative inline-flex / tabular-nums rounded-full"
-            codeSnippet={`<button className="relative inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 bg-white">\n  <Bell className="w-4 h-4" />\n  <span>Notifikasi</span>\n  <span className="px-1.5 py-0.5 rounded-full bg-primary-600 text-white text-[11px] font-bold tabular-nums">3</span>\n</button>`}
+            codeSnippet={`<button className="relative inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-300 bg-white">\n  <Bell className="w-4 h-4" />\n  <span>Notifikasi</span>\n  <span className="px-1.5 py-0.5 rounded-full bg-primary-600 text-white text-[11px] font-bold tabular-nums">3</span>\n</button>`}
           >
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-              <div className="p-3.5 rounded-xl border border-gray-200 bg-white space-y-2.5">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200 font-semibold text-gray-800">
+              <div className="p-3.5 rounded-xl border border-gray-300 bg-white space-y-2.5">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-300 font-semibold text-gray-800">
                   <Bell className="w-3.5 h-3.5 text-gray-600" />
                   <span>Pesan Masuk</span>
                   <span className="px-1.5 py-0.5 rounded-full bg-primary-600 text-white text-[10px] font-bold tabular-nums">
@@ -974,8 +982,8 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                 <p className="text-[11px] text-gray-500">3 pertanyaan baru dari siswa kelas 12.</p>
               </div>
 
-              <div className="p-3.5 rounded-xl border border-gray-200 bg-white space-y-2.5">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200 font-semibold text-gray-800">
+              <div className="p-3.5 rounded-xl border border-gray-300 bg-white space-y-2.5">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-300 font-semibold text-gray-800">
                   <FileText className="w-3.5 h-3.5 text-gray-600" />
                   <span>Perlu Dinilai</span>
                   <span className="px-1.5 py-0.5 rounded-full bg-amber-600 text-white text-[10px] font-bold tabular-nums">
@@ -985,8 +993,8 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                 <p className="text-[11px] text-gray-500">12 lembar jawaban menunggu koreksi pengajar.</p>
               </div>
 
-              <div className="p-3.5 rounded-xl border border-gray-200 bg-white space-y-2.5">
-                <div className="relative inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200 font-semibold text-gray-800">
+              <div className="p-3.5 rounded-xl border border-gray-300 bg-white space-y-2.5">
+                <div className="relative inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-300 font-semibold text-gray-800">
                   <Inbox className="w-3.5 h-3.5 text-gray-600" />
                   <span>Kotak Arsip</span>
                   <span className="px-1.5 py-0.5 rounded-full bg-gray-900 text-white text-[10px] font-bold tabular-nums">
@@ -1005,28 +1013,28 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
             codeSnippet={`<div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold">\n  <Award className="w-3.5 h-3.5" /> Mahir · 10 Modul\n</div>`}
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-              <div className="p-3 rounded-xl border border-gray-200 bg-white space-y-2">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-gray-100 text-gray-800 border border-gray-200 font-semibold">
+              <div className="p-3 rounded-xl border border-gray-300 bg-white space-y-2">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-gray-100 text-gray-800 border border-gray-300 font-semibold">
                   <Award className="w-3.5 h-3.5 text-gray-600" />
                   <span>Pemula</span>
                 </span>
                 <p className="text-[11px] text-gray-500">Menyelesaikan 1 modul pengantar beserta kuis awal.</p>
               </div>
-              <div className="p-3 rounded-xl border border-gray-200 bg-white space-y-2">
+              <div className="p-3 rounded-xl border border-gray-300 bg-white space-y-2">
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-sky-50 text-sky-800 border border-sky-200 font-semibold">
                   <Award className="w-3.5 h-3.5 text-sky-600" />
                   <span>Terampil</span>
                 </span>
                 <p className="text-[11px] text-gray-500">Lulus 5 modul inti dengan nilai latihan minimal 75.</p>
               </div>
-              <div className="p-3 rounded-xl border border-gray-200 bg-white space-y-2">
+              <div className="p-3 rounded-xl border border-gray-300 bg-white space-y-2">
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold">
                   <Award className="w-3.5 h-3.5 text-emerald-600" />
                   <span>Mahir</span>
                 </span>
                 <p className="text-[11px] text-gray-500">Menuntaskan 10 modul dengan rata-rata skor ≥ 85.</p>
               </div>
-              <div className="p-3 rounded-xl border border-gray-200 bg-white space-y-2">
+              <div className="p-3 rounded-xl border border-gray-300 bg-white space-y-2">
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-primary-50 text-primary-800 border border-primary-200 font-semibold">
                   <Award className="w-3.5 h-3.5 text-primary-600" />
                   <span>Kehormatan</span>
@@ -1049,7 +1057,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                 </span>
                 <span>Dr. Hendra W. · Pengajar</span>
               </div>
-              <div className="inline-flex items-center gap-2 pl-1 pr-3 py-1 rounded-full bg-gray-100 border border-gray-200 text-gray-800 font-semibold">
+              <div className="inline-flex items-center gap-2 pl-1 pr-3 py-1 rounded-full bg-gray-100 border border-gray-300 text-gray-800 font-semibold">
                 <span className="w-5 h-5 rounded-full bg-gray-700 text-white text-[10px] font-bold flex items-center justify-center">
                   NP
                 </span>
@@ -1087,7 +1095,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                   <button
                     onMouseEnter={() => setTooltipHover(dir)}
                     onMouseLeave={() => setTooltipHover(null)}
-                    className="px-3.5 py-1.5 rounded-lg border border-gray-200 font-medium capitalize hover:bg-gray-50 cursor-pointer"
+                    className="px-3.5 py-1.5 rounded-lg border border-gray-300 font-medium capitalize hover:bg-gray-50 cursor-pointer"
                   >
                     Tooltip on {dir}
                   </button>
@@ -1124,7 +1132,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                 onMouseEnter={() => setTooltipHover('disabled')}
                 onMouseLeave={() => setTooltipHover(null)}
               >
-                <button disabled className="px-3.5 py-1.5 rounded-lg bg-gray-100 text-gray-400 text-xs font-medium cursor-not-allowed">
+                <button disabled className="px-3.5 py-1.5 rounded-lg bg-gray-100 text-gray-500 border border-gray-300 text-xs font-medium cursor-not-allowed">
                   Disabled button
                 </button>
                 {tooltipHover === 'disabled' && (
@@ -1151,7 +1159,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           <UiDocSection
             id="pop-basic"
             title="Basic examples"
-            classesHint="w-64 bg-white rounded-xl shadow-xl border border-gray-200 p-3.5"
+            classesHint="w-64 bg-white rounded-xl shadow-xl border border-gray-300 p-3.5"
             codeSnippet={`<button onClick={() => setOpen(!open)}>Toggle Popover</button>`}
           >
             <div className="pb-20">
@@ -1163,7 +1171,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                   Click to toggle popover
                 </button>
                 {popoverOpen === 'basic' && (
-                  <div className="animate-ui-pop absolute left-0 top-11 w-64 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-gray-200 p-3.5 z-30 space-y-1 text-xs">
+                  <div className="animate-ui-pop absolute left-0 top-11 w-64 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-gray-300 p-3.5 z-30 space-y-1 text-xs">
                     <div className="font-bold text-gray-900">Popover Title</div>
                     <p className="text-gray-600 leading-relaxed">Panel konten melayang untuk menampilkan ringkasan detail bab atau profil siswa.</p>
                   </div>
@@ -1180,7 +1188,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
             codeSnippet={`<span className="inline-block" title="Disabled popover"><button disabled>Disabled button</button></span>`}
           >
             <div className="text-xs">
-              <button disabled className="px-3.5 py-2 rounded-lg bg-gray-100 text-gray-400 font-semibold cursor-not-allowed border border-gray-200">
+              <button disabled className="px-3.5 py-2 rounded-lg bg-gray-100 text-gray-500 font-semibold cursor-not-allowed border border-gray-300">
                 Disabled button with popover wrapper
               </button>
             </div>
@@ -1202,7 +1210,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                   Dismissible popover
                 </button>
                 {popoverOpen === 'dismiss' && (
-                  <div className="animate-ui-pop absolute left-0 top-11 w-64 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-gray-200 p-3.5 z-30 space-y-1 text-xs">
+                  <div className="animate-ui-pop absolute left-0 top-11 w-64 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-gray-300 p-3.5 z-30 space-y-1 text-xs">
                     <div className="font-bold text-gray-900">Dismiss on next click</div>
                     <p className="text-gray-600 leading-relaxed">Klik di mana saja di luar popup untuk menutup popover ini secara otomatis.</p>
                   </div>
@@ -1230,19 +1238,19 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           <UiDocSection
             id="mdl-components"
             title="Modal Components"
-            classesHint="rounded-2xl border border-gray-200 bg-white shadow-lg overflow-hidden max-w-md"
+            classesHint="rounded-2xl border border-gray-300 bg-white shadow-lg overflow-hidden max-w-md"
             codeSnippet={`<div className="rounded-2xl border bg-white shadow-lg max-w-md">\n  <div className="px-5 py-3 border-b font-bold">Modal title</div>\n  <div className="p-5 text-sm">Modal body text goes here.</div>\n  <div className="px-5 py-3 border-t flex justify-end gap-2">...</div>\n</div>`}
           >
-            <div className="rounded-2xl border border-gray-200 bg-white shadow-md max-w-md overflow-hidden text-xs">
-              <div className="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between">
+            <div className="rounded-2xl border border-gray-300 bg-white shadow-md max-w-md overflow-hidden text-xs">
+              <div className="px-5 py-3.5 border-b border-gray-200 flex items-center justify-between">
                 <span className="font-bold text-sm text-gray-900">Modal title</span>
-                <X className="w-4 h-4 text-gray-400" />
+                <X className="w-4 h-4 text-gray-500" />
               </div>
               <div className="p-5 text-gray-600 leading-relaxed">
                 Modal body text goes here. Gunakan dialog ini untuk menampilkan informasi terfokus atau formulir singkat.
               </div>
-              <div className="px-5 py-3 bg-gray-50 border-t border-gray-100 flex justify-end gap-2">
-                <button className="px-3 py-1.5 rounded-lg border border-gray-200 bg-white font-medium text-gray-700">Close</button>
+              <div className="px-5 py-3 bg-gray-50 border-t border-gray-200 flex justify-end gap-2">
+                <button className="px-3 py-1.5 rounded-lg border border-gray-300 bg-white font-medium text-gray-700">Close</button>
                 <button className="px-3.5 py-1.5 rounded-lg bg-gray-900 text-white font-semibold">Save changes</button>
               </div>
             </div>
@@ -1326,8 +1334,8 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
             classesHint="space-y-3 / input / badge"
             codeSnippet={`<div className="rounded-2xl border bg-white p-5 space-y-3">\n  <span className="badge">Class 302</span>\n  <input placeholder="Judul materi baru..." />\n</div>`}
           >
-            <div className="rounded-2xl border border-gray-200 bg-white shadow-sm max-w-md overflow-hidden text-xs">
-              <div className="px-5 py-3 border-b border-gray-100 flex items-center justify-between">
+            <div className="rounded-2xl border border-gray-300 bg-white shadow-sm max-w-md overflow-hidden text-xs">
+              <div className="px-5 py-3 border-b border-gray-200 flex items-center justify-between">
                 <span className="font-bold text-gray-900">Modal + Embedded Form &amp; Badge</span>
                 <span className="px-2 py-0.5 rounded-full bg-primary-50 text-primary-700 font-semibold text-[10px]">Class 302</span>
               </div>
@@ -1384,8 +1392,8 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
             { id: 'crd-checklist', label: 'Interactive Checklist Card' },
           ]}
         >
-          <UiDocSection id="crd-basic" title="Card basic" classesHint="p-5 rounded-xl border border-gray-200 bg-white max-w-sm" codeSnippet={`<div className="p-5 rounded-xl border border-gray-200 bg-white max-w-sm space-y-2">\n  <h4 className="font-bold text-sm text-gray-900">Turunan fungsi</h4>\n  <p className="text-gray-600">Matematika · Kelas 12 — Memahami aturan rantai dan titik stasioner kurva.</p>\n  <button className={ACTION_BTN_PRIMARY}>Buka materi</button>\n</div>`}>
-            <div className="p-5 rounded-xl border border-gray-200 bg-white max-w-sm text-xs space-y-2.5 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:shadow-[0_14px_28px_-10px_rgba(15,23,42,0.12)]">
+          <UiDocSection id="crd-basic" title="Card basic" classesHint="p-5 rounded-xl border border-gray-300 bg-white max-w-sm" codeSnippet={`<div className="p-5 rounded-xl border border-gray-300 bg-white max-w-sm space-y-2">\n  <h4 className="font-bold text-sm text-gray-900">Turunan fungsi</h4>\n  <p className="text-gray-600">Matematika · Kelas 12 — Memahami aturan rantai dan titik stasioner kurva.</p>\n  <button className={ACTION_BTN_PRIMARY}>Buka materi</button>\n</div>`}>
+            <div className="p-5 rounded-xl border border-gray-300 bg-white max-w-sm text-xs space-y-2.5 transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-1 hover:shadow-[0_14px_28px_-10px_rgba(15,23,42,0.12)]">
               <div className="text-[11px] text-gray-500">Matematika · Kelas 12</div>
               <h4 className="font-bold text-sm text-gray-900">Turunan fungsi</h4>
               <p className="text-gray-600 leading-relaxed">
@@ -1401,11 +1409,11 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
             </div>
           </UiDocSection>
 
-          <UiDocSection id="crd-header-footer" title="Header and Footer" classesHint="rounded-xl border border-gray-200 overflow-hidden max-w-sm" codeSnippet={`<div className="rounded-xl border overflow-hidden">\n  <div className="px-4 py-2.5 bg-gray-50 border-b font-semibold">Matematika · Kelas 12</div>\n  <div className="p-4">Turunan fungsi</div>\n  <div className="px-4 py-2 bg-gray-50 border-t flex justify-between"><span>12 soal latihan</span><a>Buka materi</a></div>\n</div>`}>
-            <div className="rounded-xl border border-gray-200 overflow-hidden max-w-sm text-xs bg-white transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:shadow-[0_14px_28px_-10px_rgba(15,23,42,0.12)]">
-              <div className="px-4 py-2.5 bg-gray-50 border-b border-gray-100 font-semibold text-gray-800 flex justify-between items-center">
+          <UiDocSection id="crd-header-footer" title="Header and Footer" classesHint="rounded-xl border border-gray-300 overflow-hidden max-w-sm" codeSnippet={`<div className="rounded-xl border overflow-hidden">\n  <div className="px-4 py-2.5 bg-gray-50 border-b font-semibold">Matematika · Kelas 12</div>\n  <div className="p-4">Turunan fungsi</div>\n  <div className="px-4 py-2 bg-gray-50 border-t flex justify-between"><span>12 soal latihan</span><a>Buka materi</a></div>\n</div>`}>
+            <div className="rounded-xl border border-gray-300 overflow-hidden max-w-sm text-xs bg-white transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-1 hover:shadow-[0_14px_28px_-10px_rgba(15,23,42,0.12)]">
+              <div className="px-4 py-2.5 bg-gray-50 border-b border-gray-200 font-semibold text-gray-800 flex justify-between items-center">
                 <span>Matematika · Kelas 12</span>
-                <MoreHorizontal className="w-4 h-4 text-gray-400" />
+                <MoreHorizontal className="w-4 h-4 text-gray-500" />
               </div>
               <div className="p-4 space-y-1">
                 <div className="font-bold text-sm text-gray-900">Turunan fungsi</div>
@@ -1413,12 +1421,12 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                   Ringkasan konsep limit selisih disertai pembahasan soal bertahap untuk persiapan evaluasi.
                 </p>
               </div>
-              <div className="px-4 py-2.5 bg-gray-50 border-t border-gray-100 text-gray-500 flex justify-between items-center tabular-nums">
+              <div className="px-4 py-2.5 bg-gray-50 border-t border-gray-200 text-gray-500 flex justify-between items-center tabular-nums">
                 <span>12 soal latihan</span>
                 <button
                   type="button"
                   onClick={() => triggerToast('Buka materi', 'Membuka Turunan fungsi (Kelas 12).', 'info')}
-                  className="text-primary-600 font-semibold hover:underline hover:translate-x-0.5 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer"
+                  className="text-primary-600 font-semibold hover:underline transition-colors duration-200 cursor-pointer"
                 >
                   Buka materi →
                 </button>
@@ -1426,8 +1434,8 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
             </div>
           </UiDocSection>
 
-          <UiDocSection id="crd-titles" title="Titles, text, and links" classesHint="space-y-2 max-w-sm" codeSnippet={`<div className="p-4 rounded-xl border border-gray-200 space-y-2">\n  <h4 className="font-bold">Turunan fungsi</h4>\n  <div className="text-gray-500">Matematika · Kelas 12</div>\n  <div className="flex gap-4 text-primary-600"><a>Buka materi</a><a>Unduh latihan</a></div>\n</div>`}>
-            <div className="p-4 rounded-xl border border-gray-200 bg-white max-w-sm text-xs space-y-2">
+          <UiDocSection id="crd-titles" title="Titles, text, and links" classesHint="space-y-2 max-w-sm" codeSnippet={`<div className="p-4 rounded-xl border border-gray-300 space-y-2">\n  <h4 className="font-bold">Turunan fungsi</h4>\n  <div className="text-gray-500">Matematika · Kelas 12</div>\n  <div className="flex gap-4 text-primary-600"><a>Buka materi</a><a>Unduh latihan</a></div>\n</div>`}>
+            <div className="p-4 rounded-xl border border-gray-300 bg-white max-w-sm text-xs space-y-2">
               <h4 className="font-bold text-sm text-gray-900">Turunan fungsi</h4>
               <div className="text-gray-500">Matematika · Kelas 12</div>
               <p className="text-gray-600 leading-relaxed">
@@ -1458,10 +1466,10 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
             </div>
           </UiDocSection>
 
-          <UiDocSection id="crd-kitchen" title="Kitchen sink" classesHint="rounded-xl border border-gray-200 overflow-hidden max-w-sm" codeSnippet={`<div className="rounded-xl border overflow-hidden max-w-sm">...</div>`}>
-            <div className="rounded-xl border border-gray-200 bg-white overflow-hidden max-w-sm text-xs">
+          <UiDocSection id="crd-kitchen" title="Kitchen sink" classesHint="rounded-xl border border-gray-300 overflow-hidden max-w-sm" codeSnippet={`<div className="rounded-xl border overflow-hidden max-w-sm">...</div>`}>
+            <div className="rounded-xl border border-gray-300 bg-white overflow-hidden max-w-sm text-xs">
               <div className="p-3.5 bg-[#FEF1F5] text-[#9D113C] font-bold">Turunan fungsi · Paket Belajar</div>
-              <div className="divide-y divide-gray-100 text-gray-700">
+              <div className="divide-y divide-gray-200 text-gray-700">
                 <div className="px-3.5 py-2.5 flex justify-between tabular-nums">
                   <span>Video Pembahasan</span>
                   <span className="text-gray-500">18 menit</span>
@@ -1471,7 +1479,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                   <span className="text-gray-500">12 soal</span>
                 </div>
               </div>
-              <div className="px-3.5 py-2.5 bg-gray-50 border-t border-gray-100 flex justify-between text-primary-600 font-semibold">
+              <div className="px-3.5 py-2.5 bg-gray-50 border-t border-gray-200 flex justify-between text-primary-600 font-semibold">
                 <button
                   type="button"
                   onClick={() => triggerToast('Unduh latihan', 'Lembar latihan diunduh.', 'success')}
@@ -1491,12 +1499,12 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           </UiDocSection>
 
           <UiDocSection id="crd-overlay" title="Image overlays" classesHint="relative h-44 rounded-xl overflow-hidden max-w-md" codeSnippet={`<div className="relative h-44 rounded-xl overflow-hidden max-w-md">\n  <img src={thumbnail} alt="Catatan Turunan fungsi" className="absolute inset-0 w-full h-full object-cover" />\n  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/15" />\n  <div className="relative z-10 p-5 text-white">\n    <div className="text-xs text-gray-200">Matematika · Kelas 12 · 18 menit</div>\n    <h4 className="font-bold text-base">Turunan fungsi</h4>\n  </div>\n</div>`}>
-            <div className="group relative h-44 rounded-xl overflow-hidden border border-gray-200 bg-gray-900 text-white p-5 flex flex-col justify-end max-w-md text-xs">
+            <div className="group relative h-44 rounded-xl overflow-hidden border border-gray-300 bg-gray-900 text-white p-5 flex flex-col justify-end max-w-md text-xs">
               <img
                 src={cardOverlayImg}
                 alt="Catatan pembelajaran Turunan fungsi Matematika Kelas 12"
                 referrerPolicy="no-referrer"
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-[260ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/15" />
               <div className="relative z-10 space-y-1">
@@ -1512,13 +1520,13 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           </UiDocSection>
 
           <UiDocSection id="crd-horizontal" title="Horizontal" classesHint="rounded-xl border overflow-hidden flex h-36 max-w-md" codeSnippet={`<div className="rounded-xl border overflow-hidden flex h-36">\n  <img src={thumbnail} className="w-1/3 h-full object-cover" />\n  <div className="p-4 flex-1">Turunan fungsi</div>\n</div>`}>
-            <div className="group rounded-xl border border-gray-200 overflow-hidden flex h-36 max-w-md text-xs bg-white transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:shadow-[0_14px_28px_-10px_rgba(15,23,42,0.12)]">
+            <div className="group rounded-xl border border-gray-300 overflow-hidden flex h-36 max-w-md text-xs bg-white transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-1 hover:shadow-[0_14px_28px_-10px_rgba(15,23,42,0.12)]">
               <div className="w-1/3 bg-gray-100 shrink-0 overflow-hidden">
                 <img
                   src={cardOverlayImg}
                   alt="Thumbnail Turunan fungsi"
                   referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-[260ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-105"
                 />
               </div>
               <div className="p-4 flex-1 flex flex-col justify-between">
@@ -1526,7 +1534,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                   <div className="font-bold text-sm text-gray-900">Turunan fungsi</div>
                   <p className="text-gray-500 mt-1">Pembahasan aturan perkalian dan pembagian dua fungsi.</p>
                 </div>
-                <span className="text-[11px] text-gray-400 tabular-nums">Matematika · Kelas 12 · 18 menit</span>
+                <span className="text-[11px] text-gray-500 tabular-nums">Matematika · Kelas 12 · 18 menit</span>
               </div>
             </div>
           </UiDocSection>
@@ -1558,7 +1566,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           </UiDocSection>
 
           <UiDocSection id="crd-icons" title="Card with icons" classesHint="flex items-center gap-3 p-4 rounded-xl border" codeSnippet={`<div className="p-4 rounded-xl border flex items-center gap-3">...</div>`}>
-            <div className="p-4 rounded-xl border border-gray-200 flex items-center gap-3 max-w-sm text-xs">
+            <div className="p-4 rounded-xl border border-gray-300 flex items-center gap-3 max-w-sm text-xs">
               <div className="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
                 <BookOpen className="w-5 h-5" />
               </div>
@@ -1577,11 +1585,11 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
             </div>
           </UiDocSection>
 
-          <UiDocSection id="crd-table" title="Card with table" classesHint="rounded-xl border border-gray-200 overflow-hidden max-w-sm" codeSnippet={`<div className="rounded-xl border overflow-hidden">\n  <div className="px-3 py-2 bg-gray-50 border-b font-bold">Header</div>\n  <table className="w-full">...</table>\n</div>`}>
-            <div className="rounded-xl border border-gray-200 overflow-hidden max-w-sm text-xs">
-              <div className="px-3.5 py-2.5 bg-gray-50 border-b border-gray-100 font-bold text-gray-900">Card with Embedded Table</div>
+          <UiDocSection id="crd-table" title="Card with table" classesHint="rounded-xl border border-gray-300 overflow-hidden max-w-sm" codeSnippet={`<div className="rounded-xl border overflow-hidden">\n  <div className="px-3 py-2 bg-gray-50 border-b font-bold">Header</div>\n  <table className="w-full">...</table>\n</div>`}>
+            <div className="rounded-xl border border-gray-300 overflow-hidden max-w-sm text-xs">
+              <div className="px-3.5 py-2.5 bg-gray-50 border-b border-gray-200 font-bold text-gray-900">Card with Embedded Table</div>
               <table className="w-full text-left">
-                <tbody className="divide-y divide-gray-100 tabular-nums">
+                <tbody className="divide-y divide-gray-200 tabular-nums">
                   <tr><td className="p-2.5 font-medium">James W.</td><td className="p-2.5 text-right font-bold text-emerald-600">94</td></tr>
                   <tr><td className="p-2.5 font-medium">Sarah A.</td><td className="p-2.5 text-right font-bold text-emerald-600">98</td></tr>
                 </tbody>
@@ -1589,21 +1597,21 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
             </div>
           </UiDocSection>
 
-          <UiDocSection id="crd-progress" title="Card with progress bar" classesHint="w-full bg-gray-100 h-2 rounded-full" codeSnippet={`<div className="p-4 rounded-xl border space-y-2"><div>78%</div><div className="h-2 bg-gray-100 rounded-full">...</div></div>`}>
-            <div className="p-4 rounded-xl border border-gray-200 max-w-sm text-xs space-y-2">
+          <UiDocSection id="crd-progress" title="Card with progress bar" classesHint="w-full bg-gray-200 h-2 rounded-full" codeSnippet={`<div className="p-4 rounded-xl border space-y-2"><div>78%</div><div className="h-2 bg-gray-200 rounded-full">...</div></div>`}>
+            <div className="p-4 rounded-xl border border-gray-300 max-w-sm text-xs space-y-2">
               <div className="flex items-center justify-between font-bold text-gray-900">
                 <span>Card with Progress Bar</span>
                 <span className="text-primary-600 tabular-nums">78%</span>
               </div>
-              <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+              <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
                 <div className="bg-primary-600 h-full w-[78%] rounded-full" />
               </div>
               <p className="text-gray-500">Progres tonton video pembelajaran.</p>
             </div>
           </UiDocSection>
 
-          <UiDocSection id="crd-line" title="Card with line" classesHint="border-t-4 border-t-[#ee2e65] border border-gray-200" codeSnippet={`<div className="p-4 rounded-xl border-t-4 border-t-[#ee2e65] border">Card with Line</div>`}>
-            <div className="p-4 rounded-xl border-t-4 border-t-[#ee2e65] border border-gray-200 max-w-sm text-xs space-y-2">
+          <UiDocSection id="crd-line" title="Card with line" classesHint="border-t-4 border-t-[#ee2e65] border border-gray-300" codeSnippet={`<div className="p-4 rounded-xl border-t-4 border-t-[#ee2e65] border">Card with Line</div>`}>
+            <div className="p-4 rounded-xl border-t-4 border-t-[#ee2e65] border border-gray-300 max-w-sm text-xs space-y-2">
               <div className="font-bold text-gray-900 text-sm">Card with Top Line Accent</div>
               <p className="text-gray-500">Kombinasi garis aksen warna di atas untuk membedakan kartu unggulan.</p>
             </div>
@@ -1613,24 +1621,24 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
             id="crd-kpi-strip"
             title="Pastel KPI Metric Strip"
             description="Strip 3-kolom hemat ruang yang memadukan palet PASTEL_THEMES dan angka tabular-nums sebagai pengganti kartu KPI terpisah."
-            classesHint="rounded-2xl border border-black/[0.06] grid grid-cols-1 sm:grid-cols-3 divide-x"
-            codeSnippet={`<div className="rounded-2xl border border-black/[0.06] overflow-hidden grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-black/[0.06]">\n  <div className={\`p-4 \${PASTEL_THEMES.periwinkle.bg}\`}>...</div>\n  <div className={\`p-4 \${PASTEL_THEMES.mint.bg}\`}>...</div>\n  <div className={\`p-4 \${PASTEL_THEMES.peach.bg}\`}>...</div>\n</div>`}
+            classesHint="rounded-2xl border border-black/[0.12] grid grid-cols-1 sm:grid-cols-3 divide-x"
+            codeSnippet={`<div className="rounded-2xl border border-black/[0.12] overflow-hidden grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-black/[0.12]">\n  <div className={\`p-4 \${PASTEL_THEMES.periwinkle.bg}\`}>...</div>\n  <div className={\`p-4 \${PASTEL_THEMES.mint.bg}\`}>...</div>\n  <div className={\`p-4 \${PASTEL_THEMES.peach.bg}\`}>...</div>\n</div>`}
           >
-            <div className="max-w-xl rounded-2xl border border-black/[0.06] overflow-hidden grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-black/[0.06]">
+            <div className="max-w-xl rounded-2xl border border-black/[0.12] overflow-hidden grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-black/[0.12]">
               <div className={`p-4 ${PASTEL_THEMES.periwinkle.bg}`}>
                 <div className="text-[11px] font-semibold uppercase tracking-wider text-[#9D113C]">Total Tokens</div>
-                <div className="mt-1 text-2xl font-bold text-[#1C1D21] tabular-nums">148</div>
-                <div className="mt-0.5 text-[11px] text-[#6E717A]">12 kategori terstruktur</div>
+                <div className="mt-1 kpi-value font-bold text-[#1C1D21]">148</div>
+                <div className="mt-0.5 text-[11px] text-[#5A5D67]">12 kategori terstruktur</div>
               </div>
               <div className={`p-4 ${PASTEL_THEMES.mint.bg}`}>
                 <div className="text-[11px] font-semibold uppercase tracking-wider text-[#146C43]">Adoption Rate</div>
-                <div className="mt-1 text-2xl font-bold text-[#1C1D21] tabular-nums">96.4%</div>
-                <div className="mt-0.5 text-[11px] text-[#6E717A]">Komponen tersinkron</div>
+                <div className="mt-1 kpi-value font-bold text-[#1C1D21]">96.4%</div>
+                <div className="mt-0.5 text-[11px] text-[#5A5D67]">Komponen tersinkron</div>
               </div>
               <div className={`p-4 ${PASTEL_THEMES.peach.bg}`}>
                 <div className="text-[11px] font-semibold uppercase tracking-wider text-[#8C5811]">Mobile Parity</div>
-                <div className="mt-1 text-2xl font-bold text-[#1C1D21] tabular-nums">100%</div>
-                <div className="mt-0.5 text-[11px] text-[#6E717A]">Touch &amp; Spring Ready</div>
+                <div className="mt-1 kpi-value font-bold text-[#1C1D21]">100%</div>
+                <div className="mt-0.5 text-[11px] text-[#5A5D67]">Touch &amp; Spring Ready</div>
               </div>
             </div>
           </UiDocSection>
@@ -1639,10 +1647,10 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
             id="crd-checklist"
             title="Interactive Checklist Card"
             description="Kartu daftar tugas interaktif dengan toggle bundar Primary Rose (#ee2e65), coretan otomatis, dan input pill sebaris untuk menambah item."
-            classesHint="rounded-2xl border border-black/[0.07] bg-white p-4 space-y-3"
+            classesHint="rounded-2xl border border-black/[0.12] bg-white p-4 space-y-3"
             codeSnippet={`<form onSubmit={handleAdd} className="flex items-center gap-2">\n  <input className="flex-1 h-9 px-3.5 rounded-full border" placeholder="Tambah langkah..." />\n  <button className={ACTION_BTN_PRIMARY}>Add</button>\n</form>`}
           >
-            <div className="max-w-md rounded-2xl border border-black/[0.07] bg-white p-4 space-y-3 text-xs">
+            <div className="max-w-md rounded-2xl border border-black/[0.12] bg-white p-4 space-y-3 text-xs">
               <div className="flex items-center justify-between">
                 <span className="font-bold text-sm text-[#1C1D21]">Design System QA Checklist</span>
                 <span className="px-2 py-0.5 rounded-full bg-[#FEF1F5] text-[#9D113C] font-bold tabular-nums text-[11px]">
@@ -1650,7 +1658,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                 </span>
               </div>
 
-              <div className="divide-y divide-black/[0.05]">
+              <div className="divide-y divide-black/[0.10]">
                 {checklistItems.map((item) => (
                   <button
                     key={item.id}
@@ -1666,14 +1674,14 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                       className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 transition-colors ${
                         item.done
                           ? 'bg-[#ee2e65] border-[#ee2e65] text-white'
-                          : 'border-gray-300 bg-white group-hover:border-[#ee2e65]'
+                          : 'border-gray-400 bg-white group-hover:border-[#ee2e65]'
                       }`}
                     >
                       {item.done && <Check className="w-2.5 h-2.5 stroke-[3px]" />}
                     </span>
                     <span
                       className={`flex-1 transition-colors ${
-                        item.done ? 'line-through text-[#8A8D98]' : 'text-[#1C1D21] font-medium'
+                        item.done ? 'line-through text-[#646772]' : 'text-[#1C1D21] font-medium'
                       }`}
                     >
                       {item.label}
@@ -1700,7 +1708,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                   value={newCheckTask}
                   onChange={(e) => setNewCheckTask(e.target.value)}
                   placeholder="Tambah langkah verifikasi..."
-                  className="flex-1 min-w-0 h-9 px-3.5 rounded-full border border-black/[0.09] bg-[#FAFBFD] text-xs focus:outline-none focus:border-[#ee2e65]"
+                  className="flex-1 min-w-0 h-9 px-3.5 rounded-full border border-black/[0.14] bg-[#FAFBFD] text-xs focus:outline-none focus:border-[#ee2e65]"
                 />
                 <button type="submit" className={ACTION_BTN_PRIMARY}>
                   <Plus className="w-3.5 h-3.5 shrink-0" />
@@ -1728,21 +1736,21 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           <UiDocSection
             id="car-bootstrap"
             title="React-Bootstrap Carousel"
-            classesHint="transition-all duration-300 rounded-xl border p-5"
+            classesHint="transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] rounded-xl border p-5"
             codeSnippet={`<div className="p-5 rounded-xl border bg-[#FEF1F5]">\n  <div className="font-bold">{slide.title}</div>\n  <p className="text-xs">{slide.desc}</p>\n</div>`}
             actions={
               <div className="flex gap-1">
                 <button
                   type="button"
                   onClick={() => setCarouselIdx((p) => (p === 0 ? carouselSlides.length - 1 : p - 1))}
-                  className="w-7 h-7 rounded-lg border border-gray-200 hover:bg-gray-100 flex items-center justify-center cursor-pointer"
+                  className="w-7 h-7 rounded-lg border border-gray-300 hover:bg-gray-100 flex items-center justify-center cursor-pointer"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   type="button"
                   onClick={() => setCarouselIdx((p) => (p === carouselSlides.length - 1 ? 0 : p + 1))}
-                  className="w-7 h-7 rounded-lg border border-gray-200 hover:bg-gray-100 flex items-center justify-center cursor-pointer"
+                  className="w-7 h-7 rounded-lg border border-gray-300 hover:bg-gray-100 flex items-center justify-center cursor-pointer"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
@@ -1768,14 +1776,14 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                 <button
                   type="button"
                   onClick={() => setSwiperIdx((p) => (p === 0 ? carouselSlides.length - 1 : p - 1))}
-                  className="w-7 h-7 rounded-lg border border-gray-200 hover:bg-gray-100 flex items-center justify-center cursor-pointer"
+                  className="w-7 h-7 rounded-lg border border-gray-300 hover:bg-gray-100 flex items-center justify-center cursor-pointer"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   type="button"
                   onClick={() => setSwiperIdx((p) => (p === carouselSlides.length - 1 ? 0 : p + 1))}
-                  className="w-7 h-7 rounded-lg border border-gray-200 hover:bg-gray-100 flex items-center justify-center cursor-pointer"
+                  className="w-7 h-7 rounded-lg border border-gray-300 hover:bg-gray-100 flex items-center justify-center cursor-pointer"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
@@ -1794,7 +1802,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                     key={idx}
                     type="button"
                     onClick={() => setSwiperIdx(idx)}
-                    className={`h-2 rounded-full transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer ${
+                    className={`h-2 rounded-full transition-all duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer ${
                       swiperIdx === idx ? 'w-6 bg-gray-900' : 'w-2 bg-gray-300 hover:bg-gray-400'
                     }`}
                   />
@@ -1811,7 +1819,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
               {carouselSlides.map((s) => (
-                <div key={s.title} className={`p-4 rounded-xl border ${s.bg} transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:shadow-md`}>
+                <div key={s.title} className={`p-4 rounded-xl border ${s.bg} transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-1 hover:shadow-md`}>
                   <div className="text-[10px] font-bold uppercase opacity-75">{s.tag}</div>
                   <div className="font-bold text-sm mt-1 text-gray-900">{s.title}</div>
                   <p className="text-xs text-gray-700 mt-1 line-clamp-2">{s.desc}</p>
@@ -1823,28 +1831,28 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           <UiDocSection
             id="car-card"
             title="Card Carousel"
-            classesHint="rounded-xl border border-gray-200 overflow-hidden"
-            codeSnippet={`<div className="rounded-xl border border-gray-200 p-4 flex items-center justify-between">\n  <div>{slide.title}</div>\n</div>`}
+            classesHint="rounded-xl border border-gray-300 overflow-hidden"
+            codeSnippet={`<div className="rounded-xl border border-gray-300 p-4 flex items-center justify-between">\n  <div>{slide.title}</div>\n</div>`}
             actions={
               <div className="flex gap-1">
                 <button
                   type="button"
                   onClick={() => setCardCarouselIdx((p) => (p === 0 ? carouselSlides.length - 1 : p - 1))}
-                  className="w-7 h-7 rounded-lg border border-gray-200 hover:bg-gray-100 flex items-center justify-center cursor-pointer"
+                  className="w-7 h-7 rounded-lg border border-gray-300 hover:bg-gray-100 flex items-center justify-center cursor-pointer"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   type="button"
                   onClick={() => setCardCarouselIdx((p) => (p === carouselSlides.length - 1 ? 0 : p + 1))}
-                  className="w-7 h-7 rounded-lg border border-gray-200 hover:bg-gray-100 flex items-center justify-center cursor-pointer"
+                  className="w-7 h-7 rounded-lg border border-gray-300 hover:bg-gray-100 flex items-center justify-center cursor-pointer"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
             }
           >
-            <div key={cardCarouselIdx} className="animate-ui-fade rounded-xl border border-gray-200 bg-white p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div key={cardCarouselIdx} className="animate-ui-fade rounded-xl border border-gray-300 bg-white p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="space-y-1">
                 <span className="text-[11px] font-bold uppercase text-primary-600">
                   {carouselSlides[cardCarouselIdx].tag}
@@ -1865,19 +1873,19 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           <UiDocSection
             id="car-autoheight"
             title="Auto Height Carousel"
-            classesHint="transition-all duration-300"
+            classesHint="transition-all duration-[240ms]"
             codeSnippet={`<div className="p-4 rounded-xl border transition-all">{slide.desc}</div>`}
             actions={
               <button
                 type="button"
                 onClick={() => setAutoHeightIdx((p) => (p + 1) % carouselSlides.length)}
-                className="px-2.5 py-1 rounded-md border border-gray-200 text-xs font-medium hover:bg-gray-50 cursor-pointer"
+                className="px-2.5 py-1 rounded-md border border-gray-300 text-xs font-medium hover:bg-gray-50 cursor-pointer"
               >
                 Slide Berikutnya ({autoHeightIdx + 1}/3)
               </button>
             }
           >
-            <div key={autoHeightIdx} className={`animate-ui-fade p-5 rounded-xl border transition-all duration-300 ${carouselSlides[autoHeightIdx].bg}`}>
+            <div key={autoHeightIdx} className={`animate-ui-fade p-5 rounded-xl border transition-all duration-[240ms] ${carouselSlides[autoHeightIdx].bg}`}>
               <div className="font-bold text-sm text-gray-900">{carouselSlides[autoHeightIdx].title}</div>
               <p className="text-xs text-gray-700 mt-1.5 leading-relaxed">{carouselSlides[autoHeightIdx].desc}</p>
             </div>
@@ -1888,7 +1896,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
             title="Directional Widening 3-Col Carousel & Meter"
             description="Pola karousel 3-kolom dengan wipe clipPath inset() melebar saat dipilih, navigasi swipe horizontal berarah (onPanEnd), indikator titik, serta meter 14-bar tersegmentasi."
             classesHint="clipPath: inset(...) + onPanEnd swipe + 14-bar vertical segmented meter"
-            codeSnippet={`<motion.div\n  animate={{ clipPath: activeCol === idx ? 'inset(0% 0% 0% 0%)' : 'inset(0% 10% 0% 10%)' }}\n  transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}\n>\n  <div className="flex gap-1">{bars.map(b => <span className="h-7 w-1.5 rounded-full" />)}</div>\n</motion.div>`}
+            codeSnippet={`<motion.div\n  animate={{ clipPath: activeCol === idx ? 'inset(0% 0% 0% 0%)' : 'inset(0% 10% 0% 10%)' }}\n  transition={{ duration: 0.26, ease: [0.23, 1, 0.32, 1] }}\n>\n  <div className="flex gap-1">{bars.map(b => <span className="h-7 w-1.5 rounded-full" />)}</div>\n</motion.div>`}
             actions={
               <div className="flex items-center gap-1.5">
                 <button
@@ -1922,8 +1930,8 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                   key={widenPage}
                   custom={widenDir}
                   initial={{ opacity: 0, x: widenDir * 24 }}
-                  animate={{ opacity: 1, x: 0, transition: { duration: 0.24, ease: [0.22, 1, 0.36, 1] } }}
-                  exit={{ opacity: 0, x: widenDir * -24, transition: { duration: 0.16 } }}
+                  animate={{ opacity: 1, x: 0, transition: { duration: 0.22, ease: [0.23, 1, 0.32, 1] } }}
+                  exit={{ opacity: 0, x: widenDir * -24, transition: { duration: 0.16, ease: [0.23, 1, 0.32, 1] } }}
                   onPanEnd={(_, info) => {
                     if (info.offset.x < -40) {
                       setWidenDir(1);
@@ -1933,11 +1941,11 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                       setWidenPage((p) => (p === 0 ? widenPages.length - 1 : p - 1));
                     }
                   }}
-                  className="rounded-2xl border border-black/[0.06] bg-[#FAFBFD] p-4 space-y-3 touch-pan-y select-none"
+                  className="rounded-2xl border border-black/[0.12] bg-[#FAFBFD] p-4 space-y-3 touch-pan-y select-none"
                 >
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-bold text-[#1C1D21]">{widenPages[widenPage].period}</span>
-                    <span className="text-[11px] text-[#8A8D98]">Klik kolom untuk memperlebar · Geser untuk ganti</span>
+                    <span className="text-[11px] text-[#646772]">Klik kolom untuk memperlebar · Geser untuk ganti</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
@@ -1952,11 +1960,11 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                             clipPath: isExpanded ? 'inset(0% 0% 0% 0% round 16px)' : 'inset(2% 2% 2% 2% round 16px)',
                             scale: isExpanded ? 1.02 : 0.985,
                           }}
-                          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                          transition={{ duration: 0.26, ease: [0.23, 1, 0.32, 1] }}
                           className={`text-left p-3.5 rounded-2xl border transition-colors cursor-pointer ${
                             isExpanded
                               ? 'bg-white border-[#ee2e65]/45 shadow-sm'
-                              : 'bg-white/75 border-black/[0.06] hover:bg-white'
+                              : 'bg-white/75 border-black/[0.12] hover:bg-white'
                           }`}
                         >
                           <div className="flex items-center justify-between gap-2">
@@ -1974,7 +1982,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                               />
                             ))}
                           </div>
-                          <div className="mt-2 text-[10.5px] text-[#8A8D98] tabular-nums">{col.sub}</div>
+                          <div className="mt-2 text-[10.5px] text-[#646772] tabular-nums">{col.sub}</div>
                         </motion.button>
                       );
                     })}
@@ -1992,7 +2000,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                       setWidenDir(idx >= widenPage ? 1 : -1);
                       setWidenPage(idx);
                     }}
-                    className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                    className={`h-2 rounded-full transition-all duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer ${
                       widenPage === idx ? 'w-6 bg-[#ee2e65]' : 'w-2 bg-gray-300 hover:bg-gray-400'
                     }`}
                   />
@@ -2015,7 +2023,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           <UiDocSection
             id="col-vertical"
             title="Example"
-            classesHint="p-3.5 rounded-xl border border-gray-200"
+            classesHint="p-3.5 rounded-xl border border-gray-300"
             codeSnippet={`<button onClick={() => setOpen(!open)}>Toggle Vertical</button>\n{open && <div className="p-3.5 border rounded-xl">Vertical Collapse Content</div>}`}
             actions={
               <button
@@ -2028,18 +2036,18 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           >
             <div className="text-xs">
               <div
-                className={`grid transition-[grid-template-rows,opacity] duration-[340ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                className={`grid transition-[grid-template-rows,opacity] duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
                   collapseVertical ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
                 }`}
               >
                 <div className="overflow-hidden">
-                  <div className="p-3.5 rounded-xl border border-gray-200 bg-gray-50/70 text-gray-700">
+                  <div className="p-3.5 rounded-xl border border-gray-300 bg-gray-50/70 text-gray-700">
                     <strong>Vertical Collapse:</strong> Konten catatan silabus dapat dibuka-tutup secara vertikal.
                   </div>
                 </div>
               </div>
               {!collapseVertical && (
-                <span className="animate-ui-fade text-gray-400 block">
+                <span className="animate-ui-fade text-gray-500 block">
                   Panel dalam kondisi tertutup. Klik Buka di kanan atas.
                 </span>
               )}
@@ -2049,8 +2057,8 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           <UiDocSection
             id="col-horizontal"
             title="Horizontal"
-            classesHint="transition-all duration-300 overflow-hidden"
-            codeSnippet={`<div className={\`transition-all duration-300 overflow-hidden \${open ? 'w-full p-3.5' : 'w-0 p-0'}\`}>Horizontal Panel</div>`}
+            classesHint="transition-all duration-[240ms] overflow-hidden"
+            codeSnippet={`<div className={\`transition-all duration-[240ms] overflow-hidden \${open ? 'w-full p-3.5' : 'w-0 p-0'}\`}>Horizontal Panel</div>`}
             actions={
               <button
                 onClick={() => setCollapseHorizontal(!collapseHorizontal)}
@@ -2062,7 +2070,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           >
             <div className="flex items-center overflow-hidden text-xs min-h-[48px]">
               <div
-                className={`transition-all duration-[340ms] ease-[cubic-bezier(0.22,1,0.36,1)] overflow-hidden rounded-xl border border-primary-200 bg-primary-50/60 text-primary-900 ${
+                className={`transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] overflow-hidden rounded-xl border border-primary-200 bg-primary-50/60 text-primary-900 ${
                   collapseHorizontal ? 'w-full p-3.5 opacity-100' : 'w-0 p-0 opacity-0 border-0'
                 }`}
               >
@@ -2091,17 +2099,17 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
             { id: 'lg-numbered', label: 'Numbered' },
           ]}
         >
-          <UiDocSection id="lg-basic" title="Basic List" classesHint="rounded-xl border border-gray-200 divide-y divide-gray-100 max-w-md" codeSnippet={`<ul className="rounded-xl border divide-y"><li className="px-4 py-2.5">An item</li></ul>`}>
-            <ul className="rounded-xl border border-gray-200 divide-y divide-gray-100 max-w-md text-xs">
+          <UiDocSection id="lg-basic" title="Basic List" classesHint="rounded-xl border border-gray-300 divide-y divide-gray-200 max-w-md" codeSnippet={`<ul className="rounded-xl border divide-y"><li className="px-4 py-2.5">An item</li></ul>`}>
+            <ul className="rounded-xl border border-gray-300 divide-y divide-gray-200 max-w-md text-xs">
               <li className="px-4 py-2.5 bg-primary-600 text-white font-semibold rounded-t-xl">Active item</li>
               <li className="px-4 py-2.5 text-gray-800">A second item</li>
               <li className="px-4 py-2.5 text-gray-800">A third item</li>
-              <li className="px-4 py-2.5 text-gray-400">Disabled item</li>
+              <li className="px-4 py-2.5 text-gray-500">Disabled item</li>
             </ul>
           </UiDocSection>
 
-          <UiDocSection id="lg-flush" title="Flush" classesHint="divide-y divide-gray-200 border-y border-gray-200 max-w-md" codeSnippet={`<ul className="divide-y border-y"><li className="py-2.5">Flush item</li></ul>`}>
-            <ul className="divide-y divide-gray-200 border-y border-gray-200 max-w-md text-xs text-gray-800">
+          <UiDocSection id="lg-flush" title="Flush" classesHint="divide-y divide-gray-200 border-y border-gray-300 max-w-md" codeSnippet={`<ul className="divide-y border-y"><li className="py-2.5">Flush item</li></ul>`}>
+            <ul className="divide-y divide-gray-200 border-y border-gray-300 max-w-md text-xs text-gray-800">
               <li className="py-2.5">An item (Flush)</li>
               <li className="py-2.5">A second item</li>
               <li className="py-2.5">A third item</li>
@@ -2109,7 +2117,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           </UiDocSection>
 
           <UiDocSection id="lg-ctx" title="Contextual classes" classesHint="bg-emerald-50 / bg-amber-50 / bg-rose-50" codeSnippet={`<li className="px-4 py-2.5 bg-emerald-50 text-emerald-900">Success item</li>`}>
-            <ul className="rounded-xl border border-gray-200 divide-y divide-gray-100 max-w-md text-xs font-medium overflow-hidden">
+            <ul className="rounded-xl border border-gray-300 divide-y divide-gray-200 max-w-md text-xs font-medium overflow-hidden">
               <li className="px-4 py-2.5 bg-primary-50 text-primary-900">Primary contextual item</li>
               <li className="px-4 py-2.5 bg-emerald-50 text-emerald-900">Success contextual item</li>
               <li className="px-4 py-2.5 bg-amber-50 text-amber-900">Warning contextual item</li>
@@ -2125,8 +2133,8 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
             </ul>
           </UiDocSection>
 
-          <UiDocSection id="lg-horiz" title="Horizontal" classesHint="flex border border-gray-200 rounded-lg divide-x" codeSnippet={`<div className="flex border rounded-lg divide-x"><div className="flex-1 py-2">Item 1</div></div>`}>
-            <div className="flex border border-gray-200 rounded-lg divide-x divide-gray-200 text-center font-medium text-xs max-w-md overflow-hidden">
+          <UiDocSection id="lg-horiz" title="Horizontal" classesHint="flex border border-gray-300 rounded-lg divide-x" codeSnippet={`<div className="flex border rounded-lg divide-x"><div className="flex-1 py-2">Item 1</div></div>`}>
+            <div className="flex border border-gray-300 rounded-lg divide-x divide-gray-300 text-center font-medium text-xs max-w-md overflow-hidden">
               <div className="flex-1 py-2.5 bg-gray-50">An item</div>
               <div className="flex-1 py-2.5 bg-gray-50">A second item</div>
               <div className="flex-1 py-2.5 bg-gray-50">A third item</div>
@@ -2134,28 +2142,28 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           </UiDocSection>
 
           <UiDocSection id="lg-badges" title="With badges" classesHint="flex items-center justify-between" codeSnippet={`<div className="px-4 py-2.5 flex justify-between">Class 302 <span className="badge">24</span></div>`}>
-            <ul className="rounded-xl border border-gray-200 divide-y divide-gray-100 max-w-md text-xs">
+            <ul className="rounded-xl border border-gray-300 divide-y divide-gray-200 max-w-md text-xs">
               <li className="px-4 py-2.5 flex items-center justify-between"><span>Class 302: Matematika</span><span className="px-2 py-0.5 rounded-full bg-primary-600 text-white font-bold tabular-nums">24</span></li>
               <li className="px-4 py-2.5 flex items-center justify-between"><span>Class 303: Fisika</span><span className="px-2 py-0.5 rounded-full bg-emerald-600 text-white font-bold tabular-nums">22</span></li>
             </ul>
           </UiDocSection>
 
           <UiDocSection id="lg-links" title="Links and buttons" classesHint="w-full text-left px-4 py-2.5 hover:bg-gray-50" codeSnippet={`<button className="w-full text-left px-4 py-2.5 hover:bg-gray-50">Clickable Button Item</button>`}>
-            <div className="rounded-xl border border-gray-200 divide-y divide-gray-100 max-w-md text-xs overflow-hidden">
-              <button onClick={() => triggerToast('List Action', 'Membuka item tautan aktif.', 'info')} className="w-full text-left px-4 py-2.5 bg-primary-50 text-primary-700 font-semibold hover:pl-5 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer">The current button item</button>
-              <button onClick={() => triggerToast('List Action', 'Membuka item kedua.', 'info')} className="w-full text-left px-4 py-2.5 hover:bg-gray-50 hover:pl-5 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] text-gray-800 cursor-pointer">A second button item</button>
+            <div className="rounded-xl border border-gray-300 divide-y divide-gray-200 max-w-md text-xs overflow-hidden">
+              <button onClick={() => triggerToast('List Action', 'Membuka item tautan aktif.', 'info')} className="w-full text-left px-4 py-2.5 bg-primary-50 text-primary-700 font-semibold transition-colors duration-200 cursor-pointer">The current button item</button>
+              <button onClick={() => triggerToast('List Action', 'Membuka item kedua.', 'info')} className="w-full text-left px-4 py-2.5 hover:bg-gray-50 transition-colors duration-200 text-gray-800 cursor-pointer">A second button item</button>
             </div>
           </UiDocSection>
 
           <UiDocSection id="lg-icons" title="With icons" classesHint="flex items-center gap-2.5" codeSnippet={`<div className="px-4 py-2.5 flex items-center gap-2.5"><BookOpen className="w-4 h-4 text-primary-600" /> Silabus</div>`}>
-            <ul className="rounded-xl border border-gray-200 divide-y divide-gray-100 max-w-md text-xs font-medium">
+            <ul className="rounded-xl border border-gray-300 divide-y divide-gray-200 max-w-md text-xs font-medium">
               <li className="px-4 py-2.5 flex items-center gap-2.5"><BookOpen className="w-4 h-4 text-primary-600" /> Silabus Pembelajaran</li>
               <li className="px-4 py-2.5 flex items-center gap-2.5"><Layers className="w-4 h-4 text-emerald-600" /> Modul Praktikum</li>
             </ul>
           </UiDocSection>
 
           <UiDocSection id="lg-checkbox" title="With checkbox" classesHint="flex items-center gap-2.5 cursor-pointer" codeSnippet={`<label className="px-4 py-2.5 flex items-center gap-2.5"><input type="checkbox" /> First checkbox</label>`}>
-            <div className="rounded-xl border border-gray-200 divide-y divide-gray-100 max-w-md text-xs">
+            <div className="rounded-xl border border-gray-300 divide-y divide-gray-200 max-w-md text-xs">
               {['Class 302: Matematika Peminatan', 'Class 303: Fisika Terapan', 'Class 304: Seni Lukis Modern'].map((label, idx) => (
                 <label key={label} className="px-4 py-2.5 flex items-center gap-2.5 hover:bg-gray-50 transition-colors cursor-pointer">
                   <input
@@ -2176,10 +2184,10 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
 
           <UiDocSection id="lg-js" title="JavaScript behavior" classesHint="grid grid-cols-12 gap-4" codeSnippet={`<div className="grid grid-cols-12 gap-4">...</div>`}>
             <div className="grid grid-cols-12 gap-4 text-xs">
-              <div className="relative col-span-5 grid grid-rows-3 rounded-xl border border-gray-200 divide-y divide-gray-100 overflow-hidden bg-white">
+              <div className="relative col-span-5 grid grid-rows-3 rounded-xl border border-gray-300 divide-y divide-gray-200 overflow-hidden bg-white">
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute inset-x-0 top-0 h-1/3 bg-gray-900 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  className="pointer-events-none absolute inset-x-0 top-0 h-1/3 bg-gray-900 transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
                   style={{
                     transform: `translate3d(0, ${listActiveTab * 100}%, 0)`,
                   }}
@@ -2196,7 +2204,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                   </button>
                 ))}
               </div>
-              <div className="col-span-7 p-4 rounded-xl border border-gray-200 bg-gray-50/70 text-gray-700 flex items-center">
+              <div className="col-span-7 p-4 rounded-xl border border-gray-300 bg-gray-50/70 text-gray-700 flex items-center">
                 <span key={listActiveTab} className="animate-ui-fade">
                   Panel JS Behavior Aktif:{' '}
                   <strong className="text-gray-900">
@@ -2208,7 +2216,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           </UiDocSection>
 
           <UiDocSection id="lg-numbered" title="Numbered" classesHint="list-decimal list-inside" codeSnippet={`<ol className="list-decimal list-inside rounded-xl border divide-y"><li className="px-4 py-2.5">First item</li></ol>`}>
-            <ol className="list-decimal list-inside rounded-xl border border-gray-200 divide-y divide-gray-100 max-w-md text-xs text-gray-800">
+            <ol className="list-decimal list-inside rounded-xl border border-gray-300 divide-y divide-gray-200 max-w-md text-xs text-gray-800">
               <li className="px-4 py-2.5">Persiapan Silabus Term 1</li>
               <li className="px-4 py-2.5">Unggah Video Pembelajaran</li>
               <li className="px-4 py-2.5">Evaluasi &amp; Ujian Akhir</li>
@@ -2232,7 +2240,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           ]}
         >
           <UiDocSection id="rib-overhead" title="Ribbon overhead" classesHint="relative / absolute -top-2.5 left-4 rounded-full" codeSnippet={`<div className="relative p-4 rounded-xl border"><span className="absolute -top-2.5 left-4 px-2.5 py-0.5 rounded-full bg-primary-600 text-white text-[10px] font-bold">OVERHEAD</span>...</div>`}>
-            <div className="relative p-5 rounded-xl border border-gray-200 bg-gray-50/50 max-w-sm text-xs mt-2">
+            <div className="relative p-5 rounded-xl border border-gray-300 bg-gray-50/50 max-w-sm text-xs mt-2">
               <div className="absolute -top-2.5 left-4 px-2.5 py-0.5 rounded-full bg-primary-600 text-white text-[10px] font-bold">OVERHEAD</div>
               <div className="font-bold text-gray-900">Modul Unggulan</div>
               <p className="text-gray-500 mt-1">Pita berada tepat menumpang di garis tepi atas kartu.</p>
@@ -2240,7 +2248,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           </UiDocSection>
 
           <UiDocSection id="rib-over" title="Ribbon over" classesHint="relative / absolute top-3 left-3 rounded" codeSnippet={`<div className="relative p-4 rounded-xl border"><span className="px-2 py-0.5 bg-emerald-600 text-white text-[10px] font-bold">OVER</span></div>`}>
-            <div className="relative p-5 pt-10 rounded-xl border border-gray-200 bg-white max-w-sm text-xs">
+            <div className="relative p-5 pt-10 rounded-xl border border-gray-300 bg-white max-w-sm text-xs">
               <div className="absolute top-3 left-3 px-2.5 py-0.5 rounded bg-emerald-600 text-white text-[10px] font-bold">RIBBON OVER</div>
               <div className="font-bold text-gray-900">Materi Terpopuler</div>
               <p className="text-gray-500 mt-1">Ditempatkan di dalam area padding atas kartu.</p>
@@ -2248,7 +2256,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           </UiDocSection>
 
           <UiDocSection id="rib-touch" title="Ribbon touch" classesHint="absolute top-3 right-0 rounded-l-full" codeSnippet={`<div className="absolute top-3 right-0 pl-3 pr-2.5 py-0.5 rounded-l-full bg-gray-900 text-white">TOUCH</div>`}>
-            <div className="relative p-5 rounded-xl border border-gray-200 bg-white max-w-sm text-xs">
+            <div className="relative p-5 rounded-xl border border-gray-300 bg-white max-w-sm text-xs">
               <div className="absolute top-3 right-0 pl-3 pr-2.5 py-0.5 rounded-l-full bg-gray-900 text-white text-[10px] font-bold">TOUCH RIGHT</div>
               <div className="font-bold text-gray-900">Modul Baru</div>
               <p className="text-gray-500 mt-1">Menyentuh batas kanan kontainer kartu secara presisi.</p>
@@ -2256,7 +2264,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           </UiDocSection>
 
           <UiDocSection id="rib-square" title="Ribbon Square" classesHint="rounded-none" codeSnippet={`<div className="absolute -top-2.5 left-4 px-2.5 py-0.5 rounded-none bg-primary-600 text-white">SQUARE</div>`}>
-            <div className="relative p-5 rounded-xl border border-gray-200 bg-gray-50/50 max-w-sm text-xs mt-2">
+            <div className="relative p-5 rounded-xl border border-gray-300 bg-gray-50/50 max-w-sm text-xs mt-2">
               <div className="absolute -top-2.5 left-4 px-2.5 py-0.5 rounded-none bg-primary-600 text-white text-[10px] font-bold">SQUARE</div>
               <div className="font-bold text-gray-900">Kartu Praktikum</div>
               <p className="text-gray-500 mt-1">Bentuk pita persegi tajam tanpa kelengkungan sudut.</p>
@@ -2264,7 +2272,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           </UiDocSection>
 
           <UiDocSection id="rib-icon" title="Ribbon with Icon" classesHint="inline-flex items-center gap-1" codeSnippet={`<div className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-amber-500 text-white"><Award className="w-3 h-3" /> TOP</div>`}>
-            <div className="relative p-5 rounded-xl border border-gray-200 bg-white max-w-sm text-xs mt-2">
+            <div className="relative p-5 rounded-xl border border-gray-300 bg-white max-w-sm text-xs mt-2">
               <div className="absolute -top-2.5 left-4 px-2.5 py-0.5 rounded bg-amber-500 text-white text-[10px] font-bold inline-flex items-center gap-1">
                 <Award className="w-3 h-3" />
                 <span>FEATURED</span>
@@ -2275,7 +2283,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           </UiDocSection>
 
           <UiDocSection id="rib-flag" title="Ribbon with Flag" classesHint="absolute top-3 right-0 flex items-center gap-1" codeSnippet={`<div className="absolute top-3 right-0 pl-2.5 pr-2 py-0.5 bg-rose-600 text-white flex items-center gap-1"><Flag className="w-2.5 h-2.5" /> FLAG</div>`}>
-            <div className="relative p-5 rounded-xl border border-gray-200 bg-white max-w-sm text-xs">
+            <div className="relative p-5 rounded-xl border border-gray-300 bg-white max-w-sm text-xs">
               <div className="absolute top-3 right-0 pl-2.5 pr-2 py-0.5 rounded-l-full bg-rose-600 text-white text-[10px] font-bold flex items-center gap-1">
                 <Flag className="w-2.5 h-2.5" />
                 <span>FLAG</span>
@@ -2306,7 +2314,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
               </div>
             }
           >
-            <div className="relative p-5 rounded-xl border border-gray-200 bg-gray-50/60 max-w-sm text-xs mt-2">
+            <div className="relative p-5 rounded-xl border border-gray-300 bg-gray-50/60 max-w-sm text-xs mt-2">
               <div
                 key={ribbonColor}
                 className={`animate-ui-pop absolute -top-2.5 left-4 px-2.5 py-0.5 rounded text-white text-[10px] font-bold uppercase transition-colors ${
@@ -2392,7 +2400,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           <UiDocSection
             id="off-demo"
             title="Demo"
-            classesHint="fixed z-50 bg-white border-gray-200 transition-transform"
+            classesHint="fixed z-50 bg-white border-gray-300 transition-transform"
             codeSnippet={`<button onClick={() => setActiveDrawerSpec({ dir: 'left', type: 'Offcanvas' })}>Launch Offcanvas</button>`}
           >
             <button
@@ -2450,7 +2458,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                     className={`px-2 py-0.5 rounded-md font-mono font-semibold ${
                       controlledOverlayOpen
                         ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                        : 'bg-gray-100 text-gray-600 border border-gray-200'
+                        : 'bg-gray-100 text-gray-600 border border-gray-300'
                     }`}
                   >
                     isOpen = {String(controlledOverlayOpen)}
@@ -2466,7 +2474,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
               </div>
 
               {controlledOverlayOpen ? (
-                <div className="animate-ui-pop p-4 rounded-xl border border-gray-200 bg-white shadow-sm flex items-center justify-between gap-3">
+                <div className="animate-ui-pop p-4 rounded-xl border border-gray-300 bg-white shadow-sm flex items-center justify-between gap-3">
                   <div>
                     <div className="font-bold text-gray-900">Modal / Drawer Terbuka</div>
                     <div className="text-[11px] text-gray-500">Klik tombol silang atau Tutup Panel untuk mengubah state ke false.</div>
@@ -2480,7 +2488,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                   </button>
                 </div>
               ) : (
-                <div className="animate-ui-fade p-4 rounded-xl border border-dashed border-gray-200 bg-gray-50/70 text-gray-500 text-center">
+                <div className="animate-ui-fade p-4 rounded-xl border border-dashed border-gray-300 bg-gray-50/70 text-gray-500 text-center">
                   Overlay tertutup (`isOpen = false`). Klik Buka Panel untuk menampilkan kembali.
                 </div>
               )}
@@ -2494,8 +2502,8 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
             classesHint="isDirty ? showConfirmDiscard : closeImmediately"
             codeSnippet={`const handleRequestClose = () => {\n  if (isDirty) setConfirmDiscard(true);\n  else onClose();\n};`}
           >
-            <div className="max-w-lg p-4 rounded-xl border border-gray-200 bg-white space-y-3 text-xs">
-              <div className="flex items-center justify-between border-b border-gray-100 pb-2.5">
+            <div className="max-w-lg p-4 rounded-xl border border-gray-300 bg-white space-y-3 text-xs">
+              <div className="flex items-center justify-between border-b border-gray-200 pb-2.5">
                 <div className="flex items-center gap-2">
                   <span className="font-bold text-gray-900">Edit Judul Drawer</span>
                   {drawerDraftText !== 'Silabus Fisika Terapan' && (
@@ -2568,7 +2576,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
             classesHint="disabled={isSubmitting} / closeOnBackdrop={!isSubmitting}"
             codeSnippet={`<button disabled={isSubmitting} onClick={onCancel}>Batal</button>\n<button disabled={isSubmitting}>{isSubmitting ? 'Menyimpan...' : 'Simpan'}</button>`}
           >
-            <div className="max-w-lg p-4 rounded-xl border border-gray-200 bg-white space-y-3 text-xs">
+            <div className="max-w-lg p-4 rounded-xl border border-gray-300 bg-white space-y-3 text-xs">
               <div className="flex items-center justify-between">
                 <span className="font-bold text-gray-900">Konfirmasi Publikasi Ujian</span>
                 <span className="text-[11px] font-mono text-gray-500">
@@ -2578,12 +2586,12 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
               <p className="text-gray-600">
                 Saat menyimpan ke server, penutupan lewat backdrop maupun tombol Batal dinonaktifkan untuk mencegah data korup.
               </p>
-              <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-100">
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-200">
                 <button
                   type="button"
                   disabled={overlaySubmitting}
                   onClick={() => triggerToast('Dibatalkan', 'Aksi modal dibatalkan.', 'info')}
-                  className="px-3.5 py-1.5 rounded-lg border border-gray-200 text-gray-700 font-semibold hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                  className="px-3.5 py-1.5 rounded-lg border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                 >
                   Batal
                 </button>
@@ -2634,18 +2642,18 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                 </div>
               </div>
 
-              <div className="relative h-36 rounded-xl border border-gray-200 bg-gray-50 p-3 overflow-hidden flex items-center justify-center">
+              <div className="relative h-36 rounded-xl border border-gray-300 bg-gray-50 p-3 overflow-hidden flex items-center justify-center">
                 {stackedLayerDepth === 0 && (
                   <span className="animate-ui-fade text-gray-500">Halaman Dasar Aktif (Tidak ada overlay terbuka)</span>
                 )}
                 {stackedLayerDepth >= 1 && (
-                  <div className="animate-ui-drawer-right absolute inset-y-2 right-2 w-64 rounded-xl border border-gray-200 bg-white shadow-md p-3 flex flex-col justify-between z-10">
+                  <div className="animate-ui-drawer-right absolute inset-y-2 right-2 w-64 rounded-xl border border-gray-300 bg-white shadow-md p-3 flex flex-col justify-between z-10">
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-gray-900">Layer 1: Drawer Filter</span>
                       <button
                         type="button"
                         onClick={() => setStackedLayerDepth(0)}
-                        className="text-gray-400 hover:text-gray-700 cursor-pointer"
+                        className="text-gray-500 hover:text-gray-800 cursor-pointer"
                       >
                         <X className="w-3.5 h-3.5" />
                       </button>
@@ -2688,10 +2696,10 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           <UiDocSection
             title="Empty Inbox & CTA State"
             classesHint="p-8 text-center rounded-xl border border-dashed border-gray-300 bg-gray-50/50"
-            codeSnippet={`<div className="p-8 text-center rounded-xl border border-dashed border-gray-300 bg-gray-50/50 space-y-2">\n  <Inbox className="w-8 h-8 text-gray-300 mx-auto" />\n  <div className="font-bold text-gray-800">Belum Ada Tugas Dikumpulkan</div>\n</div>`}
+            codeSnippet={`<div className="p-8 text-center rounded-xl border border-dashed border-gray-300 bg-gray-50/50 space-y-2">\n  <Inbox className="w-8 h-8 text-gray-400 mx-auto" />\n  <div className="font-bold text-gray-800">Belum Ada Tugas Dikumpulkan</div>\n</div>`}
           >
             <div className="p-8 text-center rounded-xl border border-dashed border-gray-300 bg-gray-50/50 space-y-2.5">
-              <Inbox className="w-9 h-9 text-gray-300 mx-auto" />
+              <Inbox className="w-9 h-9 text-gray-400 mx-auto" />
               <div className="text-sm font-bold text-gray-800">Belum Ada Tugas Dikumpulkan</div>
               <p className="text-xs text-gray-500 max-w-md mx-auto">
                 Siswa belum mengunggah lembar jawaban minggu ini. Bagikan tautan pengumpulan agar kelas segera merespons.
@@ -2732,8 +2740,8 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
             </div>
           </UiDocSection>
 
-          <UiDocSection id="st-readonly" title="Read-Only Lock State" classesHint="border-gray-200 bg-gray-50 text-gray-700" codeSnippet={`<div className="p-3.5 rounded-xl border border-gray-200 bg-gray-50 flex items-center gap-2.5"><Lock className="w-4 h-4 text-gray-500" /> State: Read-Only Lock</div>`}>
-            <div className="p-3.5 rounded-xl border border-gray-200 bg-gray-50 flex items-center gap-2.5 text-gray-700 text-xs font-semibold max-w-xs">
+          <UiDocSection id="st-readonly" title="Read-Only Lock State" classesHint="border-gray-300 bg-gray-50 text-gray-700" codeSnippet={`<div className="p-3.5 rounded-xl border border-gray-300 bg-gray-50 flex items-center gap-2.5"><Lock className="w-4 h-4 text-gray-500" /> State: Read-Only Lock</div>`}>
+            <div className="p-3.5 rounded-xl border border-gray-300 bg-gray-50 flex items-center gap-2.5 text-gray-700 text-xs font-semibold max-w-xs">
               <Lock className="w-4 h-4 text-gray-500 shrink-0" />
               <span>State: Read-Only Lock</span>
             </div>
@@ -2827,7 +2835,7 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
                       setGalleryActive(item.title);
                       triggerToast('Gallery Lightbox', `Pratinjau foto: ${item.title}`, 'info');
                     }}
-                    className={`p-3.5 rounded-xl border border-gray-200 ${item.bg} text-left flex flex-col justify-between h-24 hover:-translate-y-1 hover:shadow-md transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer`}
+                    className={`p-3.5 rounded-xl border border-gray-300 ${item.bg} text-left flex flex-col justify-between h-24 hover:shadow-md transition-shadow duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer`}
                   >
                     <span className="text-[10px] font-bold uppercase opacity-75">{item.lab}</span>
                     <span className="font-bold leading-snug">{item.title}</span>
@@ -2846,6 +2854,12 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
           </UiDocSection>
         </UiDocPage>
       )}
+
+      {/* 2.19 KANBAN BOARD */}
+      {isVisible('kanbanboard') && <KanbanBoardUiKit />}
+
+      {/* 2.20 TIMELINE */}
+      {isVisible('timeline') && <TimelineUiKit />}
     </div>
   );
 };

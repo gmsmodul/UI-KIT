@@ -166,7 +166,7 @@ export const AnalyticsPage: React.FC = () => {
                   </div>
                 </div>
                 <div className="w-full h-2 bg-[#F4F5F8] rounded-full overflow-hidden">
-                  <div className={`h-full ${row.color} rounded-full transition-all duration-500`} style={{ width: `${row.score}%` }} />
+                  <div className={`h-full ${row.color} rounded-full transition-all duration-[260ms] ease-[cubic-bezier(0.23,1,0.32,1)]`} style={{ width: `${row.score}%` }} />
                 </div>
               </div>
               ));

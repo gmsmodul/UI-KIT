@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { PageId } from '../../types';
 import { useIsMobile } from '../../hooks/useIsMobile';
+import { playUiMotionSound } from '../../utils/uiMotionSound';
 
 const MOBILE_PAGE_ORDER: PageId[] = [
   'overview',
@@ -74,57 +75,67 @@ interface TransitionCustom {
   isMobile: boolean;
 }
 
+const EASE_OUT = [0.23, 1, 0.32, 1] as const;
+
 const pageVariants = {
   enter: ({ direction, isMobile }: TransitionCustom) =>
     isMobile
       ? {
           opacity: 0,
-          x: direction * 28,
+          x: direction * 24,
           y: 0,
-          scale: 0.986,
+          scale: 0.95,
+          filter: 'blur(4px)',
         }
       : {
           opacity: 0,
           x: 0,
-          y: direction * 16,
-          scale: 0.992,
+          y: direction * 14,
+          scale: 0.95,
+          filter: 'blur(4px)',
         },
   center: {
     opacity: 1,
     x: 0,
     y: 0,
     scale: 1,
+    filter: 'blur(0px)',
     transition: {
-      x: { type: 'spring' as const, stiffness: 400, damping: 36, mass: 0.85 },
-      y: { type: 'spring' as const, stiffness: 420, damping: 36, mass: 0.82 },
-      scale: { duration: 0.26, ease: [0.22, 1, 0.36, 1] as const },
-      opacity: { duration: 0.22, ease: [0.22, 1, 0.36, 1] as const },
+      x: { type: 'spring' as const, stiffness: 420, damping: 28, mass: 0.8 },
+      y: { type: 'spring' as const, stiffness: 420, damping: 28, mass: 0.8 },
+      scale: { type: 'spring' as const, stiffness: 420, damping: 26, mass: 0.8 },
+      opacity: { duration: 0.18, ease: EASE_OUT },
+      filter: { duration: 0.2, ease: EASE_OUT },
     },
   },
   exit: ({ direction, isMobile }: TransitionCustom) =>
     isMobile
       ? {
           opacity: 0,
-          x: direction * -20,
+          x: direction * -18,
           y: 0,
-          scale: 0.99,
+          scale: 0.95,
+          filter: 'blur(2px)',
           pointerEvents: 'none' as const,
           transition: {
-            x: { duration: 0.2, ease: [0.32, 0.72, 0, 1] as const },
-            scale: { duration: 0.2, ease: [0.32, 0.72, 0, 1] as const },
-            opacity: { duration: 0.16, ease: 'easeOut' as const },
+            x: { duration: 0.18, ease: EASE_OUT },
+            scale: { duration: 0.18, ease: EASE_OUT },
+            opacity: { duration: 0.15, ease: EASE_OUT },
+            filter: { duration: 0.15, ease: EASE_OUT },
           },
         }
       : {
           opacity: 0,
           x: 0,
-          y: direction * -12,
-          scale: 0.994,
+          y: direction * -10,
+          scale: 0.95,
+          filter: 'blur(2px)',
           pointerEvents: 'none' as const,
           transition: {
-            y: { duration: 0.18, ease: [0.32, 0.72, 0, 1] as const },
-            scale: { duration: 0.18, ease: [0.32, 0.72, 0, 1] as const },
-            opacity: { duration: 0.15, ease: 'easeOut' as const },
+            y: { duration: 0.18, ease: EASE_OUT },
+            scale: { duration: 0.18, ease: EASE_OUT },
+            opacity: { duration: 0.15, ease: EASE_OUT },
+            filter: { duration: 0.15, ease: EASE_OUT },
           },
         },
 };
@@ -141,6 +152,7 @@ export const PageTransition: React.FC<PageTransitionProps> = ({
   const isMobile = useIsMobile();
   const key = transitionKey ?? activePage;
   const direction = directionOverride ?? getPageDirection(prevPage, activePage, isMobile);
+  const prevKeyRef = useRef(key);
 
   useEffect(() => {
     if (scrollResetOnChange && isMobile && typeof window !== 'undefined' && window.scrollY > 0) {
@@ -157,7 +169,13 @@ export const PageTransition: React.FC<PageTransitionProps> = ({
         initial="enter"
         animate="center"
         exit="exit"
-        style={{ willChange: 'transform, opacity' }}
+        onAnimationComplete={(definition) => {
+          if (definition === 'center' && prevKeyRef.current !== key) {
+            prevKeyRef.current = key;
+            playUiMotionSound('land', true);
+          }
+        }}
+        style={{ willChange: 'transform, opacity, filter' }}
         className={className}
       >
         {children}

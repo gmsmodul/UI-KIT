@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Check, Copy } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { playUiMotionSound } from '../../utils/uiMotionSound';
 
 interface InfoPopoverProps {
   content: React.ReactNode;
@@ -37,13 +38,18 @@ export const InfoPopover: React.FC<InfoPopoverProps> = ({ content, label }) => {
     <div ref={wrapperRef} className="relative inline-flex items-center shrink-0">
       <button
         type="button"
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={() =>
+          setOpen((prev) => {
+            playUiMotionSound(!prev ? 'pop' : 'tick');
+            return !prev;
+          })
+        }
         aria-label={`Keterangan ${label}`}
         aria-expanded={open}
-        className={`w-[18px] h-[18px] rounded-full border inline-flex items-center justify-center text-[10px] font-semibold leading-none transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105 active:scale-95 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/30 ${
+        className={`w-[18px] h-[18px] rounded-full border inline-flex items-center justify-center text-[10px] font-semibold leading-none transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/30 ${
           open
             ? 'border-primary-500 bg-primary-50 text-primary-600'
-            : 'border-gray-300/90 bg-white text-gray-400 hover:border-gray-400 hover:text-gray-700 hover:bg-gray-50'
+            : 'border-gray-300 bg-white text-gray-500 hover:border-gray-400 hover:text-gray-800 hover:bg-gray-50'
         }`}
       >
         ?
@@ -53,7 +59,7 @@ export const InfoPopover: React.FC<InfoPopoverProps> = ({ content, label }) => {
         <div
           role="dialog"
           aria-label={`Info ${label}`}
-          className="animate-ui-pop absolute left-0 top-full mt-2 w-72 sm:w-80 max-w-[calc(100vw-3rem)] rounded-xl border border-gray-200/90 bg-white/95 backdrop-blur-sm p-3.5 text-xs text-gray-600 leading-relaxed shadow-[0_14px_34px_-10px_rgba(15,23,42,0.14)] z-40"
+          className="animate-ui-pop absolute left-0 top-full mt-2 w-72 sm:w-80 max-w-[calc(100vw-3rem)] rounded-xl border border-gray-300 bg-white/95 backdrop-blur-sm p-3.5 text-xs text-gray-600 leading-relaxed shadow-[0_14px_34px_-10px_rgba(15,23,42,0.14)] z-40"
         >
           {content}
         </div>
@@ -85,7 +91,7 @@ export const UiDocPage: React.FC<UiDocPageProps> = ({
   return (
     <div className="space-y-8 print-section">
       {/* Minimalist Unboxed Page Header */}
-      <div className="pb-4 border-b border-gray-200/80 space-y-2.5">
+      <div className="pb-4 border-b border-gray-300/85 space-y-2.5">
         <div className="flex items-center gap-2">
           <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 tracking-tight">{title}</h2>
           {description && <InfoPopover content={description} label={title} />}
@@ -98,7 +104,7 @@ export const UiDocPage: React.FC<UiDocPageProps> = ({
                 key={link.id}
                 type="button"
                 onClick={() => scrollToSub(link.id)}
-                className="text-gray-500 hover:text-primary-600 hover:translate-x-0.5 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer"
+                className="text-gray-500 hover:text-primary-600 transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer"
               >
                 {link.label}
               </button>
@@ -186,17 +192,20 @@ export const UiDocSection: React.FC<UiDocSectionProps> = ({
       </div>
 
       {/* Single-elevation White Preview Container */}
-      <div className="rounded-xl border border-gray-200/85 bg-white overflow-hidden transition-shadow duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:shadow-[0_6px_20px_-10px_rgba(15,23,42,0.08)]">
-        <div className="px-4 border-b border-gray-100 flex items-center justify-between gap-3 bg-white">
+      <div className="rounded-xl border border-gray-300/90 bg-white overflow-hidden transition-shadow duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] hover:shadow-[0_6px_20px_-10px_rgba(15,23,42,0.08)]">
+        <div className="px-4 border-b border-gray-300 flex items-center justify-between gap-3 bg-white">
           <div ref={tabContainerRef} className="relative flex items-center gap-5 text-xs">
             <button
               ref={previewTabRef}
               type="button"
-              onClick={() => setActiveTab('preview')}
-              className={`py-2.5 transition-colors duration-200 cursor-pointer whitespace-nowrap ${
+              onClick={() => {
+                if (activeTab !== 'preview') playUiMotionSound('tick');
+                setActiveTab('preview');
+              }}
+              className={`py-2.5 font-semibold transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer whitespace-nowrap ${
                 activeTab === 'preview'
-                  ? 'text-gray-900 font-semibold'
-                  : 'text-gray-400 hover:text-gray-700 font-medium'
+                  ? 'text-gray-900'
+                  : 'text-gray-500 hover:text-gray-800'
               }`}
             >
               Preview
@@ -204,11 +213,14 @@ export const UiDocSection: React.FC<UiDocSectionProps> = ({
             <button
               ref={reactTabRef}
               type="button"
-              onClick={() => setActiveTab('react')}
-              className={`py-2.5 transition-colors duration-200 cursor-pointer whitespace-nowrap ${
+              onClick={() => {
+                if (activeTab !== 'react') playUiMotionSound('tick');
+                setActiveTab('react');
+              }}
+              className={`py-2.5 font-semibold transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer whitespace-nowrap ${
                 activeTab === 'react'
-                  ? 'text-gray-900 font-semibold'
-                  : 'text-gray-400 hover:text-gray-700 font-medium'
+                  ? 'text-gray-900'
+                  : 'text-gray-500 hover:text-gray-800'
               }`}
             >
               React
@@ -217,11 +229,14 @@ export const UiDocSection: React.FC<UiDocSectionProps> = ({
               <button
                 ref={classesTabRef}
                 type="button"
-                onClick={() => setActiveTab('classes')}
-                className={`py-2.5 transition-colors duration-200 cursor-pointer whitespace-nowrap ${
+                onClick={() => {
+                  if (activeTab !== 'classes') playUiMotionSound('tick');
+                  setActiveTab('classes');
+                }}
+                className={`py-2.5 font-semibold transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer whitespace-nowrap ${
                   activeTab === 'classes'
-                    ? 'text-gray-900 font-semibold'
-                    : 'text-gray-400 hover:text-gray-700 font-medium'
+                    ? 'text-gray-900'
+                    : 'text-gray-500 hover:text-gray-800'
                 }`}
               >
                 Classes
@@ -233,7 +248,7 @@ export const UiDocSection: React.FC<UiDocSectionProps> = ({
                 width: `${indicatorStyle.width}px`,
                 transform: `translate3d(${indicatorStyle.left}px, 0, 0)`,
               }}
-              className="pointer-events-none absolute bottom-0 left-0 h-[2px] rounded-full bg-primary-600 transition-[transform,width] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+              className="pointer-events-none absolute bottom-0 left-0 h-[2px] rounded-full bg-primary-600 transition-[transform,width] duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
             />
           </div>
 
@@ -245,14 +260,25 @@ export const UiDocSection: React.FC<UiDocSectionProps> = ({
                 title
               )
             }
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-400 hover:text-gray-900 py-1 px-2 rounded-md hover:bg-gray-50 transition-all duration-200 cursor-pointer whitespace-nowrap"
+            className="inline-grid place-items-center text-xs font-medium text-gray-500 hover:text-gray-900 py-1 px-2 rounded-md hover:bg-gray-100 transition-colors duration-200 cursor-pointer whitespace-nowrap"
           >
-            {copied ? (
-              <Check className="w-3.5 h-3.5 text-emerald-600 animate-ui-check" />
-            ) : (
+            <span
+              className={`[grid-area:1/1] inline-flex items-center gap-1.5 transition-opacity duration-150 ${
+                copied ? 'opacity-0 invisible' : 'opacity-100'
+              }`}
+            >
               <Copy className="w-3.5 h-3.5" />
-            )}
-            <span>{copied ? 'Disalin' : 'Salin'}</span>
+              <span>Salin</span>
+            </span>
+            <span
+              aria-hidden={!copied}
+              className={`[grid-area:1/1] inline-flex items-center gap-1.5 text-emerald-600 transition-opacity duration-150 ${
+                copied ? 'opacity-100' : 'opacity-0 invisible'
+              }`}
+            >
+              <Check className="w-3.5 h-3.5 animate-ui-check" />
+              <span>Disalin</span>
+            </span>
           </button>
         </div>
 
@@ -270,7 +296,7 @@ export const UiDocSection: React.FC<UiDocSectionProps> = ({
 
         {activeTab === 'classes' && classesHint && (
           <div key="classes" className="animate-ui-fade p-4 sm:p-5 bg-gray-50/70 text-xs font-mono text-gray-700">
-            <div className="p-3 rounded-lg bg-white border border-gray-200/80 break-words leading-relaxed">
+            <div className="p-3 rounded-lg bg-white border border-gray-300 break-words leading-relaxed">
               {classesHint}
             </div>
           </div>

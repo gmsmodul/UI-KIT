@@ -95,11 +95,11 @@ const DockPreview: React.FC<{
     <div className="w-full max-w-[352px] flex items-center gap-2">
       <div
         ref={barRef}
-        className="relative flex-1 bg-white rounded-full p-1 shadow-[0_10px_28px_-8px_rgba(15,23,42,0.16)] border border-black/[0.06] flex items-center justify-between"
+        className="relative flex-1 bg-white rounded-full p-1 shadow-[0_10px_28px_-8px_rgba(15,23,42,0.16)] border border-black/[0.14] flex items-center justify-between"
       >
         <span
           aria-hidden="true"
-          className={`pointer-events-none absolute top-1 bottom-1 left-0 rounded-full bg-[#ee2e65] shadow-[0_5px_14px_-4px_rgba(238,46,101,0.55)] transition-[transform,width,opacity] duration-300 ease-[cubic-bezier(0.22,1.24,0.36,1)] ${
+          className={`pointer-events-none absolute top-1 bottom-1 left-0 rounded-full bg-[#ee2e65] shadow-[0_5px_14px_-4px_rgba(238,46,101,0.55)] transition-[transform,width,opacity] duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
             indicator.ready ? 'opacity-100' : 'opacity-0'
           }`}
           style={{
@@ -165,7 +165,7 @@ const DockPreview: React.FC<{
         type="button"
         aria-label="Mobile quick search"
         onClick={onSearchClick}
-        className="w-12 h-12 shrink-0 rounded-full bg-white shadow-[0_10px_28px_-8px_rgba(15,23,42,0.16)] border border-black/[0.06] flex items-center justify-center text-[#1C1D21] hover:text-[#ee2e65] active:scale-95 transition-all cursor-pointer"
+        className="w-12 h-12 shrink-0 rounded-full bg-white shadow-[0_10px_28px_-8px_rgba(15,23,42,0.16)] border border-black/[0.14] flex items-center justify-center text-[#1C1D21] hover:text-[#ee2e65] active:scale-95 transition-all cursor-pointer"
       >
         <Search className="w-[18px] h-[18px] stroke-[2px]" />
       </button>
@@ -187,7 +187,9 @@ export const MobileNavUiKitDemo: React.FC = () => {
   const [drawerActive, setDrawerActive] = useState('utilities');
   const [drawerOpen, setDrawerOpen] = useState(true);
   const [drawerClosing, setDrawerClosing] = useState(false);
+  const [drawerPeekHeight, setDrawerPeekHeight] = useState<number | null>(null);
   const drawerSandboxRef = useRef<HTMLDivElement>(null);
+  const drawerListRef = useRef<HTMLDivElement>(null);
   const drawerTimerRef = useRef<number | null>(null);
 
   const openDrawerDemo = () => {
@@ -219,6 +221,50 @@ export const MobileNavUiKitDemo: React.FC = () => {
     document.addEventListener('mousedown', onPointerDown);
     return () => document.removeEventListener('mousedown', onPointerDown);
   }, [drawerOpen, drawerClosing]);
+
+  useLayoutEffect(() => {
+    if (!drawerOpen) {
+      setDrawerPeekHeight(null);
+      return;
+    }
+
+    const computeDrawerPeek = () => {
+      const scroller = drawerListRef.current;
+      if (!scroller) return;
+
+      const capHeight = 264;
+      if (scroller.scrollHeight <= capHeight + 2) {
+        setDrawerPeekHeight((prev) => (prev !== null ? null : prev));
+        return;
+      }
+
+      const items = Array.from(
+        scroller.querySelectorAll<HTMLElement>('[data-drawer-item="true"]')
+      );
+      let targetMid: number | null = null;
+      for (const item of items) {
+        const midInContent = item.offsetTop + item.offsetHeight * 0.5;
+        if (midInContent <= capHeight) {
+          targetMid = Math.round(midInContent);
+        } else {
+          break;
+        }
+      }
+
+      setDrawerPeekHeight((prev) => (prev !== targetMid ? targetMid : prev));
+    };
+
+    computeDrawerPeek();
+    const scroller = drawerListRef.current;
+    const ro =
+      typeof ResizeObserver !== 'undefined' ? new ResizeObserver(computeDrawerPeek) : null;
+    if (ro && scroller) ro.observe(scroller);
+    window.addEventListener('resize', computeDrawerPeek);
+    return () => {
+      ro?.disconnect();
+      window.removeEventListener('resize', computeDrawerPeek);
+    };
+  }, [drawerOpen]);
 
   useEffect(() => {
     return () => {
@@ -255,7 +301,7 @@ export const MobileNavUiKitDemo: React.FC = () => {
           </button>
         }
       >
-        <div className="bg-[#F4F5F8] rounded-2xl p-5 sm:p-6 border border-black/[0.04] flex flex-col items-center gap-3">
+        <div className="bg-[#F4F5F8] rounded-2xl p-5 sm:p-6 border border-black/[0.12] flex flex-col items-center gap-3">
           <DockPreview
             activeId={dockActive}
             onSelect={setDockActive}
@@ -265,7 +311,7 @@ export const MobileNavUiKitDemo: React.FC = () => {
               triggerToast('UI KIT Search', 'Membuka panel pencarian cepat kategori & komponen UI KIT.', 'info')
             }
           />
-          <div className="text-xs text-gray-500 font-medium">
+          <div className="text-xs text-gray-600 font-medium">
             Slot aktif: <strong className="text-gray-900 capitalize">{dockActive}</strong>
           </div>
         </div>
@@ -277,7 +323,7 @@ export const MobileNavUiKitDemo: React.FC = () => {
         classesHint="flex-[1.35] px-3 bg-[#ee2e65] text-white"
         codeSnippet={`<button className={isOverflowActive ? 'flex-[1.35] px-3 text-white' : 'flex-1'}>\n  {isOverflowActive && <ActiveCategoryIcon />}\n  <ChevronsUpDown />\n</button>`}
       >
-        <div className="bg-[#F4F5F8] rounded-2xl p-5 sm:p-6 border border-black/[0.04] flex flex-col items-center gap-4">
+        <div className="bg-[#F4F5F8] rounded-2xl p-5 sm:p-6 border border-black/[0.12] flex flex-col items-center gap-4">
           <div className="flex flex-wrap justify-center gap-1.5">
             {[
               { id: 'datadisplay', label: 'Data Display' },
@@ -293,7 +339,7 @@ export const MobileNavUiKitDemo: React.FC = () => {
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                   overflowActive === item.id
                     ? 'bg-[#ee2e65] text-white shadow-xs'
-                    : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                 }`}
               >
                 {item.label}
@@ -314,8 +360,8 @@ export const MobileNavUiKitDemo: React.FC = () => {
       <UiDocSection
         id="mnav-popup"
         title="Floating Vertical Drawer Card"
-        classesHint="rounded-[24px] max-w-[272px] bg-white shadow-2xl / bg-[#ee2e65] rounded-full"
-        codeSnippet={`<div className="w-[272px] bg-white rounded-[24px] shadow-2xl border p-2">\n  <ProfileHeader />\n  {modules.map(m => <button className={active ? 'bg-[#ee2e65] text-white rounded-full' : '...'}>{m.label}</button>)}\n</div>`}
+        classesHint="rounded-[24px] max-w-[272px] bg-white shadow-2xl / no-scrollbar half-peek cue"
+        codeSnippet={`<div className="w-[272px] bg-white rounded-[24px] shadow-2xl border overflow-hidden">\n  <ProfileHeader />\n  <div className="overflow-y-auto no-scrollbar px-2 pt-2" style={{ maxHeight: peekMidHeight }}>\n    {modules.map(m => <button className={active ? 'bg-[#ee2e65] text-white rounded-full' : '...'}>{m.label}</button>)}\n  </div>\n</div>`}
         actions={
           <button
             type="button"
@@ -332,23 +378,23 @@ export const MobileNavUiKitDemo: React.FC = () => {
       >
         <div
           ref={drawerSandboxRef}
-          className="bg-[#E8EAEE] rounded-2xl p-5 sm:p-6 border border-black/[0.05] flex flex-col items-start gap-2.5"
+          className="bg-[#E8EAEE] rounded-2xl p-5 sm:p-6 border border-black/[0.12] flex flex-col items-start gap-2.5"
         >
           {drawerOpen && (
             <div
-              className={`w-full max-w-[272px] bg-white rounded-[24px] shadow-[0_20px_48px_-12px_rgba(15,23,42,0.25)] border border-black/[0.06] overflow-hidden ${
+              className={`w-full max-w-[272px] bg-white rounded-[24px] shadow-[0_20px_48px_-12px_rgba(15,23,42,0.25)] border border-black/[0.14] overflow-hidden ${
                 drawerClosing ? 'animate-menu-fold-down' : 'animate-menu-fold-up'
               }`}
             >
               {/* Profile & Action Row */}
-              <div className="px-3.5 pt-3 pb-2.5 border-b border-black/[0.05] flex items-center justify-between">
+              <div className="px-3.5 pt-3 pb-2.5 border-b border-black/[0.12] flex items-center justify-between">
                 <div className="flex items-center gap-2 min-w-0">
                   <div className="w-7 h-7 rounded-full bg-[#ee2e65] text-white text-[10px] font-bold flex items-center justify-center shrink-0">
                     UI
                   </div>
                   <div className="min-w-0">
                     <div className="text-[13px] font-semibold text-[#1C1D21] truncate">UI KIT</div>
-                    <div className="text-[10px] text-[#8A8D98]">Design System</div>
+                    <div className="text-[10px] text-[#646772]">Design System</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5">
@@ -372,41 +418,48 @@ export const MobileNavUiKitDemo: React.FC = () => {
               </div>
 
               {/* Vertical Items List (Excludes primary dock tabs: Utilities, Data Entry, Mobile UI Kit) */}
-              <div className="p-2 space-y-0.5 max-h-72 overflow-y-auto">
-                {DEMO_MODULES.filter(
-                  (mod) => !['utilities', 'dataentry', 'mobilekit'].includes(mod.id)
-                ).map((mod) => {
-                  const Icon = mod.icon;
-                  const isCurrent = drawerActive === mod.id;
-                  return (
-                    <React.Fragment key={mod.id}>
-                      {mod.dividerBefore && <div className="my-1 border-t border-black/[0.06] mx-2" />}
-                      <button
-                        type="button"
-                        onClick={() => setDrawerActive(mod.id)}
-                        className={`w-full flex items-center justify-between px-3 py-2 rounded-full text-left transition-all duration-200 cursor-pointer ${
-                          isCurrent
-                            ? 'bg-[#ee2e65] text-white font-semibold shadow-xs'
-                            : 'text-[#1C1D21] hover:bg-[#F4F5F8] font-medium'
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <Icon className="w-4 h-4 shrink-0" />
-                          <span className="text-[13px] truncate">{mod.label}</span>
-                        </div>
-                        {mod.badge && (
-                          <span
-                            className={`min-w-[24px] h-5 px-1.5 rounded-full text-[10.5px] font-bold flex items-center justify-center ${
-                              isCurrent ? 'bg-white text-[#ee2e65]' : 'bg-[#EF4444] text-white'
-                            }`}
-                          >
-                            {mod.badge}
-                          </span>
-                        )}
-                      </button>
-                    </React.Fragment>
-                  );
-                })}
+              <div
+                ref={drawerListRef}
+                style={{ maxHeight: drawerPeekHeight ? `${drawerPeekHeight}px` : '264px' }}
+                className="relative px-2 pt-2 overflow-y-auto overflow-x-hidden no-scrollbar overscroll-contain"
+              >
+                <div className="space-y-0.5 pb-2">
+                  {DEMO_MODULES.filter(
+                    (mod) => !['utilities', 'dataentry', 'mobilekit'].includes(mod.id)
+                  ).map((mod) => {
+                    const Icon = mod.icon;
+                    const isCurrent = drawerActive === mod.id;
+                    return (
+                      <React.Fragment key={mod.id}>
+                        {mod.dividerBefore && <div className="my-1 border-t border-black/[0.12] mx-2" />}
+                        <button
+                          type="button"
+                          data-drawer-item="true"
+                          onClick={() => setDrawerActive(mod.id)}
+                          className={`w-full flex items-center justify-between px-3 py-2 rounded-full text-left font-semibold transition-all duration-200 cursor-pointer ${
+                            isCurrent
+                              ? 'bg-[#ee2e65] text-white shadow-xs'
+                              : 'text-[#1C1D21] hover:bg-[#F4F5F8]'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <Icon className="w-4 h-4 shrink-0" />
+                            <span className="text-[13px] truncate">{mod.label}</span>
+                          </div>
+                          {mod.badge && (
+                            <span
+                              className={`min-w-[24px] h-5 px-1.5 rounded-full text-[10.5px] font-bold flex items-center justify-center shrink-0 ${
+                                isCurrent ? 'bg-white text-[#ee2e65]' : 'bg-[#EF4444] text-white'
+                              }`}
+                            >
+                              {mod.badge}
+                            </span>
+                          )}
+                        </button>
+                      </React.Fragment>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           )}
@@ -429,22 +482,22 @@ export const MobileNavUiKitDemo: React.FC = () => {
       <UiDocSection
         id="mnav-search-sheet"
         title="Quick Search Bottom Sheet"
-        classesHint="rounded-t-[28px] bg-white shadow-2xl / w-10 h-1 rounded-full bg-black/15"
-        codeSnippet={`<div className="bg-white rounded-t-[28px] p-5 space-y-4 shadow-2xl">\n  <div className="w-10 h-1 bg-black/15 rounded-full mx-auto" />\n  <div className="flex items-center gap-2 bg-[#F4F5F8] rounded-full px-4 py-2.5">\n    <Search className="w-4 h-4 text-[#8A8D98]" />\n    <input placeholder="Cari modul, siswa, atau materi..." />\n  </div>\n</div>`}
+        classesHint="rounded-t-[28px] bg-white shadow-2xl / w-10 h-1 rounded-full bg-black/20"
+        codeSnippet={`<div className="bg-white rounded-t-[28px] p-5 space-y-4 shadow-2xl">\n  <div className="w-10 h-1 bg-black/20 rounded-full mx-auto" />\n  <div className="flex items-center gap-2 bg-[#F4F5F8] rounded-full px-4 py-2.5 border border-black/[0.14]">\n    <Search className="w-4 h-4 text-[#646772]" />\n    <input placeholder="Cari modul, siswa, atau materi..." />\n  </div>\n</div>`}
       >
-        <div className="bg-[#E8EAEE] rounded-2xl p-5 sm:p-6 border border-black/[0.05] flex justify-center">
-          <div className="w-full max-w-[340px] bg-white rounded-[26px] p-4 space-y-3 shadow-[0_20px_48px_-12px_rgba(15,23,42,0.22)] border border-black/[0.06]">
+        <div className="bg-[#E8EAEE] rounded-2xl p-5 sm:p-6 border border-black/[0.12] flex justify-center">
+          <div className="w-full max-w-[340px] bg-white rounded-[26px] p-4 space-y-3 shadow-[0_20px_48px_-12px_rgba(15,23,42,0.22)] border border-black/[0.14]">
             <div className="flex justify-center pb-0.5">
-              <div className="w-10 h-1 bg-black/15 rounded-full" />
+              <div className="w-10 h-1 bg-black/20 rounded-full" />
             </div>
-            <div className="flex items-center gap-2 bg-[#F4F5F8] rounded-full px-3.5 py-2 border border-black/[0.04]">
-              <Search className="w-3.5 h-3.5 text-[#8A8D98] shrink-0" />
-              <span className="text-[12.5px] text-[#8A8D98] truncate">
+            <div className="flex items-center gap-2 bg-[#F4F5F8] rounded-full px-3.5 py-2 border border-black/[0.14]">
+              <Search className="w-3.5 h-3.5 text-[#646772] shrink-0" />
+              <span className="text-[12.5px] text-[#646772] truncate">
                 Cari komponen, varian, atau kategori UI KIT...
               </span>
             </div>
             <div className="space-y-1">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-[#8A8D98] px-1">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-[#646772] px-1">
                 Quick Access Categories
               </div>
               {DEMO_MODULES.slice(0, 3).map((mod) => {
@@ -456,13 +509,13 @@ export const MobileNavUiKitDemo: React.FC = () => {
                     onClick={() =>
                       triggerToast('Quick Search', `Membuka kategori ${mod.label}.`, 'info')
                     }
-                    className="w-full flex items-center justify-between px-3 py-2 rounded-2xl bg-[#FAFBFD] hover:bg-[#F4F5F8] text-[#1C1D21] text-[12.5px] font-medium cursor-pointer"
+                    className="w-full flex items-center justify-between px-3 py-2 rounded-2xl bg-[#FAFBFD] hover:bg-[#F4F5F8] border border-black/[0.10] text-[#1C1D21] text-[12.5px] font-medium cursor-pointer"
                   >
                     <span className="flex items-center gap-2.5">
                       <Icon className="w-3.5 h-3.5" />
                       <span>{mod.label}</span>
                     </span>
-                    <span className="text-[10.5px] text-[#8A8D98]">Buka</span>
+                    <span className="text-[10.5px] text-[#646772]">Buka</span>
                   </button>
                 );
               })}

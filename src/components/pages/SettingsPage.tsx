@@ -1370,7 +1370,7 @@ export const SettingsPage: React.FC = () => {
                     </div>
                     <div className="w-full h-1.5 rounded-full bg-[#F4F5F8] overflow-hidden">
                       <div
-                        className={`h-full rounded-full transition-all duration-300 ${
+                        className={`h-full rounded-full transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
                           band.passed ? 'bg-[#10B981]' : 'bg-[#ee2e65]'
                         }`}
                         style={{ width: `${pct}%` }}

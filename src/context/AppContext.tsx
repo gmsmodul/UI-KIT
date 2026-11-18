@@ -27,6 +27,12 @@ import {
 import { apiService } from '../services/api';
 import { resolveClassKeyForSubject, resolveSubjectForClassKey } from '../utils/scheduleSubjects';
 import { getCrewForMaterial, getMaterialCrewSummary } from '../utils/materialCrewProgress';
+import { playUiMotionSound } from '../utils/uiMotionSound';
+import {
+  flushOfflineQueue,
+  getOfflineQueueCount,
+  subscribeOfflineQueue,
+} from '../utils/offlineSyncQueue';
 import {
   INITIAL_EXAMS,
   INITIAL_ASSIGNMENTS,
@@ -64,6 +70,50 @@ export interface UiKitUpdateItem {
 }
 
 const INITIAL_UI_UPDATES: UiKitUpdateItem[] = [
+  {
+    id: 'UI-UPD-OPT',
+    title: 'App Optimization (Optimistic UI, Skeletons, Preload & Offline Queue)',
+    desc: 'Code-split lazy chunks + shimmer skeletons, cache-first navigation & batch hydration, tactile scale(0.97) press physics, and offline mutation replay queue.',
+    time: 'Just now',
+    unread: true,
+    theme: 'periwinkle',
+    groupId: 'behavioral',
+    itemLabel: 'App Optimization',
+    sectionId: 'opt-optimistic',
+  },
+  {
+    id: 'UI-UPD-375',
+    title: 'Mobile 375px Fixes (Tables→Cards, 16px, 44px, Safe-Area)',
+    desc: 'Table-to-Card below 640px, single-line KPI .kpi-value clamp, 16px anti-zoom inputs + numeric keyboards, 44px touch targets (pointer: coarse), and safe-area bottom clearance.',
+    time: 'Just now',
+    unread: true,
+    theme: 'mint',
+    groupId: 'mobilekit',
+    itemLabel: 'Mobile 375px Fixes',
+    sectionId: 'm375-tables',
+  },
+  {
+    id: 'UI-UPD-MUX',
+    title: '6 Menu UX Rules (Type to Filter, Typed Dates, Reasons Not Grey)',
+    desc: 'Auto-search >10 rows, typed dates + month/year jump, stay-open multi-select with Done CTA, collision-aware flip-up, inline blockers & inline controls <5 options.',
+    time: 'Just now',
+    unread: true,
+    theme: 'periwinkle',
+    groupId: 'dataentry',
+    itemLabel: 'Menu UX Rules',
+    sectionId: 'mux-type-filter',
+  },
+  {
+    id: 'UI-UPD-KGT',
+    title: 'Kanban Board, Gantt Chart & Timeline',
+    desc: 'Interactive drag-and-drop Kanban columns, 14-day sprint Gantt chart, and chronological activity/milestone timelines.',
+    time: 'Just now',
+    unread: true,
+    theme: 'coral',
+    groupId: 'datadisplay',
+    itemLabel: 'Kanban Board',
+    sectionId: 'knb-interactive',
+  },
   {
     id: 'UI-UPD-00',
     title: 'Motion & Animations Showcase',
@@ -324,6 +374,11 @@ interface AppContextType {
   ) => void;
   importBatchRecord: (incoming: BatchRecord) => void;
   saveCurrentBatchSnapshot: (showToast?: boolean) => void;
+
+  // Network & Offline Sync Queue
+  isOnline: boolean;
+  pendingSyncCount: number;
+  syncPendingNow: () => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -368,23 +423,36 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Unified UI KIT Navigation & Updates State
+  // Unified UI KIT Navigation & Updates State (Cache-First so screen never opens empty)
   const [uiNavState, setUiNavState] = useState<{
     category: string;
     prevCategory: string;
     sub: string;
     prevSub: string;
     sectionId: string | null;
-  }>({
-    category: 'utilities',
-    prevCategory: 'utilities',
-    sub: 'Grid',
-    prevSub: 'Grid',
-    sectionId: null,
+  }>(() => {
+    const cached = apiService.getCachedUiNavState();
+    const matchedGroup =
+      (cached && UI_KIT_CATALOG.find((g) => g.id === cached.category)) || UI_KIT_CATALOG[0];
+    const matchedSub =
+      cached && matchedGroup.items.some((item) => item.label === cached.sub)
+        ? cached.sub
+        : matchedGroup.items[0]?.label || 'Grid';
+    return {
+      category: matchedGroup.id,
+      prevCategory: matchedGroup.id,
+      sub: matchedSub,
+      prevSub: matchedSub,
+      sectionId: null,
+    };
   });
   const [uiSearchFocusSeq, setUiSearchFocusSeq] = useState(0);
   const [isUiMobileSearchOpen, setIsUiMobileSearchOpen] = useState(false);
-  const [uiUpdates, setUiUpdates] = useState<UiKitUpdateItem[]>(INITIAL_UI_UPDATES);
+  const [uiUpdates, setUiUpdates] = useState<UiKitUpdateItem[]>(() => {
+    const readIds = new Set(apiService.getCachedReadUpdateIds());
+    if (readIds.size === 0) return INITIAL_UI_UPDATES;
+    return INITIAL_UI_UPDATES.map((u) => (readIds.has(u.id) ? { ...u, unread: false } : u));
+  });
 
   const selectUiNode = useCallback((groupId: string, subLabel?: string, sectionId?: string) => {
     const group = UI_KIT_CATALOG.find((g) => g.id === groupId) || UI_KIT_CATALOG[0];
@@ -392,6 +460,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       subLabel && group.items.some((item) => item.label === subLabel)
         ? subLabel
         : group.items[0]?.label || 'Grid';
+    playUiMotionSound('tick');
+    apiService.saveCachedUiNavState({ category: group.id, sub: resolvedSub });
     setUiNavState((curr) => ({
       category: group.id,
       prevCategory: curr.category,
@@ -415,24 +485,69 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   );
 
   const markAllUiUpdatesRead = useCallback(() => {
-    setUiUpdates((prev) => prev.map((u) => ({ ...u, unread: false })));
+    setUiUpdates((prev) => {
+      const next = prev.map((u) => ({ ...u, unread: false }));
+      apiService.saveCachedReadUpdateIds(next.map((u) => u.id));
+      return next;
+    });
     triggerToast('Pembaruan Dibaca', 'Semua catatan UI KIT telah ditandai dibaca.', 'success');
   }, []);
 
   const handleUiUpdateClick = useCallback(
     (item: UiKitUpdateItem) => {
-      setUiUpdates((prev) =>
-        prev.map((u) => (u.id === item.id ? { ...u, unread: false } : u))
-      );
+      setUiUpdates((prev) => {
+        const next = prev.map((u) => (u.id === item.id ? { ...u, unread: false } : u));
+        apiService.saveCachedReadUpdateIds(next.filter((u) => !u.unread).map((u) => u.id));
+        return next;
+      });
       selectUiNode(item.groupId, item.itemLabel, item.sectionId);
     },
     [selectUiNode]
   );
 
+  // Offline status & persistent sync queue listener
+  const [isOnline, setIsOnline] = useState<boolean>(() =>
+    typeof navigator !== 'undefined' ? navigator.onLine : true
+  );
+  const [pendingSyncCount, setPendingSyncCount] = useState<number>(() => getOfflineQueueCount());
+
+  const syncPendingNow = useCallback(async () => {
+    const res = await flushOfflineQueue();
+    if (res.flushed > 0) {
+      triggerToast(
+        'Sinkronisasi Selesai',
+        `${res.flushed} perubahan offline berhasil dikirim ke server.`,
+        'success'
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = subscribeOfflineQueue(setPendingSyncCount);
+    const onOnline = () => {
+      setIsOnline(true);
+      void syncPendingNow();
+    };
+    const onOffline = () => {
+      setIsOnline(false);
+    };
+    window.addEventListener('online', onOnline);
+    window.addEventListener('offline', onOffline);
+    if (typeof navigator !== 'undefined' && navigator.onLine && getOfflineQueueCount() > 0) {
+      void syncPendingNow();
+    }
+    return () => {
+      unsubscribe();
+      window.removeEventListener('online', onOnline);
+      window.removeEventListener('offline', onOffline);
+    };
+  }, [syncPendingNow]);
+
   // Toasts
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const triggerToast = (title: string, message: string, type: 'success' | 'info' | 'warning' | 'error' = 'success') => {
     const id = Date.now() + Math.random();
+    playUiMotionSound(type === 'success' ? 'success' : type === 'error' ? 'land' : 'pop');
     setToasts((prev) => [...prev, { id, title, message, type }]);
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -595,23 +710,38 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [uiSweetAlertType, setUiSweetAlertType] = useState<'success' | 'confirm' | null>(null);
   const [uiSessionModal, setUiSessionModal] = useState(false);
 
-  // Unified Batch & Year Database State
-  const initialDefaultStoreRef = useRef(createDefaultBatchStore());
-  const [batches, setBatches] = useState<BatchRecord[]>(initialDefaultStoreRef.current.batches);
-  const [activeBatchId, setActiveBatchId] = useState<string>(initialDefaultStoreRef.current.activeBatchId);
-  const [graduationRule, setGraduationRule] = useState<AttendanceGraduationRule>({
-    ...DEFAULT_GRADUATION_RULE,
-  });
-  const [examGradingRule, setExamGradingRule] = useState<ExamGradingRule>(() =>
-    normalizeExamGradingRule(DEFAULT_EXAM_GRADING_RULE)
+  // Unified Batch & Year Database State (Cache-First hydration at frame 0)
+  const initialCachedStoreRef = useRef(apiService.getCachedBatchDatabaseStore());
+  const [batches, setBatches] = useState<BatchRecord[]>(initialCachedStoreRef.current.batches);
+  const [activeBatchId, setActiveBatchId] = useState<string>(
+    initialCachedStoreRef.current.activeBatchId
   );
+  const [graduationRule, setGraduationRule] = useState<AttendanceGraduationRule>(() => {
+    const target =
+      initialCachedStoreRef.current.batches.find(
+        (b) => b.id === initialCachedStoreRef.current.activeBatchId
+      ) || initialCachedStoreRef.current.batches[0];
+    return target?.graduationRule
+      ? { ...DEFAULT_GRADUATION_RULE, ...target.graduationRule }
+      : { ...DEFAULT_GRADUATION_RULE };
+  });
+  const [examGradingRule, setExamGradingRule] = useState<ExamGradingRule>(() => {
+    const target =
+      initialCachedStoreRef.current.batches.find(
+        (b) => b.id === initialCachedStoreRef.current.activeBatchId
+      ) || initialCachedStoreRef.current.batches[0];
+    return normalizeExamGradingRule(target?.examGradingRule);
+  });
   const [lastBatchSavedAt, setLastBatchSavedAt] = useState<string>(
-    initialDefaultStoreRef.current.batches[0]?.updatedAt || new Date().toISOString()
+    initialCachedStoreRef.current.batches[0]?.updatedAt || new Date().toISOString()
   );
   const batchHydratedRef = useRef(false);
 
   const activeBatch = useMemo(
-    () => batches.find((b) => b.id === activeBatchId) || batches[0] || initialDefaultStoreRef.current.batches[0],
+    () =>
+      batches.find((b) => b.id === activeBatchId) ||
+      batches[0] ||
+      initialCachedStoreRef.current.batches[0],
     [batches, activeBatchId]
   );
 
@@ -1847,6 +1977,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         updateBatchRules,
         importBatchRecord,
         saveCurrentBatchSnapshot,
+        isOnline,
+        pendingSyncCount,
+        syncPendingNow,
       }}
     >
       {children}

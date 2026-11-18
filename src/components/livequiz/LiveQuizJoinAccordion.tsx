@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { ChevronRight, Zap } from 'lucide-react';
 import { LiveQuizJoinCard } from './LiveQuizJoinCard';
+import { playUiMotionSound } from '../../utils/uiMotionSound';
 
 interface LiveQuizJoinAccordionProps {
   code: string;
@@ -34,6 +35,7 @@ export const LiveQuizJoinAccordion: React.FC<LiveQuizJoinAccordionProps> = ({
 
   const handleToggle = () => {
     setSettled(false);
+    playUiMotionSound('tick');
     if (onToggle) {
       onToggle();
     } else {
@@ -56,7 +58,7 @@ export const LiveQuizJoinAccordion: React.FC<LiveQuizJoinAccordionProps> = ({
           <span>Gabung Sesi dengan Kode Ruangan</span>
         </span>
         <ChevronRight
-          className={`w-4 h-4 text-[#6E717A] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] shrink-0 ${
+          className={`w-4 h-4 text-[#6E717A] transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] shrink-0 ${
             isOpen ? 'rotate-90 text-[#ee2e65]' : ''
           }`}
         />
@@ -70,8 +72,8 @@ export const LiveQuizJoinAccordion: React.FC<LiveQuizJoinAccordionProps> = ({
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{
-              height: { duration: 0.36, ease: [0.22, 1, 0.36, 1] },
-              opacity: { duration: 0.24, ease: [0.22, 1, 0.36, 1] },
+              height: { type: 'spring', stiffness: 420, damping: 28, mass: 0.85 },
+              opacity: { duration: 0.18, ease: [0.23, 1, 0.32, 1] },
             }}
             onAnimationStart={() => setSettled(false)}
             onAnimationComplete={() => {
@@ -85,10 +87,14 @@ export const LiveQuizJoinAccordion: React.FC<LiveQuizJoinAccordionProps> = ({
             }}
           >
             <motion.div
-              initial={{ y: -10 }}
-              animate={{ y: 0 }}
-              exit={{ y: -8 }}
-              transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ y: -8, scale: 0.98, filter: 'blur(3px)' }}
+              animate={{ y: 0, scale: 1, filter: 'blur(0px)' }}
+              exit={{ y: -6, scale: 0.98, filter: 'blur(2px)' }}
+              transition={{
+                y: { type: 'spring', stiffness: 420, damping: 28, mass: 0.8 },
+                scale: { type: 'spring', stiffness: 420, damping: 26 },
+                filter: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
+              }}
               className="border-t border-black/[0.06] rounded-b-2xl"
             >
               <LiveQuizJoinCard

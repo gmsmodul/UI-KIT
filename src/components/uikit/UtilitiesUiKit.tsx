@@ -117,8 +117,8 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
             }
           >
             <div className={`grid grid-cols-2 ${gridGutter} text-center text-sm font-medium`}>
-              <div className="p-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-700">Gutter Kiri ({gridGutter})</div>
-              <div className="p-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-700">Gutter Kanan ({gridGutter})</div>
+              <div className="p-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-700">Gutter Kiri ({gridGutter})</div>
+              <div className="p-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-700">Gutter Kanan ({gridGutter})</div>
             </div>
           </UiDocSection>
 
@@ -137,13 +137,13 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
             }
           >
             <div className="grid grid-cols-3 gap-4 text-center text-sm font-medium">
-              <div className={`p-3 rounded-lg border ${gridReversed ? 'order-3 bg-primary-50 border-primary-200 text-primary-800' : 'order-1 bg-gray-50 border-gray-200'}`}>
+              <div className={`p-3 rounded-lg border ${gridReversed ? 'order-3 bg-primary-50 border-primary-200 text-primary-800' : 'order-1 bg-gray-50 border-gray-300'}`}>
                 First in DOM (Order {gridReversed ? 3 : 1})
               </div>
-              <div className="p-3 rounded-lg bg-gray-50 border border-gray-200 order-2">
+              <div className="p-3 rounded-lg bg-gray-50 border border-gray-300 order-2">
                 Second in DOM (Order 2)
               </div>
-              <div className={`p-3 rounded-lg border ${gridReversed ? 'order-1 bg-emerald-50 border-emerald-200 text-emerald-800' : 'order-3 bg-gray-50 border-gray-200'}`}>
+              <div className={`p-3 rounded-lg border ${gridReversed ? 'order-1 bg-emerald-50 border-emerald-200 text-emerald-800' : 'order-3 bg-gray-50 border-gray-300'}`}>
                 Third in DOM (Order {gridReversed ? 1 : 3})
               </div>
             </div>
@@ -176,7 +176,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
               }`}
             >
               {Array.from({ length: rowColsCount * 2 }).map((_, i) => (
-                <div key={i} className="p-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-700">
+                <div key={i} className="p-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-700">
                   Row Col #{i + 1}
                 </div>
               ))}
@@ -211,7 +211,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
             codeSnippet={`<h1 className="text-[32px] font-bold">h1. Heading Utama</h1>\n<h2 className="text-[24px] font-bold">h2. Sub Judul Seksi</h2>\n<h3 className="text-[20px] font-semibold">h3. Judul Kartu</h3>\n<h4 className="text-[16px] font-semibold">h4. Judul Kelompok</h4>\n<h5 className="text-[14px] font-semibold">h5. Label Bagian</h5>\n<h6 className="text-[12px] font-semibold">h6. Label Mikro</h6>`}
             noPadding
           >
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-gray-200">
               {[
                 { tag: 'h1. UI KIT heading', cls: 'text-[32px] font-bold text-gray-900', spec: 'Bold 2rem (32px)' },
                 { tag: 'h2. UI KIT heading', cls: 'text-[24px] font-bold text-gray-900', spec: 'Bold 1.5rem (24px)' },
@@ -222,7 +222,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
               ].map((row) => (
                 <div key={row.tag} className="px-6 py-4 flex items-center justify-between gap-4">
                   <span className={row.cls}>{row.tag}</span>
-                  <span className="text-xs text-gray-400 shrink-0 tabular-nums">{row.spec}</span>
+                  <span className="text-xs text-gray-500 shrink-0 tabular-nums">{row.spec}</span>
                 </div>
               ))}
             </div>
@@ -235,7 +235,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
             codeSnippet={`<div className="text-4xl font-bold tracking-tight">Display 1</div>\n<div className="text-3xl font-bold tracking-tight">Display 2</div>\n<div className="text-2xl font-bold tracking-tight">Display 3</div>`}
             noPadding
           >
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-gray-200">
               {[
                 { label: 'Display 1', cls: 'text-4xl font-bold tracking-tight text-gray-950', spec: 'Bold 2.25rem (36px)' },
                 { label: 'Display 2', cls: 'text-3xl font-bold tracking-tight text-gray-900', spec: 'Bold 1.875rem (30px)' },
@@ -243,7 +243,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
               ].map((row) => (
                 <div key={row.label} className="px-6 py-4 flex items-center justify-between gap-4">
                   <span className={row.cls}>{row.label}</span>
-                  <span className="text-xs text-gray-400 shrink-0 tabular-nums">{row.spec}</span>
+                  <span className="text-xs text-gray-500 shrink-0 tabular-nums">{row.spec}</span>
                 </div>
               ))}
             </div>
@@ -261,7 +261,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
             codeSnippet={`<h2 className="flex items-center gap-3 text-2xl font-semibold text-gray-900">\n  <Monitor className="w-6 h-6 text-gray-700" />\n  <span>h2. UI KIT heading</span>\n</h2>`}
             noPadding
           >
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-gray-200">
               {[
                 { label: 'h1. UI KIT heading', cls: 'text-[32px] font-semibold', iconCls: 'w-7 h-7', spec: 'Semibold 2rem (32px)' },
                 { label: 'h2. UI KIT heading', cls: 'text-[24px] font-semibold', iconCls: 'w-6 h-6', spec: 'Semibold 1.5rem (24px)' },
@@ -275,7 +275,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
                     <Monitor className={`${row.iconCls} text-gray-600 shrink-0`} />
                     <span>{row.label}</span>
                   </div>
-                  <span className="text-xs text-gray-400 shrink-0 tabular-nums">{row.spec}</span>
+                  <span className="text-xs text-gray-500 shrink-0 tabular-nums">{row.spec}</span>
                 </div>
               ))}
             </div>
@@ -296,7 +296,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
             codeSnippet={`<div className="text-[18px] font-semibold">Title Lg</div>\n<div className="text-[16px] font-semibold">Title Default</div>\n<div className="text-[14px] font-semibold">Title sm</div>\n<div className="text-[12px] font-semibold">Title xs</div>`}
             noPadding
           >
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-gray-200">
               {[
                 { label: 'Title Lg', cls: 'text-[18px] font-semibold text-gray-900', spec: 'Semibold 1.125rem (18px)' },
                 { label: 'Title Default', cls: 'text-[16px] font-semibold text-gray-900', spec: 'Semibold 1rem (16px)' },
@@ -305,7 +305,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
               ].map((row) => (
                 <div key={row.label} className="px-6 py-3.5 flex items-center justify-between gap-4">
                   <span className={row.cls}>{row.label}</span>
-                  <span className="text-xs text-gray-400 shrink-0 tabular-nums">{row.spec}</span>
+                  <span className="text-xs text-gray-500 shrink-0 tabular-nums">{row.spec}</span>
                 </div>
               ))}
             </div>
@@ -320,11 +320,11 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
                 <code className="px-1.5 py-0.5 rounded bg-gray-100 text-primary-700 font-mono text-xs">.title-wth-divider</code>.
               </>
             }
-            classesHint="flex items-center gap-4 flex-1 h-px bg-gray-200"
-            codeSnippet={`<div className="flex items-center gap-4">\n  <span className="text-[16px] font-semibold text-gray-900 shrink-0">Title Default</span>\n  <span className="h-px flex-1 bg-gray-200" />\n</div>`}
+            classesHint="flex items-center gap-4 flex-1 h-px bg-gray-300"
+            codeSnippet={`<div className="flex items-center gap-4">\n  <span className="text-[16px] font-semibold text-gray-900 shrink-0">Title Default</span>\n  <span className="h-px flex-1 bg-gray-300" />\n</div>`}
             noPadding
           >
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-gray-200">
               {[
                 { label: 'Title Lg', cls: 'text-[18px] font-semibold text-gray-900', spec: 'Semibold 1.125rem (18px)' },
                 { label: 'Title Default', cls: 'text-[16px] font-semibold text-gray-900', spec: 'Semibold 1rem (16px)' },
@@ -333,8 +333,8 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
               ].map((row) => (
                 <div key={row.label} className="px-6 py-3.5 flex items-center gap-4">
                   <span className={`${row.cls} shrink-0`}>{row.label}</span>
-                  <span className="h-px flex-1 bg-gray-200" />
-                  <span className="text-xs text-gray-400 shrink-0 tabular-nums">{row.spec}</span>
+                  <span className="h-px flex-1 bg-gray-300" />
+                  <span className="text-xs text-gray-500 shrink-0 tabular-nums">{row.spec}</span>
                 </div>
               ))}
             </div>
@@ -353,7 +353,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
             codeSnippet={`<div className="flex items-center gap-2.5 text-[16px] font-semibold text-gray-900">\n  <Monitor className="w-4 h-4 text-primary-600" />\n  <span>Title Default</span>\n</div>`}
             noPadding
           >
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-gray-200">
               {[
                 { label: 'Title Lg', cls: 'text-[18px] font-semibold text-gray-900', iconCls: 'w-4 h-4', spec: 'Semibold 1.125rem (18px)' },
                 { label: 'Title Default', cls: 'text-[16px] font-semibold text-gray-900', iconCls: 'w-4 h-4', spec: 'Semibold 1rem (16px)' },
@@ -365,7 +365,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
                     <Monitor className={`${row.iconCls} text-gray-600 shrink-0`} />
                     <span>{row.label}</span>
                   </div>
-                  <span className="text-xs text-gray-400 shrink-0 tabular-nums">{row.spec}</span>
+                  <span className="text-xs text-gray-500 shrink-0 tabular-nums">{row.spec}</span>
                 </div>
               ))}
             </div>
@@ -396,12 +396,12 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
           <UiDocSection
             id="typo-customizing"
             title="Customizing headings"
-            classesHint="text-2xl font-semibold text-gray-900 text-gray-400 font-normal"
-            codeSnippet={`<h3 className="text-2xl font-semibold text-gray-900">\n  Fancy display heading{' '}\n  <small className="font-normal text-gray-400">Dengan teks sekunder pudar</small>\n</h3>`}
+            classesHint="text-2xl font-semibold text-gray-900 text-gray-500 font-normal"
+            codeSnippet={`<h3 className="text-2xl font-semibold text-gray-900">\n  Fancy display heading{' '}\n  <small className="font-normal text-gray-500">Dengan teks sekunder pudar</small>\n</h3>`}
           >
             <h3 className="text-2xl font-semibold text-gray-900">
               Fancy display heading{' '}
-              <small className="font-normal text-gray-400">Dengan teks sekunder pudar</small>
+              <small className="font-normal text-gray-500">Dengan teks sekunder pudar</small>
             </h3>
           </UiDocSection>
 
@@ -461,7 +461,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
           >
             <div className="space-y-2.5 text-sm text-gray-700">
               <p>Anda dapat memakai tag <mark className="bg-amber-100 text-amber-900 px-1 rounded">mark</mark> untuk menyorot teks penting.</p>
-              <p><del className="text-gray-400">Baris ini menandakan teks yang telah dihapus atau direvisi.</del></p>
+              <p><del className="text-gray-500">Baris ini menandakan teks yang telah dihapus atau direvisi.</del></p>
               <p><ins className="underline decoration-emerald-500">Baris ini menandakan teks tambahan baru pada silabus.</ins></p>
               <p><u>Baris ini dirender dengan garis bawah.</u></p>
               <p><strong>Baris ini dirender sebagai teks tebal (bold).</strong></p>
@@ -478,7 +478,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-gray-700">
               <div>
-                <div className="text-xs font-semibold text-gray-400 mb-2">Disc List</div>
+                <div className="text-xs font-semibold text-gray-500 mb-2">Disc List</div>
                 <ul className="list-disc list-inside space-y-1">
                   <li>Modul Video HD</li>
                   <li>Lembar Latihan PDF</li>
@@ -486,7 +486,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
                 </ul>
               </div>
               <div>
-                <div className="text-xs font-semibold text-gray-400 mb-2">Ordered List</div>
+                <div className="text-xs font-semibold text-gray-500 mb-2">Ordered List</div>
                 <ol className="list-decimal list-inside space-y-1">
                   <li>Prasyarat Dasar</li>
                   <li>Inti Praktikum</li>
@@ -494,7 +494,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
                 </ol>
               </div>
               <div>
-                <div className="text-xs font-semibold text-gray-400 mb-2">Inline List</div>
+                <div className="text-xs font-semibold text-gray-500 mb-2">Inline List</div>
                 <ul className="flex flex-wrap gap-3 text-primary-700 font-medium">
                   <li>Item 1</li>
                   <li>·</li>
@@ -555,8 +555,8 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
             codeSnippet={`<div className="p-3.5 rounded-lg bg-gray-100 text-gray-800">Grey 100 Surface</div>`}
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-sm font-semibold">
-              <div className="p-3.5 rounded-lg bg-gray-50 text-gray-700 border border-gray-200">Grey 50</div>
-              <div className="p-3.5 rounded-lg bg-gray-100 text-gray-800 border border-gray-200">Grey 100 Surface</div>
+              <div className="p-3.5 rounded-lg bg-gray-50 text-gray-700 border border-gray-300">Grey 50</div>
+              <div className="p-3.5 rounded-lg bg-gray-100 text-gray-800 border border-gray-300">Grey 100 Surface</div>
               <div className="p-3.5 rounded-lg bg-gray-200 text-gray-900">Grey 200</div>
               <div className="p-3.5 rounded-lg bg-[#FEF1F5] text-[#9D113C] border border-[#FDE0E9]">Soft Rose</div>
             </div>
@@ -600,7 +600,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
             classesHint="bg-gradient-to-r from-gray-950/85 via-gray-900/60 to-transparent"
             codeSnippet={`<div className="relative h-28 rounded-xl overflow-hidden">\n  <div className="absolute inset-0 bg-gray-950/65" />\n  <div className="relative z-10 text-white p-5">Teks di atas overlay</div>\n</div>`}
           >
-            <div className="relative h-28 rounded-xl overflow-hidden border border-gray-200 flex items-center px-6 text-white bg-gradient-to-br from-primary-600 via-primary-700 to-slate-800">
+            <div className="relative h-28 rounded-xl overflow-hidden border border-gray-300 flex items-center px-6 text-white bg-gradient-to-br from-primary-600 via-primary-700 to-slate-800">
               <div className="absolute inset-0 bg-gray-950/60" />
               <div className="relative z-10 text-sm">
                 <div className="font-bold">Permukaan Media + Scrim Overlay</div>
@@ -713,7 +713,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
               codeSnippet={`<button className="bg-[#ee2e65] hover:bg-[#c11448] text-white px-4 py-2 rounded-lg">Brand Primary</button>\n<div className="bg-[#eff9f2] text-[#05592b] p-3 rounded-lg">Status Success</div>\n<div className="bg-[#edf9fe] text-[#075875] p-3 rounded-lg">Palet Tambahan: Sky</div>`}
               actions={
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-gray-200 bg-gray-50/70 font-mono text-[11px] font-medium text-gray-700">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-gray-300 bg-gray-50/70 font-mono text-[11px] font-medium text-gray-700">
                     <span
                       className="w-2.5 h-2.5 rounded-xs border border-gray-300 shrink-0"
                       style={{ backgroundColor: selectedColorHex }}
@@ -721,20 +721,20 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
                     <span>{selectedColorHex}</span>
                   </span>
                   <div className="relative">
-                    <Search className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <Search className="w-3.5 h-3.5 text-gray-500 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <input
                       type="text"
                       value={colorQuery}
                       onChange={(e) => setColorQuery(e.target.value)}
                       placeholder="Cari warna atau peran..."
-                      className="pl-8 pr-3 py-1.5 text-xs border border-gray-200 rounded-lg bg-white text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-primary-500 w-44 sm:w-52"
+                      className="pl-8 pr-3 py-1.5 text-xs border border-gray-300 rounded-lg bg-white text-gray-800 placeholder:text-gray-500 focus:outline-none focus:border-primary-500 w-44 sm:w-52"
                     />
                   </div>
                   {colorQuery && (
                     <button
                       type="button"
                       onClick={() => setColorQuery('')}
-                      className="text-xs px-2.5 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 cursor-pointer"
+                      className="text-xs px-2.5 py-1.5 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 cursor-pointer"
                     >
                       Reset
                     </button>
@@ -748,7 +748,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
                 </div>
               ) : (
                 <div className="space-y-5">
-                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pb-3 border-b border-gray-100 text-xs text-gray-600">
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pb-3 border-b border-gray-300 text-xs text-gray-600">
                     <div className="flex items-center gap-2">
                       <span className="w-2.5 h-2.5 rounded-full bg-[#ee2e65] shrink-0" />
                       <span className="font-semibold text-gray-900">Brand Primary:</span>
@@ -769,7 +769,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
                     return (
                       <div
                         key={fam.slug}
-                        className="rounded-xl overflow-hidden border border-gray-200 bg-white flex flex-col"
+                        className="rounded-xl overflow-hidden border border-gray-300 bg-white flex flex-col"
                       >
                         {/* 5 Light Shades (light-5 -> light-1) */}
                         {fam.lightShades.map((shade) => {
@@ -781,7 +781,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
                               onClick={() => handleSelectShade(shade.token, shade.hex)}
                               style={{ backgroundColor: shade.hex }}
                               title={`Klik untuk menyalin ${shade.token} (${shade.hex})`}
-                              className={`w-full px-4 py-1.5 flex items-center justify-between text-xs cursor-pointer transition-all duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] hover:opacity-90 hover:pl-5 ${
+                              className={`w-full px-4 py-1.5 flex items-center justify-between text-xs cursor-pointer transition-opacity duration-200 hover:opacity-90 ${
                                 lightBg ? 'text-gray-700' : 'text-white'
                               }`}
                             >
@@ -797,7 +797,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
                           onClick={() => handleSelectShade(fam.slug, fam.baseHex)}
                           style={{ backgroundColor: fam.baseHex }}
                           title={`Klik untuk menyalin ${fam.name} (${fam.baseHex})`}
-                          className={`w-full px-4 py-4 min-h-[88px] flex flex-col justify-between text-left cursor-pointer transition-all duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] hover:opacity-95 hover:pl-5 ${
+                          className={`w-full px-4 py-4 min-h-[88px] flex flex-col justify-between text-left cursor-pointer transition-opacity duration-200 hover:opacity-95 ${
                             baseIsLight ? 'text-gray-900' : 'text-white'
                           }`}
                         >
@@ -822,7 +822,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
                               onClick={() => handleSelectShade(shade.token, shade.hex)}
                               style={{ backgroundColor: shade.hex }}
                               title={`Klik untuk menyalin ${shade.token} (${shade.hex})`}
-                              className={`w-full px-4 py-1.5 flex items-center justify-between text-xs cursor-pointer transition-all duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] hover:opacity-90 hover:pl-5 ${
+                              className={`w-full px-4 py-1.5 flex items-center justify-between text-xs cursor-pointer transition-opacity duration-200 hover:opacity-90 ${
                                 lightBg ? 'text-gray-900' : 'text-white'
                               }`}
                             >
@@ -857,10 +857,10 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
                       key={fam.slug}
                       type="button"
                       onClick={() => handleSelectShade(`text-${fam.slug}`, fam.baseHex)}
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 hover:border-gray-200 hover:bg-gray-50 hover:-translate-y-0.5 hover:shadow-xs text-left cursor-pointer transition-all duration-250 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-300 hover:border-gray-400 hover:bg-gray-50 hover:shadow-xs text-left cursor-pointer transition-colors duration-200"
                     >
                       <span
-                        className="w-2.5 h-2.5 rounded-full shrink-0 border border-black/10"
+                        className="w-2.5 h-2.5 rounded-full shrink-0 border border-black/15"
                         style={{ backgroundColor: fam.baseHex }}
                       />
                       <span style={{ color: sampleHex }} className="truncate">
@@ -892,10 +892,10 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
             codeSnippet={`<div className="shadow-[0_6px_14px_rgba(0,0,0,0.08)]">Shadow Bottom</div>`}
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-sm font-semibold text-center text-gray-800">
-              <div className="p-5 bg-white rounded-xl shadow-[0_-6px_14px_rgba(0,0,0,0.06)] border border-gray-100">
+              <div className="p-5 bg-white rounded-xl shadow-[0_-6px_14px_rgba(0,0,0,0.06)] border border-gray-300">
                 Shadow Direction: Top
               </div>
-              <div className="p-5 bg-white rounded-xl shadow-[0_6px_14px_rgba(0,0,0,0.08)] border border-gray-100">
+              <div className="p-5 bg-white rounded-xl shadow-[0_6px_14px_rgba(0,0,0,0.08)] border border-gray-300">
                 Shadow Direction: Bottom
               </div>
             </div>
@@ -907,7 +907,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
             classesHint="shadow-xs hover:shadow-xl transition-shadow"
             codeSnippet={`<div className="shadow-xs hover:shadow-xl transition-shadow">Hover Me</div>`}
           >
-            <div className="p-5 bg-white rounded-xl shadow-xs hover:-translate-y-1.5 hover:shadow-[0_18px_36px_-12px_rgba(15,23,42,0.16)] transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer border border-gray-200 text-sm font-semibold text-center text-gray-800">
+            <div className="p-5 bg-white rounded-xl shadow-xs hover:-translate-y-1.5 hover:shadow-[0_18px_36px_-12px_rgba(15,23,42,0.16)] transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer border border-gray-300 text-sm font-semibold text-center text-gray-800">
               Arahkan kursor untuk melihat transisi bayangan hover
             </div>
           </UiDocSection>
@@ -917,14 +917,14 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
             title="Shadow Standard & Optional Color"
             description="Gunakan bayangan netral sebagai standar elevasi kartu, popover, dan modal. Bayangan berwarna hanya dipakai sebagai variasi opsional pada konteks spesifik seperti CTA kampanye atau kartu status terpilih."
             classesHint="Standar: shadow-[0_6px_16px_rgba(15,23,42,0.08)] | Opsional: shadow-[0_6px_16px_rgba(238,46,101,0.18)]"
-            codeSnippet={`<div className="p-4 bg-white rounded-xl border border-gray-200 shadow-[0_6px_16px_rgba(15,23,42,0.08)]">Standar Netral</div>\n<button className="px-4 py-2 rounded-lg bg-primary-600 text-white shadow-[0_6px_16px_rgba(238,46,101,0.18)]">CTA Kampanye</button>`}
+            codeSnippet={`<div className="p-4 bg-white rounded-xl border border-gray-300 shadow-[0_6px_16px_rgba(15,23,42,0.08)]">Standar Netral</div>\n<button className="px-4 py-2 rounded-lg bg-primary-600 text-white shadow-[0_6px_16px_rgba(238,46,101,0.18)]">CTA Kampanye</button>`}
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-left">
-              <div className="p-4 bg-white rounded-xl border border-gray-200 shadow-[0_6px_16px_rgba(15,23,42,0.08)] flex items-center justify-between">
+              <div className="p-4 bg-white rounded-xl border border-gray-300 shadow-[0_6px_16px_rgba(15,23,42,0.08)] flex items-center justify-between">
                 <span className="font-semibold text-gray-900">Bayangan Netral (Standar)</span>
-                <span className="text-[11px] text-gray-400">Default</span>
+                <span className="text-[11px] text-gray-500">Default</span>
               </div>
-              <div className="p-4 bg-white rounded-xl border border-gray-200 shadow-[0_6px_16px_rgba(238,46,101,0.16)] flex items-center justify-between gap-2">
+              <div className="p-4 bg-white rounded-xl border border-gray-300 shadow-[0_6px_16px_rgba(238,46,101,0.16)] flex items-center justify-between gap-2">
                 <span className="font-semibold text-gray-900">Opsional: CTA Kampanye</span>
                 <button
                   type="button"
@@ -988,7 +988,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
             classesHint="h-1/3 h-2/3 h-full"
             codeSnippet={`<div className="h-32 flex items-end gap-3">\n  <div className="h-1/3">33%</div>\n  <div className="h-full">100%</div>\n</div>`}
           >
-            <div className="h-32 p-3 rounded-xl bg-gray-50 border border-gray-200 flex items-end gap-3 text-xs font-mono text-center">
+            <div className="h-32 p-3 rounded-xl bg-gray-50 border border-gray-300 flex items-end gap-3 text-xs font-mono text-center">
               <div className="h-1/3 flex-1 bg-primary-100 text-primary-800 rounded-md flex items-center justify-center">h-1/3</div>
               <div className="h-2/3 flex-1 bg-primary-200 text-primary-900 rounded-md flex items-center justify-center">h-2/3</div>
               <div className="h-full flex-1 bg-primary-600 text-white rounded-md flex items-center justify-center">h-full</div>
@@ -1056,7 +1056,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
             }
           >
             <div className={`${spacingPad} bg-primary-50 border border-primary-200 rounded-xl transition-all text-xs`}>
-              <div className="bg-white p-3 rounded-lg border border-gray-200 text-center font-medium text-gray-800">
+              <div className="bg-white p-3 rounded-lg border border-gray-300 text-center font-medium text-gray-800">
                 Inner Content Box ({spacingPad})
               </div>
             </div>
@@ -1070,13 +1070,13 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
           >
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-mono">
               <div className="bg-amber-50/70 border border-dashed border-amber-300 rounded-xl">
-                <div className="m-2 bg-white p-2.5 rounded border border-gray-200 text-center text-gray-800">m-2 (8px)</div>
+                <div className="m-2 bg-white p-2.5 rounded border border-gray-300 text-center text-gray-800">m-2 (8px)</div>
               </div>
               <div className="bg-amber-50/70 border border-dashed border-amber-300 rounded-xl">
-                <div className="m-4 bg-white p-2.5 rounded border border-gray-200 text-center text-gray-800">m-4 (16px)</div>
+                <div className="m-4 bg-white p-2.5 rounded border border-gray-300 text-center text-gray-800">m-4 (16px)</div>
               </div>
               <div className="bg-amber-50/70 border border-dashed border-amber-300 rounded-xl">
-                <div className="m-6 bg-white p-2.5 rounded border border-gray-200 text-center text-gray-800">m-6 (24px)</div>
+                <div className="m-6 bg-white p-2.5 rounded border border-gray-300 text-center text-gray-800">m-6 (24px)</div>
               </div>
             </div>
           </UiDocSection>
@@ -1126,16 +1126,16 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
                   className="group text-center space-y-2 cursor-pointer focus:outline-none"
                 >
                   {item.isThumbnail ? (
-                    <div className="w-28 h-28 sm:w-32 sm:h-32 p-1 border border-gray-300 bg-white rounded-xs transition-transform duration-300 ease-[cubic-bezier(0.22,1.24,0.36,1)] group-hover:scale-105">
+                    <div className="w-28 h-28 sm:w-32 sm:h-32 p-1 border border-gray-300 bg-white rounded-xs transition-transform duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-105">
                       <div className="w-full h-full bg-gray-300/80 flex items-center justify-center">
-                        <Camera className="w-11 h-11 text-white fill-white/90 stroke-gray-300" />
+                        <Camera className="w-11 h-11 text-white fill-white/90 stroke-gray-500" />
                       </div>
                     </div>
                   ) : (
                     <div
-                      className={`w-28 h-28 sm:w-32 sm:h-32 bg-gray-300/80 ${item.frameClass} flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.22,1.24,0.36,1)] group-hover:scale-105`}
+                      className={`w-28 h-28 sm:w-32 sm:h-32 bg-gray-300/80 ${item.frameClass} flex items-center justify-center transition-transform duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-105`}
                     >
-                      <Camera className="w-11 h-11 text-white fill-white/90 stroke-gray-300" />
+                      <Camera className="w-11 h-11 text-white fill-white/90 stroke-gray-500" />
                     </div>
                   )}
                   <div className="text-xs text-gray-500 font-medium group-hover:text-gray-800 transition-colors">
@@ -1168,7 +1168,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
                   className="group text-center space-y-2 cursor-pointer focus:outline-none"
                 >
                   <div
-                    className={`w-24 h-24 sm:w-28 sm:h-28 bg-gray-200 ${shape.shapeClass} transition-all duration-300 ease-[cubic-bezier(0.22,1.24,0.36,1)] group-hover:bg-gray-300/80 group-hover:scale-105`}
+                    className={`w-24 h-24 sm:w-28 sm:h-28 bg-gray-200 ${shape.shapeClass} transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:bg-gray-300/80 group-hover:scale-105`}
                   />
                   <div className="text-xs text-gray-500 font-mono group-hover:text-gray-800 transition-colors">
                     .{shape.classHint}
@@ -1193,13 +1193,13 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
           <UiDocSection
             id="sep-line"
             title="Line Seperators"
-            classesHint="flex items-center gap-3 flex-1 h-px bg-gray-200"
-            codeSnippet={`<div className="flex items-center gap-3">\n  <div className="flex-1 h-px bg-gray-200" />\n  <span className="text-xs text-gray-400">ATAU</span>\n  <div className="flex-1 h-px bg-gray-200" />\n</div>`}
+            classesHint="flex items-center gap-3 flex-1 h-px bg-gray-300"
+            codeSnippet={`<div className="flex items-center gap-3">\n  <div className="flex-1 h-px bg-gray-300" />\n  <span className="text-xs text-gray-500">ATAU</span>\n  <div className="flex-1 h-px bg-gray-300" />\n</div>`}
           >
             <div className="flex items-center gap-3">
-              <div className="flex-1 h-px bg-gray-200" />
+              <div className="flex-1 h-px bg-gray-300" />
               <span className="text-xs text-gray-500 font-medium">Pembatas Konten</span>
-              <div className="flex-1 h-px bg-gray-200" />
+              <div className="flex-1 h-px bg-gray-300" />
             </div>
           </UiDocSection>
 
@@ -1209,7 +1209,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
             classesHint="h-6 w-px bg-gray-300"
             codeSnippet={`<div className="flex items-center gap-4">\n  <span>Kolom Kiri</span>\n  <div className="h-6 w-px bg-gray-300" />\n  <span>Kolom Kanan</span>\n</div>`}
           >
-            <div className="flex items-center justify-around py-2 bg-gray-50 rounded-lg border border-gray-200 text-sm text-gray-700">
+            <div className="flex items-center justify-around py-2 bg-gray-50 rounded-lg border border-gray-300 text-sm text-gray-700">
               <span>Kolom Kiri</span>
               <div className="h-5 w-px bg-gray-300" />
               <span>Vertical Rule</span>
@@ -1221,12 +1221,12 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
           <UiDocSection
             id="sep-hr"
             title="Hr"
-            classesHint="border-t border-gray-200 border-dashed"
-            codeSnippet={`<hr className="border-t border-gray-200" />\n<hr className="border-t-2 border-dashed border-gray-300" />`}
+            classesHint="border-t border-gray-300 border-dashed"
+            codeSnippet={`<hr className="border-t border-gray-300" />\n<hr className="border-t-2 border-dashed border-gray-400" />`}
           >
             <div className="space-y-4">
-              <hr className="border-t border-gray-200" />
-              <hr className="border-t-2 border-dashed border-gray-300" />
+              <hr className="border-t border-gray-300" />
+              <hr className="border-t-2 border-dashed border-gray-400" />
             </div>
           </UiDocSection>
         </UiDocPage>
@@ -1262,7 +1262,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
           <UiDocSection
             id="media-nesting"
             title="Nesting"
-            classesHint="ml-12 pt-3 border-t border-gray-100"
+            classesHint="ml-12 pt-3 border-t border-gray-200"
             codeSnippet={`<div className="flex items-start gap-3">...<div className="mt-3 pt-3 border-t">Balasan bersarang</div></div>`}
           >
             <div className="flex items-start gap-3.5 text-sm">
@@ -1272,7 +1272,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
               <div className="flex-1">
                 <div className="font-semibold text-gray-900">Dr. Clara Vance</div>
                 <p className="text-gray-600 mt-0.5">Apakah semua kelompok sudah membaca panduan praktikum?</p>
-                <div className="flex items-start gap-3 mt-3 pt-3 border-t border-gray-100">
+                <div className="flex items-start gap-3 mt-3 pt-3 border-t border-gray-200">
                   <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center justify-center shrink-0">
                     JW
                   </div>
@@ -1297,7 +1297,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
                 { align: 'items-center', label: 'Center Aligned (items-center)' },
                 { align: 'items-end', label: 'Bottom Aligned (items-end)' },
               ].map((it) => (
-                <div key={it.align} className={`flex ${it.align} gap-3 p-3 rounded-lg bg-gray-50 border border-gray-100`}>
+                <div key={it.align} className={`flex ${it.align} gap-3 p-3 rounded-lg bg-gray-50 border border-gray-300`}>
                   <div className="w-9 h-9 rounded-lg bg-gray-900 text-white text-xs font-bold flex items-center justify-center shrink-0">
                     M
                   </div>
@@ -1344,8 +1344,8 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
               </div>
             }
           >
-            <div className={`relative ${embedRatio} max-h-60 w-full rounded-xl bg-gray-950 text-white flex flex-col items-center justify-center overflow-hidden mx-auto transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]`}>
-              <div className="w-12 h-12 rounded-full bg-white/15 flex items-center justify-center cursor-pointer hover:bg-white/25 hover:scale-110 transition-all duration-250 ease-[cubic-bezier(0.22,1.28,0.36,1)]">
+            <div className={`relative ${embedRatio} max-h-60 w-full rounded-xl bg-gray-950 text-white flex flex-col items-center justify-center overflow-hidden mx-auto transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)]`}>
+              <div className="w-12 h-12 rounded-full bg-white/15 flex items-center justify-center cursor-pointer hover:bg-white/25 hover:scale-110 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]">
                 <Play className="w-5 h-5 fill-white ml-0.5" />
               </div>
               <span className="text-xs text-gray-300 font-medium mt-2">{embedRatio.replace('aspect-', '')} Responsive Frame</span>
@@ -1401,15 +1401,15 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
             codeSnippet={`<div className="mx-auto w-20 h-14">Centered</div>`}
           >
             <div className="grid grid-cols-3 gap-4 text-xs text-gray-500">
-              <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
+              <div className="p-3 bg-gray-50 rounded-lg border border-gray-300">
                 <div className="w-14 h-14 rounded-lg bg-gray-900 text-white flex items-center justify-center font-bold">L</div>
                 <div className="mt-1.5">Left</div>
               </div>
-              <div className="p-3 bg-gray-50 rounded-lg border border-gray-100 text-center">
+              <div className="p-3 bg-gray-50 rounded-lg border border-gray-300 text-center">
                 <div className="w-14 h-14 rounded-lg bg-primary-600 text-white flex items-center justify-center font-bold mx-auto">C</div>
                 <div className="mt-1.5">Center</div>
               </div>
-              <div className="p-3 bg-gray-50 rounded-lg border border-gray-100 text-right">
+              <div className="p-3 bg-gray-50 rounded-lg border border-gray-300 text-right">
                 <div className="w-14 h-14 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold ml-auto">R</div>
                 <div className="mt-1.5">Right</div>
               </div>
@@ -1423,7 +1423,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
             codeSnippet={`<figure>\n  <div className="h-28 rounded-xl bg-gray-100" />\n  <figcaption className="text-xs text-gray-500 mt-1.5">Keterangan gambar di bawah media.</figcaption>\n</figure>`}
           >
             <figure className="max-w-sm">
-              <div className="h-28 rounded-xl bg-gradient-to-br from-[#FEF1F5] to-[#E6F9F0] border border-gray-200 flex items-center justify-center text-sm font-semibold text-gray-800">
+              <div className="h-28 rounded-xl bg-gradient-to-br from-[#FEF1F5] to-[#E6F9F0] border border-gray-300 flex items-center justify-center text-sm font-semibold text-gray-800">
                 Pratinjau Ilustrasi Modul
               </div>
               <figcaption className="text-xs text-gray-500 mt-2">
