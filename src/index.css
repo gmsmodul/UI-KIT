@@ -586,6 +586,240 @@ body::-webkit-scrollbar-corner,
   animation: ui-shimmer 1.35s var(--ease-out) infinite;
 }
 
+/* ==========================================================================
+   20 Creative Loading Animations Keyframes (loader/*)
+   ========================================================================== */
+@keyframes loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loader-spin-reverse {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes loader-elastic-dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+@keyframes loader-morph-blob {
+  0%, 100% {
+    border-radius: 50%;
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    border-radius: 28% 72% 70% 30% / 30% 35% 65% 70%;
+    transform: rotate(90deg) scale(1.06);
+  }
+  50% {
+    border-radius: 22%;
+    transform: rotate(180deg) scale(0.92);
+  }
+  75% {
+    border-radius: 70% 30% 30% 70% / 65% 40% 60% 35%;
+    transform: rotate(270deg) scale(1.05);
+  }
+}
+
+@keyframes loader-newton-left {
+  0%, 50%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(38deg);
+  }
+}
+
+@keyframes loader-newton-right {
+  0%, 50%, 100% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(-38deg);
+  }
+}
+
+@keyframes loader-ripple {
+  0% {
+    transform: scale(0.18);
+    opacity: 0.95;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes loader-bounce-trio {
+  0%, 80%, 100% {
+    transform: translateY(0) scale(0.88);
+    opacity: 0.5;
+  }
+  40% {
+    transform: translateY(-10px) scale(1.1);
+    opacity: 1;
+  }
+}
+
+@keyframes loader-eq-bar {
+  0%, 100% {
+    transform: scaleY(0.32);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@keyframes loader-cube-flip {
+  0% {
+    transform: perspective(140px) rotateX(0deg) rotateY(0deg);
+  }
+  50% {
+    transform: perspective(140px) rotateX(-180deg) rotateY(0deg);
+  }
+  100% {
+    transform: perspective(140px) rotateX(-180deg) rotateY(-180deg);
+  }
+}
+
+@keyframes loader-infinity-dash {
+  to {
+    stroke-dashoffset: -176;
+  }
+}
+
+@keyframes loader-sliding-pill {
+  0% {
+    transform: translateX(-110%);
+  }
+  50% {
+    transform: translateX(130%);
+  }
+  100% {
+    transform: translateX(-110%);
+  }
+}
+
+@keyframes loader-typing-wave {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-7px);
+    opacity: 1;
+  }
+}
+
+@keyframes loader-square-chase-a {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(18px, 0);
+  }
+  50% {
+    transform: translate(18px, 18px);
+  }
+  75% {
+    transform: translate(0, 18px);
+  }
+}
+
+@keyframes loader-square-chase-b {
+  0%, 100% {
+    transform: translate(18px, 18px);
+  }
+  25% {
+    transform: translate(0, 18px);
+  }
+  50% {
+    transform: translate(0, 0);
+  }
+  75% {
+    transform: translate(18px, 0);
+  }
+}
+
+@keyframes loader-hourglass {
+  0% {
+    transform: rotate(0deg);
+  }
+  45%, 50% {
+    transform: rotate(180deg);
+  }
+  95%, 100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loader-helix-top {
+  0%, 100% {
+    transform: translateY(-8px) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(8px) scale(0.62);
+    opacity: 0.38;
+  }
+}
+
+@keyframes loader-helix-bottom {
+  0%, 100% {
+    transform: translateY(8px) scale(0.62);
+    opacity: 0.38;
+  }
+  50% {
+    transform: translateY(-8px) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes loader-grid-matrix {
+  0%, 70%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  35% {
+    transform: scale(0.38);
+    opacity: 0.3;
+  }
+}
+
+@keyframes loader-radar-fade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.14;
+  }
+}
+
+@keyframes loader-blink {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0.15;
+  }
+}
+
 .animate-ui-fade {
   animation: ui-fade 200ms var(--ease-out) both;
 }

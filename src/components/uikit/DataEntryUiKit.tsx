@@ -48,12 +48,15 @@ import {
   Download,
   Trash2,
   Filter,
+  Sparkles,
+  RefreshCw,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { UiDocPage, UiDocSection } from './UiDocBlock';
 import { CustomSelect } from '../ui/CustomSelect';
 import { SplitFilterButton } from '../ui/SplitFilterButton';
 import { ToggleSwitch } from '../ui/ToggleSwitch';
+import { UiSkeletonSearchPanel } from '../ui/UiSkeleton';
 import { SelectCheckboxRadioUiKit } from './SelectCheckboxRadioUiKit';
 import { ToggleUiKit } from './ToggleUiKit';
 import { MenuUxRulesUiKit } from './MenuUxRulesUiKit';
@@ -313,6 +316,19 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
 
   // 3.19 Page Search
   const [pageSearch, setPageSearch] = useState('');
+  const [demoSearchFocused, setDemoSearchFocused] = useState(true);
+  const [demoSearchLoading, setDemoSearchLoading] = useState(false);
+  const [demoRecentSearches, setDemoRecentSearches] = useState<string[]>([
+    'Kalkulus IV',
+    'Induksi Elektromagnetik',
+    'Class 303',
+  ]);
+  const demoSuggestions = [
+    { label: 'Kalkulus IV', category: 'Class 302' },
+    { label: 'Puisi Modernis', category: 'Class 305' },
+    { label: 'Palet Gouache', category: 'Class 304' },
+    { label: 'Lab Fisika', category: 'Class 303' },
+  ];
   const searchCatalog = [
     { title: 'Kalkulus IV: Integral Lipat', tag: 'Class 302', type: 'Video' },
     { title: 'Induksi Elektromagnetik B', tag: 'Class 303', type: 'Lab' },
@@ -324,6 +340,21 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
       s.title.toLowerCase().includes(pageSearch.toLowerCase()) ||
       s.tag.toLowerCase().includes(pageSearch.toLowerCase())
   );
+
+  useEffect(() => {
+    if (!pageSearch.trim()) return;
+    setDemoSearchLoading(true);
+    const timer = window.setTimeout(() => setDemoSearchLoading(false), 220);
+    return () => window.clearTimeout(timer);
+  }, [pageSearch]);
+
+  const handleSaveDemoRecent = (term: string) => {
+    const clean = term.trim();
+    if (!clean) return;
+    setDemoRecentSearches((prev) =>
+      [clean, ...prev.filter((item) => item.toLowerCase() !== clean.toLowerCase())].slice(0, 5)
+    );
+  };
 
   const isVisible = (itemKey: string) => {
     if (!activeSubJump) return true;
@@ -3259,8 +3290,10 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
       {isVisible('pagesearch') && (
         <UiDocPage
           title="Page Search"
+          description="Pola pencarian lengkap mencakup Page Search, Recent Search, Suggestion Search, serta loading state memakai komponen reusable <UiSkeletonSearchPanel /> (.ui-skeleton-shimmer)."
           subLinks={[
             { id: 'ps-page', label: 'Page Search' },
+            { id: 'ps-recent-suggestion', label: 'Recent & Suggestion' },
             { id: 'ps-list', label: 'List Search' },
             { id: 'ps-dropdown', label: 'Dropdown Search' },
             { id: 'ps-card', label: 'Card Search' },
@@ -3288,14 +3321,212 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
               </div>
               <div className="text-gray-500">
                 Saran cepat:{' '}
-                <button onClick={() => setPageSearch('Kalkulus')} className="underline text-primary-600 cursor-pointer">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPageSearch('Kalkulus');
+                    handleSaveDemoRecent('Kalkulus');
+                  }}
+                  className="underline text-primary-600 cursor-pointer"
+                >
                   Kalkulus
                 </button>
                 ,{' '}
-                <button onClick={() => setPageSearch('Class 303')} className="underline text-primary-600 cursor-pointer">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPageSearch('Class 303');
+                    handleSaveDemoRecent('Class 303');
+                  }}
+                  className="underline text-primary-600 cursor-pointer"
+                >
                   Class 303
                 </button>
               </div>
+            </div>
+          </UiDocSection>
+
+          <UiDocSection
+            id="ps-recent-suggestion"
+            title="Recent Search & Suggestion Search (with UiSkeleton)"
+            description="Menampilkan Pencarian Terakhir dan Saran Pencarian saat input kosong/fokus, serta transisi shimmer <UiSkeletonSearchPanel /> ketika memuat hasil."
+            classesHint="<UiSkeletonSearchPanel /> + Recent Search + Suggestion Chips"
+            actions={
+              <button
+                type="button"
+                onClick={() => {
+                  setDemoSearchFocused(true);
+                  setDemoSearchLoading((prev) => !prev);
+                }}
+                className="group inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border border-gray-300 bg-white text-xs font-semibold text-gray-700 hover:bg-gray-50 cursor-pointer"
+              >
+                <RefreshCw className="w-3.5 h-3.5 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:rotate-90" />
+                <span>{demoSearchLoading ? 'Tampilkan Hasil' : 'Simulasikan UiSkeleton'}</span>
+              </button>
+            }
+            codeSnippet={`{isLoading ? (\n  <UiSkeletonSearchPanel mode={query ? 'results' : 'recent-and-suggestions'} rows={3} />\n) : (\n  <RecentAndSuggestionPanel\n    recent={recentSearches}\n    suggestions={suggestions}\n    onSelect={(term) => setQuery(term)}\n  />\n)}`}
+          >
+            <div className="max-w-lg space-y-2.5 text-xs">
+              <div className="relative">
+                <Search className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  placeholder="Ketik kata kunci atau klik riwayat & saran di bawah..."
+                  value={pageSearch}
+                  onFocus={() => setDemoSearchFocused(true)}
+                  onChange={(e) => {
+                    setPageSearch(e.target.value);
+                    setDemoSearchFocused(true);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && pageSearch.trim()) {
+                      e.preventDefault();
+                      handleSaveDemoRecent(pageSearch);
+                    }
+                  }}
+                  className="w-full pl-9 pr-16 py-2 rounded-lg border border-gray-300 bg-white focus:outline-none focus:border-primary-600"
+                />
+                {pageSearch && (
+                  <button
+                    type="button"
+                    onClick={() => setPageSearch('')}
+                    aria-label="Hapus kata kunci"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded text-gray-400 hover:text-gray-700 cursor-pointer"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+
+              {demoSearchFocused && (
+                <div className="rounded-xl border border-gray-300 bg-white shadow-sm overflow-hidden">
+                  {demoSearchLoading ? (
+                    <UiSkeletonSearchPanel
+                      mode={pageSearch.trim() ? 'results' : 'recent-and-suggestions'}
+                      rows={3}
+                    />
+                  ) : !pageSearch.trim() ? (
+                    <div className="p-3 space-y-3 animate-ui-fade">
+                      {/* Recent Search */}
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between text-[11px] font-semibold text-gray-500 px-1">
+                          <span className="inline-flex items-center gap-1.5">
+                            <Clock className="w-3 h-3 text-gray-400" />
+                            <span>Pencarian Terakhir</span>
+                          </span>
+                          {demoRecentSearches.length > 0 && (
+                            <button
+                              type="button"
+                              onClick={() => setDemoRecentSearches([])}
+                              className="inline-flex items-center gap-1 text-[11px] font-medium text-gray-500 hover:text-[#ee2e65] cursor-pointer"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                              <span>Hapus semua</span>
+                            </button>
+                          )}
+                        </div>
+                        {demoRecentSearches.length === 0 ? (
+                          <div className="px-2.5 py-2 rounded-lg bg-gray-50 border border-dashed border-gray-200 text-[11px] text-gray-500">
+                            Riwayat pencarian kosong. Klik saran di bawah atau tekan Enter pada input.
+                          </div>
+                        ) : (
+                          <div className="space-y-1">
+                            {demoRecentSearches.map((term) => (
+                              <div
+                                key={term}
+                                className="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg hover:bg-primary-50/50 transition-colors"
+                              >
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setPageSearch(term);
+                                    handleSaveDemoRecent(term);
+                                  }}
+                                  className="flex-1 flex items-center gap-2 text-left text-gray-800 font-medium cursor-pointer truncate"
+                                >
+                                  <Clock className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                                  <span className="truncate">{term}</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  aria-label={`Hapus ${term}`}
+                                  onClick={() =>
+                                    setDemoRecentSearches((prev) => prev.filter((item) => item !== term))
+                                  }
+                                  className="p-0.5 rounded text-gray-400 hover:text-gray-700 cursor-pointer"
+                                >
+                                  <X className="w-3 h-3" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Suggestion Search */}
+                      <div className="space-y-1.5 pt-2.5 border-t border-gray-200">
+                        <div className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-gray-500 px-1">
+                          <Sparkles className="w-3 h-3 text-[#ee2e65]" />
+                          <span>Saran Pencarian</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5 px-1">
+                          {demoSuggestions.map((sug) => (
+                            <button
+                              key={sug.label}
+                              type="button"
+                              onClick={() => {
+                                setPageSearch(sug.label);
+                                handleSaveDemoRecent(sug.label);
+                              }}
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-gray-200 bg-gray-50 hover:bg-[#FEF1F5] hover:border-[#FBC2D4] hover:text-[#9D113C] text-[11.5px] font-medium text-gray-700 transition-colors cursor-pointer"
+                            >
+                              <span>{sug.label}</span>
+                              <span className="text-[10px] text-gray-400">{sug.category}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="divide-y divide-gray-200 animate-ui-fade">
+                      {filteredSearch.length === 0 ? (
+                        <div className="p-3.5 text-center space-y-2">
+                          <p className="text-gray-600">Tidak ada modul untuk &ldquo;{pageSearch}&rdquo;.</p>
+                          <div className="flex flex-wrap justify-center gap-1.5">
+                            {demoSuggestions.slice(0, 3).map((sug) => (
+                              <button
+                                key={sug.label}
+                                type="button"
+                                onClick={() => setPageSearch(sug.label)}
+                                className="px-2.5 py-1 rounded-full bg-[#FEF1F5] border border-[#FBC2D4] text-[11px] font-medium text-[#9D113C] cursor-pointer"
+                              >
+                                {sug.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ) : (
+                        filteredSearch.map((item) => (
+                          <button
+                            key={item.title}
+                            type="button"
+                            onClick={() => {
+                              handleSaveDemoRecent(item.title);
+                              triggerToast('Dipilih', `Membuka ${item.title}`, 'info');
+                            }}
+                            className="w-full px-3 py-2 flex items-center justify-between hover:bg-primary-50/40 text-left cursor-pointer"
+                          >
+                            <span className="font-medium text-gray-800 truncate">{item.title}</span>
+                            <span className="text-gray-500 text-[11px] shrink-0 ml-2">
+                              {item.tag} · {item.type}
+                            </span>
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </UiDocSection>
 

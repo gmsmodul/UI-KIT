@@ -10,6 +10,9 @@ import {
   X,
   ChevronRight,
   CheckCheck,
+  Clock,
+  Sparkles,
+  Trash2,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { PASTEL_THEMES } from '../../constants/theme';
@@ -17,6 +20,15 @@ import { useBottomSheetMotion } from '../../hooks/useBottomSheetMotion';
 import { UI_KIT_CATALOG, UiKitSubSection } from '../uikit/uiKitCatalog';
 import { getUiKitCategoryIcon } from '../uikit/uiKitIcons';
 import { playUiMotionSound } from '../../utils/uiMotionSound';
+import { UiSkeletonSearchPanel } from '../ui/UiSkeleton';
+import {
+  RecentSearchEntry,
+  UI_SUGGESTION_SEARCHES,
+  loadRecentSearches,
+  saveRecentSearch,
+  removeRecentSearch,
+  clearRecentSearches,
+} from '../../utils/uiSearchHistory';
 
 interface MobileSearchEntry {
   key: string;
@@ -43,6 +55,10 @@ export const MobileBottomNav: React.FC = () => {
   const [menuClosing, setMenuClosing] = useState(false);
   const [menuSubview, setMenuSubview] = useState<'nav' | 'updates'>('nav');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isMobileSearchLoading, setIsMobileSearchLoading] = useState(false);
+  const [recentSearches, setRecentSearches] = useState<RecentSearchEntry[]>(() =>
+    loadRecentSearches()
+  );
 
   const menuCloseTimerRef = useRef<number | null>(null);
   const drawerNavScrollRef = useRef<HTMLDivElement>(null);
@@ -194,10 +210,24 @@ export const MobileBottomNav: React.FC = () => {
 
   useEffect(() => {
     if (isUiMobileSearchOpen) {
+      setRecentSearches(loadRecentSearches());
       const id = window.setTimeout(() => searchInputRef.current?.focus(), 140);
       return () => window.clearTimeout(id);
     }
   }, [isUiMobileSearchOpen]);
+
+  useEffect(() => {
+    const q = searchQuery.trim();
+    if (!q) {
+      setIsMobileSearchLoading(false);
+      return;
+    }
+    setIsMobileSearchLoading(true);
+    const timer = window.setTimeout(() => {
+      setIsMobileSearchLoading(false);
+    }, 180);
+    return () => window.clearTimeout(timer);
+  }, [searchQuery]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -621,9 +651,127 @@ export const MobileBottomNav: React.FC = () => {
             </div>
 
             <div className="overflow-y-auto overscroll-contain space-y-4 pr-0.5">
+              {!searchQuery.trim() ? (
+                <>
+                  {/* Recent Search */}
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between px-1">
+                      <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#646772]">
+                        <Clock className="w-3 h-3" />
+                        <span>Pencarian Terakhir</span>
+                      </span>
+                      {recentSearches.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setRecentSearches(clearRecentSearches())}
+                          className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#ee2e65] cursor-pointer"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                          <span>Hapus</span>
+                        </button>
+                      )}
+                    </div>
+
+                    {recentSearches.length === 0 ? (
+                      <div className="px-3.5 py-2.5 rounded-2xl bg-[#FAFBFD] border border-dashed border-black/[0.12] text-[12px] text-[#646772]">
+                        Belum ada riwayat pencarian. Pilih saran atau kategori di bawah.
+                      </div>
+                    ) : (
+                      <div className="space-y-1">
+                        {recentSearches.map((rec) => (
+                          <div
+                            key={rec.id}
+                            className="flex items-center justify-between gap-1.5 rounded-2xl bg-[#FAFBFD] border border-black/[0.10] pr-1.5"
+                          >
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (rec.groupId && rec.itemLabel) {
+                                  setRecentSearches(
+                                    saveRecentSearch({
+                                      query: rec.query,
+                                      groupId: rec.groupId,
+                                      groupLabel: rec.groupLabel,
+                                      itemLabel: rec.itemLabel,
+                                      sectionId: rec.sectionId,
+                                      sectionTitle: rec.sectionTitle,
+                                    })
+                                  );
+                                  selectUiNode(rec.groupId, rec.itemLabel, rec.sectionId);
+                                  animateCloseSearch();
+                                } else {
+                                  setSearchQuery(rec.query);
+                                }
+                              }}
+                              className="flex-1 min-w-0 flex items-center gap-2.5 px-3.5 py-2.5 text-left cursor-pointer"
+                            >
+                              <Clock className="w-4 h-4 text-[#646772] shrink-0" />
+                              <div className="min-w-0 flex-1">
+                                <div className="text-[13px] font-semibold text-[#1C1D21] truncate">
+                                  {rec.query}
+                                </div>
+                                {(rec.groupLabel || rec.itemLabel) && (
+                                  <div className="text-[11px] text-[#646772] truncate">
+                                    {[rec.groupLabel, rec.itemLabel, rec.sectionTitle]
+                                      .filter(Boolean)
+                                      .join(' · ')}
+                                  </div>
+                                )}
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              aria-label={`Hapus riwayat ${rec.query}`}
+                              onClick={() => setRecentSearches(removeRecentSearch(rec.id))}
+                              className="w-8 h-8 rounded-full flex items-center justify-center text-[#646772] hover:bg-gray-200/70 shrink-0 cursor-pointer"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Suggestion Search */}
+                  <div className="space-y-1.5">
+                    <div className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#646772] px-1">
+                      <Sparkles className="w-3 h-3 text-[#ee2e65]" />
+                      <span>Saran Pencarian</span>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {UI_SUGGESTION_SEARCHES.map((sug) => (
+                        <button
+                          key={sug.id}
+                          type="button"
+                          onClick={() => {
+                            setRecentSearches(
+                              saveRecentSearch({
+                                query: sug.label,
+                                groupId: sug.groupId,
+                                groupLabel: sug.hint.split(' · ')[0],
+                                itemLabel: sug.itemLabel,
+                                sectionId: sug.sectionId,
+                              })
+                            );
+                            selectUiNode(sug.groupId, sug.itemLabel, sug.sectionId);
+                            animateCloseSearch();
+                          }}
+                          className="px-3 py-1.5 rounded-full bg-[#FAFBFD] hover:bg-[#FEF1F5] border border-black/[0.10] hover:border-[#FBC2D4] text-[12px] font-semibold text-[#1C1D21] hover:text-[#9D113C] transition-colors cursor-pointer"
+                        >
+                          {sug.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              ) : isMobileSearchLoading ? (
+                <UiSkeletonSearchPanel mode="results" variant="sheet" rows={4} />
+              ) : null}
+
               {/* Matched UI KIT Elements */}
-              {searchResults.matchedElements.length > 0 && (
-                <div className="space-y-1.5">
+              {!isMobileSearchLoading && searchResults.matchedElements.length > 0 && (
+                <div className="space-y-1.5 animate-ui-fade">
                   <div className="text-[11px] font-bold uppercase tracking-wider text-[#646772] px-1">
                     Komponen & Bagian
                   </div>
@@ -633,6 +781,16 @@ export const MobileBottomNav: React.FC = () => {
                         key={res.key}
                         type="button"
                         onClick={() => {
+                          setRecentSearches(
+                            saveRecentSearch({
+                              query: searchQuery.trim() || (res.section ? res.section.title : res.itemLabel),
+                              groupId: res.groupId,
+                              groupLabel: res.groupLabel,
+                              itemLabel: res.itemLabel,
+                              sectionId: res.section?.id,
+                              sectionTitle: res.section?.title,
+                            })
+                          );
                           selectUiNode(res.groupId, res.itemLabel, res.section?.id);
                           animateCloseSearch();
                         }}
@@ -654,7 +812,7 @@ export const MobileBottomNav: React.FC = () => {
               )}
 
               {/* Categories */}
-              {searchResults.matchedGroups.length > 0 && (
+              {!isMobileSearchLoading && searchResults.matchedGroups.length > 0 && (
                 <div className="space-y-1.5">
                   <div className="text-[11px] font-bold uppercase tracking-wider text-[#646772] px-1">
                     {searchQuery ? 'Kategori' : 'Akses Cepat Kategori UI KIT'}
@@ -694,10 +852,25 @@ export const MobileBottomNav: React.FC = () => {
               )}
 
               {searchQuery &&
+                !isMobileSearchLoading &&
                 searchResults.matchedGroups.length === 0 &&
                 searchResults.matchedElements.length === 0 && (
-                  <div className="py-8 text-center text-[12.5px] text-[#646772]">
-                    Tidak ada komponen untuk &ldquo;{searchQuery}&rdquo;
+                  <div className="py-6 text-center space-y-3">
+                    <p className="text-[12.5px] text-[#646772]">
+                      Tidak ada komponen untuk &ldquo;{searchQuery}&rdquo;
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-1.5">
+                      {UI_SUGGESTION_SEARCHES.slice(0, 4).map((sug) => (
+                        <button
+                          key={sug.id}
+                          type="button"
+                          onClick={() => setSearchQuery(sug.query)}
+                          className="px-3 py-1.5 rounded-full bg-[#FEF1F5] border border-[#FBC2D4] text-[11.5px] font-semibold text-[#9D113C] cursor-pointer"
+                        >
+                          {sug.label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
             </div>

@@ -8,11 +8,24 @@ import {
   X,
   CornerDownLeft,
   RotateCcw,
+  Clock,
+  Sparkles,
+  Trash2,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { PageTransition, getOrderedDirection } from '../ui/PageTransition';
 import { UI_KIT_CATALOG, UiKitSubSection } from '../uikit/uiKitCatalog';
 import { UiKitCategorySkeleton } from '../uikit/UiKitCategorySkeleton';
+import { UiSkeletonSearchPanel } from '../ui/UiSkeleton';
+import { UiLoader } from '../ui/UiLoader';
+import {
+  RecentSearchEntry,
+  UI_SUGGESTION_SEARCHES,
+  loadRecentSearches,
+  saveRecentSearch,
+  removeRecentSearch,
+  clearRecentSearches,
+} from '../../utils/uiSearchHistory';
 import {
   LazyUtilitiesUiKit,
   LazyDataDisplayUiKit,
@@ -55,6 +68,10 @@ export const UiKitPage: React.FC = () => {
   const [mobileTocOpen, setMobileTocOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchDropdownOpen, setSearchDropdownOpen] = useState(false);
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
+  const [recentSearches, setRecentSearches] = useState<RecentSearchEntry[]>(() =>
+    loadRecentSearches()
+  );
 
   const sidebarScrollRef = useRef<HTMLDivElement>(null);
   const sidebarListRef = useRef<HTMLDivElement>(null);
@@ -144,6 +161,26 @@ export const UiKitPage: React.FC = () => {
   }, []);
 
   const normalizedQuery = searchQuery.trim().toLowerCase();
+
+  // Brief shimmer skeleton feedback while typing a search query
+  useEffect(() => {
+    if (!normalizedQuery) {
+      setIsSearchLoading(false);
+      return;
+    }
+    setIsSearchLoading(true);
+    const timer = window.setTimeout(() => {
+      setIsSearchLoading(false);
+    }, 180);
+    return () => window.clearTimeout(timer);
+  }, [normalizedQuery]);
+
+  // Keep recent searches synced when dropdown opens (e.g. if updated from mobile sheet)
+  useEffect(() => {
+    if (searchDropdownOpen) {
+      setRecentSearches(loadRecentSearches());
+    }
+  }, [searchDropdownOpen]);
 
   useLayoutEffect(() => {
     const updateSidebarIndicator = () => {
@@ -254,7 +291,24 @@ export const UiKitPage: React.FC = () => {
     return results.sort((a, b) => b.score - a.score).slice(0, 14);
   }, [normalizedQuery]);
 
-  const handleSelectMultimediaNode = (groupId: string, subLabel: string, targetSectionId?: string) => {
+  const handleSelectMultimediaNode = (
+    groupId: string,
+    subLabel: string,
+    targetSectionId?: string,
+    recordQuery?: { query: string; groupLabel?: string; sectionTitle?: string }
+  ) => {
+    if (recordQuery?.query) {
+      setRecentSearches(
+        saveRecentSearch({
+          query: recordQuery.query,
+          groupId,
+          groupLabel: recordQuery.groupLabel,
+          itemLabel: subLabel,
+          sectionId: targetSectionId,
+          sectionTitle: recordQuery.sectionTitle,
+        })
+      );
+    }
     selectUiNode(groupId, subLabel, targetSectionId);
     setSearchDropdownOpen(false);
   };
@@ -292,7 +346,19 @@ export const UiKitPage: React.FC = () => {
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 no-print">
           {/* Quick Search Bar with Live Dropdown */}
           <div ref={searchWrapperRef} className="relative w-full sm:w-72 lg:w-80">
-            <Search className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            {isSearchLoading ? (
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none flex items-center justify-center">
+                <UiLoader
+                  variant="spinner-arc"
+                  size="sm"
+                  color="#ee2e65"
+                  trackColor="#FDE0E9"
+                  label="Mencari"
+                />
+              </span>
+            ) : (
+              <Search className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            )}
             <input
               ref={searchInputRef}
               type="text"
@@ -304,10 +370,14 @@ export const UiKitPage: React.FC = () => {
                 setSearchDropdownOpen(true);
               }}
               onKeyDown={(e) => {
-                if (e.key === 'Enter' && quickSearchResults.length > 0) {
+                if (e.key === 'Enter' && quickSearchResults.length > 0 && !isSearchLoading) {
                   e.preventDefault();
                   const top = quickSearchResults[0];
-                  handleSelectMultimediaNode(top.groupId, top.itemLabel, top.section?.id);
+                  handleSelectMultimediaNode(top.groupId, top.itemLabel, top.section?.id, {
+                    query: searchQuery.trim() || (top.section ? top.section.title : top.itemLabel),
+                    groupLabel: top.groupLabel,
+                    sectionTitle: top.section?.title,
+                  });
                 }
               }}
               placeholder="Cari elemen UI..."
@@ -332,20 +402,150 @@ export const UiKitPage: React.FC = () => {
               </kbd>
             )}
 
-            {/* Quick-Jump Search Results Popover */}
-            {searchDropdownOpen && normalizedQuery && (
-              <div className="animate-ui-pop absolute left-0 right-0 top-full mt-1.5 bg-white/95 backdrop-blur-sm border border-gray-300 rounded-xl shadow-[0_16px_36px_-10px_rgba(15,23,42,0.16)] z-40 overflow-hidden max-h-80 overflow-y-auto custom-sidebar-scrollbar">
-                {quickSearchResults.length === 0 ? (
-                  <div className="p-4 text-center space-y-1.5">
-                    <p className="text-xs font-medium text-gray-700">
-                      Elemen &ldquo;{searchQuery}&rdquo; tidak ditemukan.
-                    </p>
-                    <p className="text-[11px] text-gray-500">
-                      Coba kata kunci lain seperti accordion, spectrum, widening, hairline, atau button pill.
-                    </p>
+            {/* Quick-Jump Search Results, Recent Search & Suggestion Search Popover */}
+            {searchDropdownOpen && (
+              <div className="animate-ui-pop absolute left-0 right-0 top-full mt-1.5 bg-white/95 backdrop-blur-sm border border-gray-300 rounded-xl shadow-[0_16px_36px_-10px_rgba(15,23,42,0.16)] z-40 overflow-hidden max-h-96 overflow-y-auto custom-sidebar-scrollbar">
+                {!normalizedQuery ? (
+                  <div className="p-2.5 space-y-3">
+                    {/* Recent Searches */}
+                    <div className="space-y-1.5">
+                      <div className="px-1.5 flex items-center justify-between text-[11px] font-semibold text-gray-500">
+                        <span className="inline-flex items-center gap-1.5">
+                          <Clock className="w-3 h-3 text-gray-400" />
+                          <span>Pencarian Terakhir</span>
+                        </span>
+                        {recentSearches.length > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => setRecentSearches(clearRecentSearches())}
+                            className="inline-flex items-center gap-1 text-[11px] font-medium text-gray-500 hover:text-[#ee2e65] transition-colors cursor-pointer"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                            <span>Hapus</span>
+                          </button>
+                        )}
+                      </div>
+
+                      {recentSearches.length === 0 ? (
+                        <div className="px-2.5 py-2 rounded-lg bg-gray-50/80 border border-dashed border-gray-200 text-[11px] text-gray-500">
+                          Belum ada riwayat pencarian. Pilih saran di bawah atau ketik nama komponen.
+                        </div>
+                      ) : (
+                        <div className="space-y-1">
+                          {recentSearches.map((rec) => (
+                            <div
+                              key={rec.id}
+                              className="group flex items-center justify-between gap-1.5 rounded-lg hover:bg-primary-50/60 transition-colors pr-1.5"
+                            >
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (rec.groupId && rec.itemLabel) {
+                                    handleSelectMultimediaNode(
+                                      rec.groupId,
+                                      rec.itemLabel,
+                                      rec.sectionId,
+                                      {
+                                        query: rec.query,
+                                        groupLabel: rec.groupLabel,
+                                        sectionTitle: rec.sectionTitle,
+                                      }
+                                    );
+                                  } else {
+                                    setSearchQuery(rec.query);
+                                  }
+                                }}
+                                className="flex-1 min-w-0 px-2.5 py-1.5 text-left flex items-center gap-2 cursor-pointer"
+                              >
+                                <Clock className="w-3.5 h-3.5 text-gray-400 group-hover:text-[#ee2e65] shrink-0" />
+                                <div className="min-w-0 flex-1">
+                                  <div className="text-xs font-medium text-gray-800 truncate">
+                                    {rec.query}
+                                  </div>
+                                  {(rec.groupLabel || rec.itemLabel) && (
+                                    <div className="text-[10.5px] text-gray-500 truncate">
+                                      {[rec.groupLabel, rec.itemLabel, rec.sectionTitle]
+                                        .filter(Boolean)
+                                        .join(' / ')}
+                                    </div>
+                                  )}
+                                </div>
+                              </button>
+                              <button
+                                type="button"
+                                aria-label={`Hapus riwayat ${rec.query}`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setRecentSearches(removeRecentSearch(rec.id));
+                                }}
+                                className="p-1 rounded-md text-gray-400 hover:text-gray-700 hover:bg-gray-100 cursor-pointer shrink-0"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Suggestion Searches */}
+                    <div className="space-y-1.5 pt-2 border-t border-gray-200/80">
+                      <div className="px-1.5 flex items-center gap-1.5 text-[11px] font-semibold text-gray-500">
+                        <Sparkles className="w-3 h-3 text-[#ee2e65]" />
+                        <span>Saran Pencarian</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5 px-1">
+                        {UI_SUGGESTION_SEARCHES.map((sug) => (
+                          <button
+                            key={sug.id}
+                            type="button"
+                            onClick={() =>
+                              handleSelectMultimediaNode(
+                                sug.groupId,
+                                sug.itemLabel,
+                                sug.sectionId,
+                                {
+                                  query: sug.label,
+                                  groupLabel: sug.hint.split(' · ')[0],
+                                }
+                              )
+                            }
+                            title={sug.hint}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-gray-200 bg-gray-50/80 hover:bg-[#FEF1F5] hover:border-[#FBC2D4] hover:text-[#9D113C] text-[11.5px] font-medium text-gray-700 transition-colors cursor-pointer"
+                          >
+                            <span>{sug.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ) : isSearchLoading ? (
+                  <UiSkeletonSearchPanel mode="results" rows={4} />
+                ) : quickSearchResults.length === 0 ? (
+                  <div className="p-3.5 space-y-3">
+                    <div className="text-center space-y-1">
+                      <p className="text-xs font-medium text-gray-700">
+                        Elemen &ldquo;{searchQuery}&rdquo; tidak ditemukan.
+                      </p>
+                      <p className="text-[11px] text-gray-500">
+                        Coba salah satu saran populer di bawah ini:
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap justify-center gap-1.5">
+                      {UI_SUGGESTION_SEARCHES.slice(0, 4).map((sug) => (
+                        <button
+                          key={sug.id}
+                          type="button"
+                          onClick={() => setSearchQuery(sug.query)}
+                          className="px-2.5 py-1 rounded-full border border-[#FBC2D4] bg-[#FEF1F5] text-[11px] font-medium text-[#9D113C] hover:brightness-95 cursor-pointer"
+                        >
+                          {sug.label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 ) : (
-                  <div className="py-1.5 divide-y divide-gray-200">
+                  <div className="py-1.5 divide-y divide-gray-200 animate-ui-fade">
                     <div className="px-3 py-1.5 flex items-center justify-between text-[11px] text-gray-500 font-medium bg-gray-50/70">
                       <span>{quickSearchResults.length} hasil cocok</span>
                       <span className="inline-flex items-center gap-1">
@@ -356,7 +556,13 @@ export const UiKitPage: React.FC = () => {
                       <button
                         key={res.key}
                         type="button"
-                        onClick={() => handleSelectMultimediaNode(res.groupId, res.itemLabel, res.section?.id)}
+                        onClick={() =>
+                          handleSelectMultimediaNode(res.groupId, res.itemLabel, res.section?.id, {
+                            query: searchQuery.trim() || (res.section ? res.section.title : res.itemLabel),
+                            groupLabel: res.groupLabel,
+                            sectionTitle: res.section?.title,
+                          })
+                        }
                         className={`w-full px-3.5 py-2 text-left flex items-center justify-between gap-2 hover:bg-primary-50/60 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer ${
                           idx === 0 ? 'bg-gray-50/50' : ''
                         }`}

@@ -1,18 +1,19 @@
 import React from 'react';
+import { UiSkeleton, UiSkeletonGroup } from '../ui/UiSkeleton';
 
 export const UiKitCategorySkeleton: React.FC = () => {
   return (
-    <div className="space-y-8" aria-busy="true" aria-label="Memuat komponen UI KIT">
+    <UiSkeletonGroup label="Memuat komponen UI KIT" className="space-y-8">
       {/* Page Title & Quick Jump Header Skeleton */}
       <div className="pb-4 border-b border-gray-200 space-y-3">
         <div className="flex items-center gap-2.5">
-          <div className="h-7 w-48 rounded-lg ui-skeleton-shimmer" />
-          <div className="h-4.5 w-4.5 rounded-full ui-skeleton-shimmer" />
+          <UiSkeleton variant="rounded" className="h-7 w-48 rounded-lg" />
+          <UiSkeleton variant="circular" width={18} height={18} />
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <div className="h-3.5 w-24 rounded ui-skeleton-shimmer" />
-          <div className="h-3.5 w-28 rounded ui-skeleton-shimmer" />
-          <div className="h-3.5 w-20 rounded ui-skeleton-shimmer" />
+          <UiSkeleton variant="text" className="h-3.5 w-24" />
+          <UiSkeleton variant="text" className="h-3.5 w-28" />
+          <UiSkeleton variant="text" className="h-3.5 w-20" />
         </div>
       </div>
 
@@ -20,26 +21,27 @@ export const UiKitCategorySkeleton: React.FC = () => {
       {[1, 2].map((sectionIdx) => (
         <div key={sectionIdx} className="space-y-3">
           <div className="flex items-center justify-between gap-3">
-            <div className="h-5 w-52 rounded-md ui-skeleton-shimmer" />
-            <div className="h-7 w-28 rounded-full ui-skeleton-shimmer" />
+            <UiSkeleton variant="rounded" className="h-5 w-52 rounded-md" />
+            <UiSkeleton variant="pill" className="h-7 w-28" />
           </div>
           <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">
             <div className="px-4 py-2.5 border-b border-gray-200 flex items-center gap-5">
-              <div className="h-3.5 w-12 rounded ui-skeleton-shimmer" />
-              <div className="h-3.5 w-10 rounded ui-skeleton-shimmer" />
-              <div className="h-3.5 w-12 rounded ui-skeleton-shimmer" />
+              <UiSkeleton variant="text" className="h-3.5 w-12" />
+              <UiSkeleton variant="text" className="h-3.5 w-10" />
+              <UiSkeleton variant="text" className="h-3.5 w-12" />
             </div>
             <div className="p-5 sm:p-6 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                <div className="h-24 rounded-xl ui-skeleton-shimmer" />
-                <div className="h-24 rounded-xl ui-skeleton-shimmer" />
-                <div className="h-24 rounded-xl ui-skeleton-shimmer hidden lg:block" />
+                <UiSkeleton variant="rounded" className="h-24 w-full" />
+                <UiSkeleton variant="rounded" className="h-24 w-full" />
+                <UiSkeleton variant="rounded" className="h-24 w-full hidden lg:block" />
               </div>
-              <div className="h-10 w-full rounded-lg ui-skeleton-shimmer" />
+              <UiSkeleton variant="rounded" className="h-10 w-full rounded-lg" />
             </div>
           </div>
         </div>
       ))}
-    </div>
+    </UiSkeletonGroup>
   );
 };
+

@@ -15,6 +15,7 @@ import {
   Send,
 } from 'lucide-react';
 import { UiDocPage, UiDocSection } from './UiDocBlock';
+import { UiSkeleton, UiSkeletonGroup } from '../ui/UiSkeleton';
 import { useApp } from '../../context/AppContext';
 
 interface TaskOptItem {
@@ -257,7 +258,7 @@ export const AppOptimizationUiKit: React.FC = () => {
         id="opt-skeletons"
         title="Opt 2 · Shimmer Skeletons (No Blank Screens or Spinners)"
         description="Ganti layar kosong dan spinner tunggal dengan skeleton shimmer abu-abu (`.ui-skeleton-shimmer`) yang dimensinya sama persis dengan kartu data final agar perpindahan ke konten bebas lompatan."
-        classesHint=".ui-skeleton-shimmer + <Suspense fallback={<UiKitCategorySkeleton />}>"
+        classesHint="<UiSkeleton /> + .ui-skeleton-shimmer + <Suspense fallback={<UiKitCategorySkeleton />}>"
         actions={
           <div className="inline-flex items-center rounded-full border border-gray-300 bg-gray-100/80 p-0.5 text-xs">
             {(
@@ -284,12 +285,9 @@ export const AppOptimizationUiKit: React.FC = () => {
   <LazyCategoryModule />
 </Suspense>
 
-/* src/index.css */
-.ui-skeleton-shimmer {
-  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 37%, #f3f4f6 63%);
-  background-size: 200% 100%;
-  animation: ui-shimmer 1.35s var(--ease-out) infinite;
-}`}
+{/* Reusable UiSkeleton (.ui-skeleton-shimmer) */}
+<UiSkeleton variant="rounded" width={40} height={40} />
+<UiSkeleton variant="text" lines={2} lastLineWidth="78%" />`}
       >
         <div className="max-w-xl rounded-xl border border-gray-300 bg-white p-4">
           {loadingPattern === 'spinner' ? (
@@ -298,20 +296,17 @@ export const AppOptimizationUiKit: React.FC = () => {
               <span>Layar kosong menunggu data...</span>
             </div>
           ) : loadingPattern === 'skeleton' ? (
-            <div className="h-32 flex flex-col justify-between">
+            <UiSkeletonGroup label="Memuat Design System Catalog" className="h-32 flex flex-col justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl ui-skeleton-shimmer shrink-0" />
+                <UiSkeleton variant="rounded" className="w-10 h-10 rounded-xl" />
                 <div className="flex-1 space-y-2">
-                  <div className="h-4 w-44 rounded ui-skeleton-shimmer" />
-                  <div className="h-3 w-28 rounded ui-skeleton-shimmer" />
+                  <UiSkeleton variant="text" className="h-4 w-44" />
+                  <UiSkeleton variant="text" className="h-3 w-28" />
                 </div>
-                <div className="h-6 w-16 rounded-md ui-skeleton-shimmer shrink-0" />
+                <UiSkeleton variant="rounded" className="h-6 w-16 rounded-md" />
               </div>
-              <div className="space-y-2">
-                <div className="h-3 w-full rounded ui-skeleton-shimmer" />
-                <div className="h-3 w-4/5 rounded ui-skeleton-shimmer" />
-              </div>
-            </div>
+              <UiSkeleton variant="text" lines={2} lastLineWidth="80%" lineClassName="h-3" />
+            </UiSkeletonGroup>
           ) : (
             <div className="h-32 flex flex-col justify-between">
               <div className="flex items-center gap-3">
