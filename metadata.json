@@ -1,0 +1,8 @@
+{
+  "name": "UI Design System",
+  "description": "Comprehensive school management and teaching operating system with class preparation, attendance, exams, assignments, schedule, and Jampack UI design system.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
