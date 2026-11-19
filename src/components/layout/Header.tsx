@@ -9,6 +9,7 @@ import {
   Layers,
   Sun,
   Moon,
+  User,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useApp } from '../../context/AppContext';
@@ -24,6 +25,8 @@ const UI_KIT_ORDER = UI_KIT_CATALOG.flatMap((g) =>
 
 export const Header: React.FC = () => {
   const {
+    activePage,
+    setActivePage,
     uiCategory,
     prevUiCategory,
     uiSubJump,
@@ -39,6 +42,8 @@ export const Header: React.FC = () => {
     theme,
     toggleTheme,
   } = useApp();
+
+  const isProfilePage = activePage === 'profile';
 
   const direction = getOrderedDirection(
     `${prevUiCategory}::${prevUiSubJump}`,
@@ -110,41 +115,53 @@ export const Header: React.FC = () => {
   };
 
   const handleHeaderSearch = () => {
+    if (isProfilePage) {
+      setActivePage('uikit');
+    }
     if (window.innerWidth < 768) {
       setIsUiMobileSearchOpen(true);
     } else {
-      triggerUiSearchFocus();
+      setTimeout(() => triggerUiSearchFocus(), isProfilePage ? 40 : 0);
     }
   };
 
   return (
-    <header className="relative z-30 h-16 px-4 sm:px-7 border-b border-black/[0.12] dark:border-white/[0.08] flex items-center justify-between gap-3 sm:gap-4 shrink-0 bg-white/80 dark:bg-[#121418]/90 backdrop-blur-sm no-print transition-colors duration-200">
+    <header className="relative z-30 h-16 px-4 sm:px-7 border-b border-[#E4E7EE] dark:border-white/[0.08] flex items-center justify-between gap-3 sm:gap-4 shrink-0 bg-white dark:bg-[#121418] no-print transition-colors duration-200">
       <div className="relative flex items-center gap-3 min-w-0 flex-1 overflow-hidden">
-        {/* Mobile Header Left: Clean Category Icon + Active Component Title (no breadcrumb, no photo) */}
+        {/* Mobile Header Left: Clean Category Icon + Active Component/Page Title */}
         <div className="flex md:hidden items-center min-w-0 flex-1 relative">
-          <AnimatePresence mode="popLayout" initial={false}>
-            <motion.div
-              key={`mobile-header-${uiCategory}-${uiSubJump}`}
-              initial={{ opacity: 0, x: direction * 14, scale: 0.95, filter: 'blur(3px)' }}
-              animate={{ opacity: 1, x: 0, scale: 1, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, x: direction * -10, scale: 0.95, filter: 'blur(2px)' }}
-              transition={{
-                x: { type: 'spring', stiffness: 420, damping: 28, mass: 0.8 },
-                scale: { type: 'spring', stiffness: 420, damping: 26 },
-                opacity: { duration: 0.18, ease: [0.23, 1, 0.32, 1] },
-                filter: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
-              }}
-              className="flex items-center gap-2 min-w-0 w-full"
-            >
-              <ActiveCategoryIcon className="w-[18px] h-[18px] text-[#ee2e65] shrink-0" />
+          {isProfilePage ? (
+            <div className="flex items-center gap-2 min-w-0 w-full">
+              <User className="w-[18px] h-[18px] text-[#ee2e65] shrink-0" />
               <h1 className="text-[17px] font-semibold tracking-tight text-[#1C1D21] dark:text-[#F3F4F6] truncate">
-                {uiSubJump}
+                Profile
               </h1>
-            </motion.div>
-          </AnimatePresence>
+            </div>
+          ) : (
+            <AnimatePresence mode="popLayout" initial={false}>
+              <motion.div
+                key={`mobile-header-${uiCategory}-${uiSubJump}`}
+                initial={{ opacity: 0, x: direction * 14, scale: 0.95, filter: 'blur(3px)' }}
+                animate={{ opacity: 1, x: 0, scale: 1, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, x: direction * -10, scale: 0.95, filter: 'blur(2px)' }}
+                transition={{
+                  x: { type: 'spring', stiffness: 420, damping: 28, mass: 0.8 },
+                  scale: { type: 'spring', stiffness: 420, damping: 26 },
+                  opacity: { duration: 0.18, ease: [0.23, 1, 0.32, 1] },
+                  filter: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
+                }}
+                className="flex items-center gap-2 min-w-0 w-full"
+              >
+                <ActiveCategoryIcon className="w-[18px] h-[18px] text-[#ee2e65] shrink-0" />
+                <h1 className="text-[17px] font-semibold tracking-tight text-[#1C1D21] dark:text-[#F3F4F6] truncate">
+                  {uiSubJump}
+                </h1>
+              </motion.div>
+            </AnimatePresence>
+          )}
         </div>
 
-        {/* Tablet & PC Breadcrumbs: UI KIT > Category > Component */}
+        {/* Tablet & PC Breadcrumbs */}
         <nav className="hidden md:flex items-center gap-2 text-[13px] min-w-0">
           <button
             type="button"
@@ -155,34 +172,49 @@ export const Header: React.FC = () => {
             <span>UI KIT</span>
           </button>
           <ChevronRight className="w-3.5 h-3.5 text-[#5A5D67] dark:text-gray-500 shrink-0" />
-          <button
-            type="button"
-            onClick={() => selectUiNode(activeGroup.id)}
-            className="text-[#5A5D67] dark:text-gray-400 hover:text-[#1C1D21] dark:hover:text-white font-medium truncate transition-colors cursor-pointer"
-          >
-            {activeGroup.label}
-          </button>
-          <ChevronRight className="w-3.5 h-3.5 text-[#5A5D67] dark:text-gray-500 shrink-0" />
-          <div className="relative flex items-center min-w-0 overflow-hidden py-0.5">
-            <AnimatePresence mode="popLayout" initial={false}>
-              <motion.div
-                key={`desktop-crumb-${uiCategory}-${uiSubJump}`}
-                initial={{ opacity: 0, y: direction * 8, scale: 0.95, filter: 'blur(3px)' }}
-                animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-                exit={{ opacity: 0, y: direction * -8, scale: 0.95, filter: 'blur(2px)' }}
-                transition={{
-                  y: { type: 'spring', stiffness: 420, damping: 28, mass: 0.8 },
-                  scale: { type: 'spring', stiffness: 420, damping: 26 },
-                  opacity: { duration: 0.18, ease: [0.23, 1, 0.32, 1] },
-                  filter: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
-                }}
-                className="flex items-center gap-1.5 font-semibold text-[#1C1D21] dark:text-[#F3F4F6] min-w-0"
+          {isProfilePage ? (
+            <>
+              <span className="text-[#5A5D67] dark:text-gray-400 font-medium truncate">
+                Account
+              </span>
+              <ChevronRight className="w-3.5 h-3.5 text-[#5A5D67] dark:text-gray-500 shrink-0" />
+              <div className="flex items-center gap-1.5 font-semibold text-[#1C1D21] dark:text-[#F3F4F6] min-w-0">
+                <User className="w-4 h-4 text-[#ee2e65] shrink-0" />
+                <span className="truncate">Profile</span>
+              </div>
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={() => selectUiNode(activeGroup.id)}
+                className="text-[#5A5D67] dark:text-gray-400 hover:text-[#1C1D21] dark:hover:text-white font-medium truncate transition-colors cursor-pointer"
               >
-                <ActiveCategoryIcon className="w-4 h-4 text-[#ee2e65] shrink-0" />
-                <span className="truncate">{uiSubJump}</span>
-              </motion.div>
-            </AnimatePresence>
-          </div>
+                {activeGroup.label}
+              </button>
+              <ChevronRight className="w-3.5 h-3.5 text-[#5A5D67] dark:text-gray-500 shrink-0" />
+              <div className="relative flex items-center min-w-0 overflow-hidden py-0.5">
+                <AnimatePresence mode="popLayout" initial={false}>
+                  <motion.div
+                    key={`desktop-crumb-${uiCategory}-${uiSubJump}`}
+                    initial={{ opacity: 0, y: direction * 8, scale: 0.95, filter: 'blur(3px)' }}
+                    animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+                    exit={{ opacity: 0, y: direction * -8, scale: 0.95, filter: 'blur(2px)' }}
+                    transition={{
+                      y: { type: 'spring', stiffness: 420, damping: 28, mass: 0.8 },
+                      scale: { type: 'spring', stiffness: 420, damping: 26 },
+                      opacity: { duration: 0.18, ease: [0.23, 1, 0.32, 1] },
+                      filter: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
+                    }}
+                    className="flex items-center gap-1.5 font-semibold text-[#1C1D21] dark:text-[#F3F4F6] min-w-0"
+                  >
+                    <ActiveCategoryIcon className="w-4 h-4 text-[#ee2e65] shrink-0" />
+                    <span className="truncate">{uiSubJump}</span>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </>
+          )}
         </nav>
       </div>
 

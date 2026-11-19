@@ -48,6 +48,7 @@ import {
 } from '../data/mockData';
 import { INITIAL_LIVE_QUIZZES, INITIAL_LIVE_QUIZ_REPORTS } from '../data/liveQuizSeed';
 import { UI_KIT_CATALOG } from '../components/uikit/uiKitCatalog';
+import { USER_PROFILE, UserProfileData } from '../constants/shellThemes';
 import {
   DEFAULT_EXAM_GRADING_RULE,
   DEFAULT_GRADUATION_RULE,
@@ -70,6 +71,17 @@ export interface UiKitUpdateItem {
 }
 
 const INITIAL_UI_UPDATES: UiKitUpdateItem[] = [
+  {
+    id: 'UI-UPD-SHELL',
+    title: 'App Shell, Sidebar & Profile Page',
+    desc: 'Gradasi sidebar lebih muda melarut ke putih, footer profil User (Role) dengan halaman Profile khusus saat diklik, dan sudut konten konsentris 18px yang tajam.',
+    time: 'Just now',
+    unread: true,
+    theme: 'periwinkle',
+    groupId: 'layout',
+    itemLabel: 'App Shell & Sidebar',
+    sectionId: 'shl-sidebar-gradient',
+  },
   {
     id: 'UI-UPD-OPT',
     title: 'App Optimization (Optimistic UI, Skeletons, Preload & Offline Queue)',
@@ -384,6 +396,11 @@ interface AppContextType {
   theme: 'light' | 'dark';
   setTheme: (theme: 'light' | 'dark') => void;
   toggleTheme: () => void;
+
+  // Account Profile State
+  userProfile: UserProfileData;
+  updateUserProfile: (patch: Partial<UserProfileData>) => void;
+  resetUserProfile: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -459,6 +476,58 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return INITIAL_UI_UPDATES.map((u) => (readIds.has(u.id) ? { ...u, unread: false } : u));
   });
 
+  const [userProfile, setUserProfile] = useState<UserProfileData>(() => {
+    if (typeof window === 'undefined') return USER_PROFILE;
+    try {
+      const saved = window.localStorage.getItem('uikit_user_profile_v1');
+      if (!saved) return USER_PROFILE;
+      const parsed = JSON.parse(saved) as Partial<UserProfileData>;
+      return {
+        ...USER_PROFILE,
+        ...parsed,
+        avatarSrc:
+          typeof parsed.avatarSrc === 'string' && parsed.avatarSrc.startsWith('data:image/')
+            ? parsed.avatarSrc
+            : USER_PROFILE.avatarSrc,
+      };
+    } catch {
+      return USER_PROFILE;
+    }
+  });
+
+  const updateUserProfile = useCallback((patch: Partial<UserProfileData>) => {
+    setUserProfile((prev) => {
+      const nextName = (patch.name ?? prev.name).trim() || USER_PROFILE.name;
+      const initials = nextName
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((w) => w[0]?.toUpperCase() || '')
+        .join('') || 'US';
+      const next: UserProfileData = {
+        ...prev,
+        ...patch,
+        name: nextName,
+        role: (patch.role ?? prev.role).trim() || USER_PROFILE.role,
+        initials,
+      };
+      try {
+        window.localStorage.setItem('uikit_user_profile_v1', JSON.stringify(next));
+      } catch {
+        // Ignore storage quota errors
+      }
+      return next;
+    });
+  }, []);
+
+  const resetUserProfile = useCallback(() => {
+    setUserProfile(USER_PROFILE);
+    try {
+      window.localStorage.removeItem('uikit_user_profile_v1');
+    } catch {
+      // Ignore storage errors
+    }
+  }, []);
+
   const selectUiNode = useCallback((groupId: string, subLabel?: string, sectionId?: string) => {
     const group = UI_KIT_CATALOG.find((g) => g.id === groupId) || UI_KIT_CATALOG[0];
     const resolvedSub =
@@ -467,6 +536,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         : group.items[0]?.label || 'Grid';
     playUiMotionSound('tick');
     apiService.saveCachedUiNavState({ category: group.id, sub: resolvedSub });
+    setPageState((curr) =>
+      curr.active === 'uikit' ? curr : { active: 'uikit', prev: curr.active }
+    );
     setUiNavState((curr) => ({
       category: group.id,
       prevCategory: curr.category,
@@ -2016,6 +2088,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         theme,
         setTheme,
         toggleTheme,
+        userProfile,
+        updateUserProfile,
+        resetUserProfile,
       }}
     >
       {children}

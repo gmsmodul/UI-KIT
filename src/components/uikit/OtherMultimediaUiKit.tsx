@@ -35,6 +35,7 @@ import { MotionUiKit } from './MotionUiKit';
 import { AppOptimizationUiKit } from './AppOptimizationUiKit';
 import { GanttChartUiKit } from './GanttChartUiKit';
 import { QuickAccessUiKit } from './QuickAccessUiKit';
+import { AppShellSidebarUiKit } from './AppShellSidebarUiKit';
 
 interface OtherMultimediaUiKitProps {
   activeSubJump?: string;
@@ -1941,6 +1942,10 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
       {/* ========================================================= */}
       {/* 10. LAYOUT */}
       {/* ========================================================= */}
+      {(category === 'all' || category === 'layout') && isVisible('appshellsidebar') && (
+        <AppShellSidebarUiKit />
+      )}
+
       {(category === 'all' || category === 'layout') && isVisible('menus') && (
         <UiDocPage
           title="Menus"

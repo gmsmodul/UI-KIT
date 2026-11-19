@@ -1092,6 +1092,36 @@ export const UI_KIT_CATALOG: UiKitCategoryGroup[] = [
     label: '10. Layout',
     items: [
       {
+        label: 'App Shell & Sidebar',
+        keywords: [
+          'app shell',
+          'sidebar gradient',
+          'gradasi sidebar',
+          'menu color morph',
+          'sidebar profile',
+          'account',
+          'user',
+          'role',
+          'profile page',
+          'profile card',
+          'glass card',
+          'change button',
+          'email',
+          'verified badge',
+          'back to home',
+          'settings',
+          'concentric corners',
+          'sudut konten',
+          'frame radius',
+        ],
+        sections: [
+          { id: 'shl-sidebar-gradient', title: 'Ultra-Light Sidebar Gradient Shell & Menu Color Morph' },
+          { id: 'shl-sidebar-profile', title: 'Sidebar Footer Actions & Account Profile' },
+          { id: 'shl-concentric-frame', title: 'Crisp Concentric Content Frame Corners' },
+          { id: 'shl-profile-card', title: 'Portrait Glass Profile Card' },
+        ],
+      },
+      {
         label: 'Menus',
         keywords: ['sidebar menu', 'horizontal menu', 'navbar menu'],
         sections: [

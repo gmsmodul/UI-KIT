@@ -544,4 +544,5 @@ export type PageId =
   | 'analytics'
   | 'reports'
   | 'settings'
-  | 'uikit';
+  | 'uikit'
+  | 'profile';
