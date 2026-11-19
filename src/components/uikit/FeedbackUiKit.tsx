@@ -1057,14 +1057,17 @@ export const FeedbackUiKit: React.FC<FeedbackUiKitProps> = ({ activeSubJump }) =
               <button
                 type="button"
                 onClick={() => selectUiNode('feedback', 'Loading Animations', 'ldr-stage')}
-                className="px-3 py-1 rounded-full bg-[#121418] text-[#C6F135] text-xs font-semibold hover:brightness-110 cursor-pointer"
+                className="px-3 py-1 rounded-full bg-[#121418] dark:bg-[#1B1E24] border border-transparent dark:border-white/[0.12] text-[#C6F135] text-xs font-semibold hover:brightness-110 cursor-pointer"
               >
                 Buka 20 Loaders →
               </button>
             }
             codeSnippet={`<UiLoader variant="spinner-arc" size="lg" color="#C6F135" />\n<UiLoader variant="orbital-atom" size="lg" color="#C6F135" />`}
           >
-            <div className="rounded-xl bg-[#121418] border border-gray-900 p-4 flex flex-wrap items-center justify-around gap-4">
+            <div
+              data-dark-preserve="true"
+              className="rounded-xl bg-[#121418] border border-gray-900 dark:border-white/[0.10] p-4 flex flex-wrap items-center justify-around gap-4"
+            >
               {(
                 [
                   { id: 'spinner-arc', label: '1. Spinner Arc' },

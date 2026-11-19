@@ -9,6 +9,15 @@
     <meta property="og:description" content="UI KIT design system showcasing utilities, data display, data entry, feedback, tables, navigation, behavioral motion, and mobile UI kit components." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
+    <script>
+      try {
+        if (localStorage.getItem('uikit_theme_v1') === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.documentElement.dataset.theme = 'dark';
+          document.documentElement.style.colorScheme = 'dark';
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -5,7 +5,7 @@ export const UiKitCategorySkeleton: React.FC = () => {
   return (
     <UiSkeletonGroup label="Memuat komponen UI KIT" className="space-y-8">
       {/* Page Title & Quick Jump Header Skeleton */}
-      <div className="pb-4 border-b border-gray-200 space-y-3">
+      <div className="pb-4 border-b border-gray-200 dark:border-white/[0.08] space-y-3">
         <div className="flex items-center gap-2.5">
           <UiSkeleton variant="rounded" className="h-7 w-48 rounded-lg" />
           <UiSkeleton variant="circular" width={18} height={18} />
@@ -24,8 +24,8 @@ export const UiKitCategorySkeleton: React.FC = () => {
             <UiSkeleton variant="rounded" className="h-5 w-52 rounded-md" />
             <UiSkeleton variant="pill" className="h-7 w-28" />
           </div>
-          <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">
-            <div className="px-4 py-2.5 border-b border-gray-200 flex items-center gap-5">
+          <div className="rounded-xl border border-gray-200 dark:border-white/[0.10] bg-white dark:bg-[#15181E] overflow-hidden">
+            <div className="px-4 py-2.5 border-b border-gray-200 dark:border-white/[0.08] flex items-center gap-5">
               <UiSkeleton variant="text" className="h-3.5 w-12" />
               <UiSkeleton variant="text" className="h-3.5 w-10" />
               <UiSkeleton variant="text" className="h-3.5 w-12" />

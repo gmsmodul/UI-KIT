@@ -331,14 +331,14 @@ export const UiKitPage: React.FC = () => {
   const activeGroup = UI_KIT_CATALOG.find((g) => g.id === uiCategory) || UI_KIT_CATALOG[0];
 
   return (
-    <div className="ui-kit-root flex-1 min-h-0 flex flex-col overflow-y-auto md:overflow-hidden p-5 sm:p-7 gap-5 bg-white">
+    <div className="ui-kit-root flex-1 min-h-0 flex flex-col overflow-y-auto md:overflow-hidden p-5 sm:p-7 gap-5 bg-white dark:bg-[#121418] transition-colors duration-200">
       {/* Header Bar with Integrated UI Element Search */}
-      <div className="shrink-0 flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-gray-200">
+      <div className="shrink-0 flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-gray-200 dark:border-white/[0.08]">
         <div className="hidden md:block">
           <div className="text-[11px] font-bold uppercase tracking-wider text-[#ee2e65] mb-0.5">
             {activeGroup.categoryTitle}
           </div>
-          <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-gray-900">
+          <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-gray-900 dark:text-[#F3F4F6]">
             {activeGroup.label}
           </h1>
         </div>
@@ -382,7 +382,7 @@ export const UiKitPage: React.FC = () => {
               }}
               placeholder="Cari elemen UI..."
               aria-label="Cari elemen UI Design System"
-              className="w-full pl-9 pr-12 py-2 text-base sm:text-sm bg-gray-50/70 border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-500 focus:outline-none focus:bg-white focus:border-primary-500 transition-colors"
+              className="w-full pl-9 pr-12 py-2 text-base sm:text-sm bg-gray-50/70 dark:bg-[#181B21] border border-gray-300 dark:border-white/[0.12] rounded-lg text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-500 focus:outline-none focus:bg-white dark:focus:bg-[#1B1E24] focus:border-primary-500 transition-colors"
             />
             {searchQuery ? (
               <button
@@ -392,24 +392,24 @@ export const UiKitPage: React.FC = () => {
                   searchInputRef.current?.focus();
                 }}
                 aria-label="Hapus pencarian"
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 cursor-pointer"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/[0.08] cursor-pointer"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
             ) : (
-              <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[11px] font-mono font-medium text-gray-500 bg-gray-50 border border-gray-300 rounded absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none">
+              <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[11px] font-mono font-medium text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-[#121418] border border-gray-300 dark:border-white/[0.12] rounded absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none">
                 /
               </kbd>
             )}
 
             {/* Quick-Jump Search Results, Recent Search & Suggestion Search Popover */}
             {searchDropdownOpen && (
-              <div className="animate-ui-pop absolute left-0 right-0 top-full mt-1.5 bg-white/95 backdrop-blur-sm border border-gray-300 rounded-xl shadow-[0_16px_36px_-10px_rgba(15,23,42,0.16)] z-40 overflow-hidden max-h-96 overflow-y-auto custom-sidebar-scrollbar">
+              <div className="animate-ui-pop absolute left-0 right-0 top-full mt-1.5 bg-white/95 dark:bg-[#15181E]/95 backdrop-blur-sm border border-gray-300 dark:border-white/[0.12] rounded-xl shadow-[0_16px_36px_-10px_rgba(15,23,42,0.16)] dark:shadow-[0_20px_48px_-12px_rgba(0,0,0,0.72)] z-40 overflow-hidden max-h-96 overflow-y-auto custom-sidebar-scrollbar">
                 {!normalizedQuery ? (
                   <div className="p-2.5 space-y-3">
                     {/* Recent Searches */}
                     <div className="space-y-1.5">
-                      <div className="px-1.5 flex items-center justify-between text-[11px] font-semibold text-gray-500">
+                      <div className="px-1.5 flex items-center justify-between text-[11px] font-semibold text-gray-500 dark:text-gray-400">
                         <span className="inline-flex items-center gap-1.5">
                           <Clock className="w-3 h-3 text-gray-400" />
                           <span>Pencarian Terakhir</span>
@@ -427,7 +427,7 @@ export const UiKitPage: React.FC = () => {
                       </div>
 
                       {recentSearches.length === 0 ? (
-                        <div className="px-2.5 py-2 rounded-lg bg-gray-50/80 border border-dashed border-gray-200 text-[11px] text-gray-500">
+                        <div className="px-2.5 py-2 rounded-lg bg-gray-50/80 dark:bg-[#1B1E24] border border-dashed border-gray-200 dark:border-white/[0.10] text-[11px] text-gray-500 dark:text-gray-400">
                           Belum ada riwayat pencarian. Pilih saran di bawah atau ketik nama komponen.
                         </div>
                       ) : (
@@ -435,7 +435,7 @@ export const UiKitPage: React.FC = () => {
                           {recentSearches.map((rec) => (
                             <div
                               key={rec.id}
-                              className="group flex items-center justify-between gap-1.5 rounded-lg hover:bg-primary-50/60 transition-colors pr-1.5"
+                              className="group flex items-center justify-between gap-1.5 rounded-lg hover:bg-primary-50/60 dark:hover:bg-[#1B1E24] transition-colors pr-1.5"
                             >
                               <button
                                 type="button"
@@ -459,11 +459,11 @@ export const UiKitPage: React.FC = () => {
                               >
                                 <Clock className="w-3.5 h-3.5 text-gray-400 group-hover:text-[#ee2e65] shrink-0" />
                                 <div className="min-w-0 flex-1">
-                                  <div className="text-xs font-medium text-gray-800 truncate">
+                                  <div className="text-xs font-medium text-gray-800 dark:text-gray-100 truncate">
                                     {rec.query}
                                   </div>
                                   {(rec.groupLabel || rec.itemLabel) && (
-                                    <div className="text-[10.5px] text-gray-500 truncate">
+                                    <div className="text-[10.5px] text-gray-500 dark:text-gray-400 truncate">
                                       {[rec.groupLabel, rec.itemLabel, rec.sectionTitle]
                                         .filter(Boolean)
                                         .join(' / ')}
@@ -478,7 +478,7 @@ export const UiKitPage: React.FC = () => {
                                   e.stopPropagation();
                                   setRecentSearches(removeRecentSearch(rec.id));
                                 }}
-                                className="p-1 rounded-md text-gray-400 hover:text-gray-700 hover:bg-gray-100 cursor-pointer shrink-0"
+                                className="p-1 rounded-md text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/[0.08] cursor-pointer shrink-0"
                               >
                                 <X className="w-3 h-3" />
                               </button>
@@ -489,8 +489,8 @@ export const UiKitPage: React.FC = () => {
                     </div>
 
                     {/* Suggestion Searches */}
-                    <div className="space-y-1.5 pt-2 border-t border-gray-200/80">
-                      <div className="px-1.5 flex items-center gap-1.5 text-[11px] font-semibold text-gray-500">
+                    <div className="space-y-1.5 pt-2 border-t border-gray-200/80 dark:border-white/[0.08]">
+                      <div className="px-1.5 flex items-center gap-1.5 text-[11px] font-semibold text-gray-500 dark:text-gray-400">
                         <Sparkles className="w-3 h-3 text-[#ee2e65]" />
                         <span>Saran Pencarian</span>
                       </div>
@@ -511,7 +511,7 @@ export const UiKitPage: React.FC = () => {
                               )
                             }
                             title={sug.hint}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-gray-200 bg-gray-50/80 hover:bg-[#FEF1F5] hover:border-[#FBC2D4] hover:text-[#9D113C] text-[11.5px] font-medium text-gray-700 transition-colors cursor-pointer"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-gray-200 dark:border-white/[0.10] bg-gray-50/80 dark:bg-[#1B1E24] hover:bg-[#FEF1F5] dark:hover:bg-[#ee2e65]/15 hover:border-[#FBC2D4] dark:hover:border-[#ee2e65]/40 hover:text-[#9D113C] dark:hover:text-[#fbc2d4] text-[11.5px] font-medium text-gray-700 dark:text-gray-200 transition-colors cursor-pointer"
                           >
                             <span>{sug.label}</span>
                           </button>
@@ -524,10 +524,10 @@ export const UiKitPage: React.FC = () => {
                 ) : quickSearchResults.length === 0 ? (
                   <div className="p-3.5 space-y-3">
                     <div className="text-center space-y-1">
-                      <p className="text-xs font-medium text-gray-700">
+                      <p className="text-xs font-medium text-gray-700 dark:text-gray-200">
                         Elemen &ldquo;{searchQuery}&rdquo; tidak ditemukan.
                       </p>
-                      <p className="text-[11px] text-gray-500">
+                      <p className="text-[11px] text-gray-500 dark:text-gray-400">
                         Coba salah satu saran populer di bawah ini:
                       </p>
                     </div>
@@ -537,7 +537,7 @@ export const UiKitPage: React.FC = () => {
                           key={sug.id}
                           type="button"
                           onClick={() => setSearchQuery(sug.query)}
-                          className="px-2.5 py-1 rounded-full border border-[#FBC2D4] bg-[#FEF1F5] text-[11px] font-medium text-[#9D113C] hover:brightness-95 cursor-pointer"
+                          className="px-2.5 py-1 rounded-full border border-[#FBC2D4] dark:border-[#ee2e65]/35 bg-[#FEF1F5] dark:bg-[#ee2e65]/15 text-[11px] font-medium text-[#9D113C] dark:text-[#fbc2d4] hover:brightness-95 cursor-pointer"
                         >
                           {sug.label}
                         </button>
@@ -545,8 +545,8 @@ export const UiKitPage: React.FC = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="py-1.5 divide-y divide-gray-200 animate-ui-fade">
-                    <div className="px-3 py-1.5 flex items-center justify-between text-[11px] text-gray-500 font-medium bg-gray-50/70">
+                  <div className="py-1.5 divide-y divide-gray-200 dark:divide-white/[0.08] animate-ui-fade">
+                    <div className="px-3 py-1.5 flex items-center justify-between text-[11px] text-gray-500 dark:text-gray-400 font-medium bg-gray-50/70 dark:bg-[#1B1E24]">
                       <span>{quickSearchResults.length} hasil cocok</span>
                       <span className="inline-flex items-center gap-1">
                         <CornerDownLeft className="w-3 h-3" /> Enter untuk buka
@@ -563,19 +563,19 @@ export const UiKitPage: React.FC = () => {
                             sectionTitle: res.section?.title,
                           })
                         }
-                        className={`w-full px-3.5 py-2 text-left flex items-center justify-between gap-2 hover:bg-primary-50/60 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer ${
-                          idx === 0 ? 'bg-gray-50/50' : ''
+                        className={`w-full px-3.5 py-2 text-left flex items-center justify-between gap-2 hover:bg-primary-50/60 dark:hover:bg-[#1B1E24] transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer ${
+                          idx === 0 ? 'bg-gray-50/50 dark:bg-[#181B21]' : ''
                         }`}
                       >
                         <div className="min-w-0">
-                          <div className="text-xs font-semibold text-gray-900 truncate">
+                          <div className="text-xs font-semibold text-gray-900 dark:text-gray-100 truncate">
                             {res.section ? res.section.title : res.itemLabel}
                           </div>
-                          <div className="text-[11px] text-gray-500 truncate">
+                          <div className="text-[11px] text-gray-500 dark:text-gray-400 truncate">
                             {res.groupLabel} / {res.itemLabel}
                           </div>
                         </div>
-                        <span className="text-[11px] font-medium text-primary-600 shrink-0">
+                        <span className="text-[11px] font-medium text-primary-600 dark:text-[#f45d8e] shrink-0">
                           {res.section ? 'Bagian' : 'Komponen'}
                         </span>
                       </button>
@@ -602,13 +602,13 @@ export const UiKitPage: React.FC = () => {
         <button
           type="button"
           onClick={() => setMobileTocOpen(!mobileTocOpen)}
-          className="touch-target-44 w-full flex items-center justify-between px-4 py-2.5 bg-white rounded-lg border border-gray-300 text-sm font-medium text-gray-800 cursor-pointer shadow-2xs"
+          className="touch-target-44 w-full flex items-center justify-between px-4 py-2.5 bg-white dark:bg-[#15181E] rounded-lg border border-gray-300 dark:border-white/[0.12] text-sm font-medium text-gray-800 dark:text-gray-100 cursor-pointer shadow-2xs"
         >
           <div className="flex items-center gap-2 min-w-0">
             <ListFilter className="w-4 h-4 text-[#ee2e65] shrink-0" />
             <span className="truncate">{activeGroup.label} · {uiSubJump}</span>
           </div>
-          <span className="text-xs font-semibold text-[#9D113C] bg-[#FEF1F5] px-2 py-0.5 rounded-md shrink-0">
+          <span className="text-xs font-semibold text-[#9D113C] dark:text-[#fbc2d4] bg-[#FEF1F5] dark:bg-[#ee2e65]/15 px-2 py-0.5 rounded-md shrink-0">
             {mobileTocOpen ? 'Tutup' : 'Pilih'}
           </span>
         </button>
@@ -621,10 +621,10 @@ export const UiKitPage: React.FC = () => {
           ref={sidebarScrollRef}
           className={`${
             mobileTocOpen ? 'block animate-ui-slide-down' : 'hidden md:block'
-          } md:col-span-4 lg:col-span-3 xl:col-span-3 bg-white rounded-xl p-4 border border-gray-300/90 md:h-full max-h-[65vh] md:max-h-none overflow-y-auto custom-sidebar-scrollbar no-print`}
+          } md:col-span-4 lg:col-span-3 xl:col-span-3 bg-white dark:bg-[#15181E] rounded-xl p-4 border border-gray-300/90 dark:border-white/[0.08] md:h-full max-h-[65vh] md:max-h-none overflow-y-auto custom-sidebar-scrollbar no-print`}
         >
           {normalizedQuery && (
-            <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-gray-200">
+            <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-gray-200 dark:border-white/[0.08]">
               <span className="text-xs font-medium text-gray-500">Hasil Filter</span>
               <span className="text-[11px] font-semibold text-[#ee2e65] tabular-nums">
                 {filteredCatalog.reduce((acc, g) => acc + g.matchedItems.length, 0)} cocok
@@ -651,7 +651,7 @@ export const UiKitPage: React.FC = () => {
             <div ref={sidebarListRef} className="relative space-y-5">
               <span
                 aria-hidden="true"
-                className={`pointer-events-none absolute left-0 right-0 top-0 rounded-lg bg-[#FEF1F5]/90 shadow-[inset_2px_0_0_#ee2e65] transition-[transform,height,opacity] duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
+                className={`pointer-events-none absolute left-0 right-0 top-0 rounded-lg bg-[#FEF1F5]/90 dark:bg-[#ee2e65]/15 shadow-[inset_2px_0_0_#ee2e65] transition-[transform,height,opacity] duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
                   sidebarIndicator.ready ? 'opacity-100' : 'opacity-0'
                 }`}
                 style={{
@@ -668,12 +668,12 @@ export const UiKitPage: React.FC = () => {
                       onClick={() =>
                         handleSelectMultimediaNode(group.id, group.matchedItems[0].item.label)
                       }
-                      className="w-full flex items-center justify-between px-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500 hover:text-gray-800 transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] text-left cursor-pointer select-none"
+                      className="w-full flex items-center justify-between px-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] text-left cursor-pointer select-none"
                     >
                       <span className={`transition-colors duration-200 ${isGroupActive ? 'text-[#ee2e65]' : ''}`}>
                         {group.categoryTitle}
                       </span>
-                      <span className="text-[10.5px] font-semibold text-gray-500 tabular-nums">
+                      <span className="text-[10.5px] font-semibold text-gray-500 dark:text-gray-400 tabular-nums">
                         {group.matchedItems.length}
                       </span>
                     </button>
@@ -698,19 +698,19 @@ export const UiKitPage: React.FC = () => {
                               }}
                               className={`w-full text-left text-[13px] leading-relaxed font-semibold transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer py-1.5 px-2.5 rounded-lg flex items-center justify-between ${
                                 isSubActive
-                                  ? `text-[#9D113C] ${
+                                  ? `text-[#9D113C] dark:text-[#fbc2d4] ${
                                       sidebarIndicator.ready
                                         ? ''
-                                        : 'bg-[#FEF1F5]/90 shadow-[inset_2px_0_0_#ee2e65]'
+                                        : 'bg-[#FEF1F5]/90 dark:bg-[#ee2e65]/15 shadow-[inset_2px_0_0_#ee2e65]'
                                     }`
-                                  : 'text-gray-600 hover:text-gray-950 hover:bg-gray-50/80'
+                                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-950 dark:hover:text-white hover:bg-gray-50/80 dark:hover:bg-[#1B1E24]'
                               }`}
                             >
                               <span>{item.label}</span>
                             </button>
 
                             {normalizedQuery && matchedSections.length > 0 && (
-                              <div className="pl-3 flex flex-col space-y-0.5 border-l border-[#FBC2D4] ml-2.5 animate-ui-slide-down">
+                              <div className="pl-3 flex flex-col space-y-0.5 border-l border-[#FBC2D4] dark:border-[#ee2e65]/40 ml-2.5 animate-ui-slide-down">
                                 {matchedSections.map((sec) => (
                                   <button
                                     key={sec.id}
@@ -721,7 +721,7 @@ export const UiKitPage: React.FC = () => {
                                         setMobileTocOpen(false);
                                       }
                                     }}
-                                    className="text-left text-xs text-gray-500 hover:text-[#ee2e65] transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] py-0.5 px-1.5 rounded hover:bg-[#FEF1F5]/60 cursor-pointer truncate"
+                                    className="text-left text-xs text-gray-500 dark:text-gray-400 hover:text-[#ee2e65] transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] py-0.5 px-1.5 rounded hover:bg-[#FEF1F5]/60 dark:hover:bg-[#1B1E24] cursor-pointer truncate"
                                   >
                                     {sec.title}
                                   </button>
@@ -745,11 +745,11 @@ export const UiKitPage: React.FC = () => {
           className="md:col-span-8 lg:col-span-9 xl:col-span-9 md:h-full md:overflow-y-auto custom-sidebar-scrollbar md:pr-2 space-y-5 min-w-0 pb-[calc(1.75rem+env(safe-area-inset-bottom,0px))] md:pb-4"
         >
           {/* Minimalist Unboxed Breadcrumb & Prev/Next Controls */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-gray-200 no-print">
-            <div className="text-xs text-gray-600 flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-gray-200 dark:border-white/[0.08] no-print">
+            <div className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-2">
               <span>{activeGroup.label}</span>
-              <span className="text-gray-500">/</span>
-              <span className="text-gray-900 font-semibold">{uiSubJump}</span>
+              <span className="text-gray-500 dark:text-gray-500">/</span>
+              <span className="text-gray-900 dark:text-[#F3F4F6] font-semibold">{uiSubJump}</span>
             </div>
 
             <div className="flex items-center gap-1.5 text-xs">
@@ -757,7 +757,7 @@ export const UiKitPage: React.FC = () => {
                 type="button"
                 disabled={currentIdx <= 0}
                 onClick={() => handleStep(-1)}
-                className="group px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-700 hover:text-gray-900 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 cursor-pointer font-medium transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] whitespace-nowrap"
+                className="group px-3 py-1.5 rounded-full border border-gray-300 dark:border-white/[0.12] bg-white dark:bg-[#181B21] text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-[#1B1E24] disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 cursor-pointer font-medium transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] whitespace-nowrap"
               >
                 <ChevronLeft className="w-3.5 h-3.5 shrink-0 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:-translate-x-0.5" />
                 <span className="sm:hidden">Prev</span>
@@ -767,7 +767,7 @@ export const UiKitPage: React.FC = () => {
                 type="button"
                 disabled={currentIdx >= flatItems.length - 1}
                 onClick={() => handleStep(1)}
-                className="group px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-700 hover:text-gray-900 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 cursor-pointer font-medium transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] whitespace-nowrap"
+                className="group px-3 py-1.5 rounded-full border border-gray-300 dark:border-white/[0.12] bg-white dark:bg-[#181B21] text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-[#1B1E24] disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 cursor-pointer font-medium transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] whitespace-nowrap"
               >
                 <span className="sm:hidden">Next</span>
                 <span className="hidden sm:inline">Berikutnya</span>

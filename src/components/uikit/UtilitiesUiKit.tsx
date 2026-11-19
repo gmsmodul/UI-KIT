@@ -540,11 +540,11 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
             classesHint="bg-gray-900 bg-[#1C1D21] bg-slate-800 bg-primary-950"
             codeSnippet={`<div className="p-3.5 rounded-lg bg-gray-900 text-white">Dark Charcoal</div>`}
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-sm font-semibold">
-              <div className="p-3.5 rounded-lg bg-[#1C1D21] text-white">Carbon Dark</div>
-              <div className="p-3.5 rounded-lg bg-gray-900 text-white">Dark Charcoal</div>
-              <div className="p-3.5 rounded-lg bg-slate-800 text-white">Slate 800</div>
-              <div className="p-3.5 rounded-lg bg-primary-950 text-white">Deep Rose</div>
+            <div data-dark-preserve="true" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-sm font-semibold">
+              <div className="p-3.5 rounded-lg bg-[#1C1D21] text-white border border-white/10">Carbon Dark</div>
+              <div className="p-3.5 rounded-lg bg-gray-900 text-white border border-white/10">Dark Charcoal</div>
+              <div className="p-3.5 rounded-lg bg-slate-800 text-white border border-white/10">Slate 800</div>
+              <div className="p-3.5 rounded-lg bg-primary-950 text-white border border-white/10">Deep Rose</div>
             </div>
           </UiDocSection>
 
@@ -554,7 +554,7 @@ export const UtilitiesUiKit: React.FC<UtilitiesUiKitProps> = ({ activeSubJump })
             classesHint="bg-gray-50 bg-gray-100 bg-gray-200 bg-[#FEF1F5]"
             codeSnippet={`<div className="p-3.5 rounded-lg bg-gray-100 text-gray-800">Grey 100 Surface</div>`}
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-sm font-semibold">
+            <div data-dark-preserve="true" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-sm font-semibold">
               <div className="p-3.5 rounded-lg bg-gray-50 text-gray-700 border border-gray-300">Grey 50</div>
               <div className="p-3.5 rounded-lg bg-gray-100 text-gray-800 border border-gray-300">Grey 100 Surface</div>
               <div className="p-3.5 rounded-lg bg-gray-200 text-gray-900">Grey 200</div>

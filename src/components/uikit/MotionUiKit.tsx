@@ -11,9 +11,7 @@ import {
   ChevronDown,
   Smartphone,
   Monitor,
-  Layers,
   ShieldCheck,
-  Zap,
   Hand,
   CheckCircle2,
   Volume2,
@@ -99,6 +97,8 @@ export const MotionUiKit: React.FC = () => {
   const [springDirection, setSpringDirection] = useState<1 | -1>(1);
   const [accordionOpen, setAccordionOpen] = useState(true);
   const [activeSlideTab, setActiveSlideTab] = useState<number>(0);
+  const [simulateReduced, setSimulateReduced] = useState(false);
+  const [a11yMoved, setA11yMoved] = useState(false);
 
   const replayEntrance = (preset: EntrancePreset) => {
     setEntrancePreset(preset);
@@ -1075,7 +1075,7 @@ onAnimationComplete={() => playUiMotionSound('land', soundEnabled)}`}
       <UiDocSection
         id="mot-a11y"
         title="Reduced Motion & Compositor Architecture"
-        description="Aturan aksesibilitas otomatis dan isolasi properti transform agar tidak berbenturan dengan kelas utilitas Tailwind."
+        description="Uji langsung perilaku aksesibilitas prefers-reduced-motion beserta standar arsitektur CSS yang menjaga 60fps tanpa bentrok properti."
         classesHint="MotionConfig reducedMotion='user' | @media (prefers-reduced-motion: reduce)"
         codeSnippet={`<MotionConfig reducedMotion="user">
   <AppContent />
@@ -1087,38 +1087,126 @@ onAnimationComplete={() => playUiMotionSound('land', soundEnabled)}`}
   to   { opacity: 1; translate: 0 0;    filter: blur(0px); }
 }`}
       >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div className="rounded-xl border border-gray-300/90 bg-white p-4 space-y-1.5">
-            <div className="flex items-center gap-2 text-xs font-semibold text-gray-900">
-              <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <span>Reduced Motion Aman</span>
+        <div className="rounded-2xl border border-black/[0.12] dark:border-white/[0.10] bg-white dark:bg-[#181B21] overflow-hidden">
+          {/* Interactive Reduced Motion Bar */}
+          <div className="p-4 bg-[#FAFBFD] dark:bg-[#15181E] border-b border-black/[0.08] dark:border-white/[0.08] space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2 text-xs">
+                <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                <span className="font-semibold text-[#1C1D21] dark:text-[#F3F4F6]">
+                  Simulasi Reduced Motion
+                </span>
+                <span className="text-gray-400 dark:text-gray-600">·</span>
+                <span className="font-mono text-[11px] text-gray-500 dark:text-gray-400 tabular-nums">
+                  {simulateReduced ? '0.01ms (Instant Snap)' : '240ms ease-out + spring'}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <div className="inline-flex rounded-lg bg-gray-100 dark:bg-[#1B1E24] p-0.5 border border-black/[0.08] dark:border-white/[0.08] text-[11px]">
+                  <button
+                    type="button"
+                    onClick={() => setSimulateReduced(false)}
+                    className={`px-2.5 py-1 rounded-md font-semibold cursor-pointer transition-colors ${
+                      !simulateReduced
+                        ? 'bg-white dark:bg-[#252A34] text-gray-900 dark:text-[#F3F4F6] shadow-2xs'
+                        : 'text-gray-600 dark:text-gray-400'
+                    }`}
+                  >
+                    Normal
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSimulateReduced(true)}
+                    className={`px-2.5 py-1 rounded-md font-semibold cursor-pointer transition-colors ${
+                      simulateReduced
+                        ? 'bg-white dark:bg-[#252A34] text-gray-900 dark:text-[#F3F4F6] shadow-2xs'
+                        : 'text-gray-600 dark:text-gray-400'
+                    }`}
+                  >
+                    Reduced
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setA11yMoved((v) => !v);
+                    playUiMotionSound('tick', tinySound);
+                  }}
+                  className={ACTION_BTN_PRIMARY}
+                >
+                  <Play className="w-3 h-3" />
+                  <span>Uji Gerak</span>
+                </button>
+              </div>
             </div>
-            <p className="text-xs text-gray-500 leading-relaxed">
-              <code>&lt;MotionConfig reducedMotion=&quot;user&quot;&gt;</code> membungkus seluruh aplikasi dan{' '}
-              <code>@media (prefers-reduced-motion: reduce)</code> mematikan animasi, blur, serta depth scale menjadi <code>0.01ms</code>.
-            </p>
+
+            <div className="relative h-10 rounded-xl bg-white dark:bg-[#181B21] border border-black/[0.10] dark:border-white/[0.08] px-2 flex items-center overflow-hidden">
+              <div
+                style={{
+                  transform: a11yMoved ? 'translate3d(calc(100% - 7rem), 0, 0)' : 'translate3d(0, 0, 0)',
+                  transitionProperty: 'transform',
+                  transitionDuration: simulateReduced ? '0.01ms' : '240ms',
+                  transitionTimingFunction: 'cubic-bezier(0.23, 1, 0.32, 1)',
+                }}
+                className="w-full flex items-center"
+              >
+                <div className="h-7 w-28 px-3 rounded-lg bg-[#1C1D21] dark:bg-[#ee2e65] text-white text-[11px] font-semibold inline-flex items-center justify-center tabular-nums">
+                  <span>{simulateReduced ? 'Instant State' : 'Fluid Glide'}</span>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="rounded-xl border border-gray-300/90 bg-white p-4 space-y-1.5">
-            <div className="flex items-center gap-2 text-xs font-semibold text-gray-900">
-              <Layers className="w-4 h-4 text-[#ee2e65]" />
-              <span>Isolasi Properti CSS</span>
-            </div>
-            <p className="text-xs text-gray-500 leading-relaxed">
-              Semua keyframe memakai <code>translate</code> &amp; <code>scale</code> individu (bukan shorthand <code>transform</code>) agar tidak menimpa{' '}
-              <code>-translate-x-1/2</code> atau <code>rotate-180</code> Tailwind.
-            </p>
-          </div>
+          {/* Clean Hairline Architectural Spec Rows (No 3-Box Slop) */}
+          <div className="divide-y divide-black/[0.08] dark:divide-white/[0.08]">
+            {[
+              {
+                num: '01',
+                title: 'Aksesibilitas Reduced Motion',
+                summary:
+                  'Saat pengguna mengaktifkan preferensi kurangi gerak di OS, animasi, blur, dan efek skala turun otomatis ke transisi instan.',
+                token: 'MotionConfig · 0.01ms',
+              },
+              {
+                num: '02',
+                title: 'Isolasi Properti Transform CSS',
+                summary:
+                  'Keyframe menggunakan properti individual translate dan scale sehingga tidak menimpa utilitas posisi atau rotasi elemen lain.',
+                token: 'translate / scale',
+              },
+              {
+                num: '03',
+                title: 'Eksekusi Jalur Compositor GPU',
+                summary:
+                  'Transisi diprioritaskan pada transform, opacity, dan clip-path agar tetap 60fps tanpa memicu kalkulasi ulang tata letak.',
+                token: 'translate3d · 60fps',
+              },
+            ].map((spec) => (
+              <div
+                key={spec.num}
+                className="px-4 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-6"
+              >
+                <div className="flex items-start gap-3 min-w-0">
+                  <span className="text-[11px] font-mono font-semibold text-gray-400 dark:text-gray-500 pt-0.5 tabular-nums shrink-0">
+                    {spec.num}
+                  </span>
+                  <div className="min-w-0 space-y-0.5">
+                    <div className="text-xs font-semibold text-[#1C1D21] dark:text-[#F3F4F6]">
+                      {spec.title}
+                    </div>
+                    <p className="text-xs text-[#5A5D67] dark:text-gray-400 leading-relaxed">
+                      {spec.summary}
+                    </p>
+                  </div>
+                </div>
 
-          <div className="rounded-xl border border-gray-300/90 bg-white p-4 space-y-1.5">
-            <div className="flex items-center gap-2 text-xs font-semibold text-gray-900">
-              <Zap className="w-4 h-4 text-amber-500" />
-              <span>GPU Compositor First</span>
-            </div>
-            <p className="text-xs text-gray-500 leading-relaxed">
-              Transisi mengutamakan <code>translate3d</code>, <code>opacity</code>, <code>scale</code>, dan{' '}
-              <code>clipPath</code> untuk menjaga 60fps tanpa memicu reflow layout berlebih.
-            </p>
+                <code className="self-start sm:self-center shrink-0 px-2.5 py-1 rounded-md bg-gray-100 dark:bg-[#1B1E24] border border-black/[0.06] dark:border-white/[0.08] text-[11px] font-mono text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                  {spec.token}
+                </code>
+              </div>
+            ))}
           </div>
         </div>
       </UiDocSection>

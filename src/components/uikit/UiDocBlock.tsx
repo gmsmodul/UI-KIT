@@ -48,8 +48,8 @@ export const InfoPopover: React.FC<InfoPopoverProps> = ({ content, label }) => {
         aria-expanded={open}
         className={`w-[18px] h-[18px] rounded-full border inline-flex items-center justify-center text-[10px] font-semibold leading-none transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/30 ${
           open
-            ? 'border-primary-500 bg-primary-50 text-primary-600'
-            : 'border-gray-300 bg-white text-gray-500 hover:border-gray-400 hover:text-gray-800 hover:bg-gray-50'
+            ? 'border-primary-500 bg-primary-50 dark:bg-[#ee2e65]/15 text-primary-600 dark:text-[#f895b5]'
+            : 'border-gray-300 dark:border-white/[0.14] bg-white dark:bg-[#1B1E24] text-gray-500 dark:text-gray-400 hover:border-gray-400 dark:hover:border-white/25 hover:text-gray-800 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-[#232730]'
         }`}
       >
         ?
@@ -59,7 +59,7 @@ export const InfoPopover: React.FC<InfoPopoverProps> = ({ content, label }) => {
         <div
           role="dialog"
           aria-label={`Info ${label}`}
-          className="animate-ui-pop absolute left-0 top-full mt-2 w-72 sm:w-80 max-w-[calc(100vw-3rem)] rounded-xl border border-gray-300 bg-white/95 backdrop-blur-sm p-3.5 text-xs text-gray-600 leading-relaxed shadow-[0_14px_34px_-10px_rgba(15,23,42,0.14)] z-40"
+          className="animate-ui-pop absolute left-0 top-full mt-2 w-72 sm:w-80 max-w-[calc(100vw-3rem)] rounded-xl border border-gray-300 dark:border-white/[0.12] bg-white/95 dark:bg-[#15181E]/95 backdrop-blur-sm p-3.5 text-xs text-gray-600 dark:text-gray-300 leading-relaxed shadow-[0_14px_34px_-10px_rgba(15,23,42,0.14)] dark:shadow-[0_18px_40px_-10px_rgba(0,0,0,0.65)] z-40"
         >
           {content}
         </div>
@@ -91,9 +91,9 @@ export const UiDocPage: React.FC<UiDocPageProps> = ({
   return (
     <div className="space-y-8 print-section">
       {/* Minimalist Unboxed Page Header */}
-      <div className="pb-4 border-b border-gray-300/85 space-y-2.5">
+      <div className="pb-4 border-b border-gray-300/85 dark:border-white/[0.08] space-y-2.5">
         <div className="flex items-center gap-2">
-          <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 tracking-tight">{title}</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-[#F3F4F6] tracking-tight">{title}</h2>
           {description && <InfoPopover content={description} label={title} />}
         </div>
 
@@ -104,7 +104,7 @@ export const UiDocPage: React.FC<UiDocPageProps> = ({
                 key={link.id}
                 type="button"
                 onClick={() => scrollToSub(link.id)}
-                className="text-gray-500 hover:text-primary-600 transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer"
+                className="text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-[#ee2e65] transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer"
               >
                 {link.label}
               </button>
@@ -185,15 +185,15 @@ export const UiDocSection: React.FC<UiDocSectionProps> = ({
       {/* Minimalist Section Title + Optional ? Popover */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0">
-          <h3 className="text-[15px] font-semibold text-gray-900 tracking-tight">{title}</h3>
+          <h3 className="text-[15px] font-semibold text-gray-900 dark:text-[#F3F4F6] tracking-tight">{title}</h3>
           {description && <InfoPopover content={description} label={title} />}
         </div>
         {actions && <div className="flex flex-wrap items-center gap-1.5 shrink-0">{actions}</div>}
       </div>
 
-      {/* Single-elevation White Preview Container */}
-      <div className="rounded-xl border border-gray-300/90 bg-white overflow-hidden transition-shadow duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] hover:shadow-[0_6px_20px_-10px_rgba(15,23,42,0.08)]">
-        <div className="px-4 border-b border-gray-300 flex items-center justify-between gap-3 bg-white">
+      {/* Single-elevation Preview Container */}
+      <div className="rounded-xl border border-gray-300/90 dark:border-white/[0.10] bg-white dark:bg-[#15181E] overflow-hidden transition-shadow duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] hover:shadow-[0_6px_20px_-10px_rgba(15,23,42,0.08)] dark:hover:shadow-[0_10px_28px_-12px_rgba(0,0,0,0.65)]">
+        <div className="px-4 border-b border-gray-300 dark:border-white/[0.08] flex items-center justify-between gap-3 bg-white dark:bg-[#181B21]">
           <div ref={tabContainerRef} className="relative flex items-center gap-5 text-xs">
             <button
               ref={previewTabRef}
@@ -204,8 +204,8 @@ export const UiDocSection: React.FC<UiDocSectionProps> = ({
               }}
               className={`py-2.5 font-semibold transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer whitespace-nowrap ${
                 activeTab === 'preview'
-                  ? 'text-gray-900'
-                  : 'text-gray-500 hover:text-gray-800'
+                  ? 'text-gray-900 dark:text-white'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
               }`}
             >
               Preview
@@ -219,8 +219,8 @@ export const UiDocSection: React.FC<UiDocSectionProps> = ({
               }}
               className={`py-2.5 font-semibold transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer whitespace-nowrap ${
                 activeTab === 'react'
-                  ? 'text-gray-900'
-                  : 'text-gray-500 hover:text-gray-800'
+                  ? 'text-gray-900 dark:text-white'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
               }`}
             >
               React
@@ -235,8 +235,8 @@ export const UiDocSection: React.FC<UiDocSectionProps> = ({
                 }}
                 className={`py-2.5 font-semibold transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer whitespace-nowrap ${
                   activeTab === 'classes'
-                    ? 'text-gray-900'
-                    : 'text-gray-500 hover:text-gray-800'
+                    ? 'text-gray-900 dark:text-white'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
                 }`}
               >
                 Classes
@@ -260,7 +260,7 @@ export const UiDocSection: React.FC<UiDocSectionProps> = ({
                 title
               )
             }
-            className="inline-grid place-items-center text-xs font-medium text-gray-500 hover:text-gray-900 py-1 px-2 rounded-md hover:bg-gray-100 transition-colors duration-200 cursor-pointer whitespace-nowrap"
+            className="inline-grid place-items-center text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white py-1 px-2 rounded-md hover:bg-gray-100 dark:hover:bg-[#1B1E24] transition-colors duration-200 cursor-pointer whitespace-nowrap"
           >
             <span
               className={`[grid-area:1/1] inline-flex items-center gap-1.5 transition-opacity duration-150 ${
@@ -272,7 +272,7 @@ export const UiDocSection: React.FC<UiDocSectionProps> = ({
             </span>
             <span
               aria-hidden={!copied}
-              className={`[grid-area:1/1] inline-flex items-center gap-1.5 text-emerald-600 transition-opacity duration-150 ${
+              className={`[grid-area:1/1] inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 transition-opacity duration-150 ${
                 copied ? 'opacity-100' : 'opacity-0 invisible'
               }`}
             >
@@ -289,14 +289,18 @@ export const UiDocSection: React.FC<UiDocSectionProps> = ({
         )}
 
         {activeTab === 'react' && (
-          <div key="react" className="animate-ui-fade p-4 sm:p-5 bg-gray-950 text-gray-100 overflow-x-auto">
+          <div
+            key="react"
+            data-dark-preserve="true"
+            className="animate-ui-fade p-4 sm:p-5 bg-[#0E1014] text-gray-100 overflow-x-auto border-t border-white/[0.06]"
+          >
             <pre className="text-xs font-mono leading-relaxed whitespace-pre">{codeSnippet}</pre>
           </div>
         )}
 
         {activeTab === 'classes' && classesHint && (
-          <div key="classes" className="animate-ui-fade p-4 sm:p-5 bg-gray-50/70 text-xs font-mono text-gray-700">
-            <div className="p-3 rounded-lg bg-white border border-gray-300 break-words leading-relaxed">
+          <div key="classes" className="animate-ui-fade p-4 sm:p-5 bg-gray-50/70 dark:bg-[#121418] text-xs font-mono text-gray-700 dark:text-gray-300">
+            <div className="p-3 rounded-lg bg-white dark:bg-[#1B1E24] border border-gray-300 dark:border-white/[0.10] break-words leading-relaxed">
               {classesHint}
             </div>
           </div>

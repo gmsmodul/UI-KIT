@@ -235,18 +235,18 @@ export const Mobile375FixesUiKit: React.FC = () => {
       <UiDocSection
         id="m375-kpi"
         title="Fix 2 · Big Numbers (One Line, Capped Size)"
-        description="Di kartu KPI 2 kolom pada layar sempit (320–375px), font besar seperti `text-3xl` membuat tanda `+` atau simbol mata uang terpisah baris (`+€5.3M` terpotong ke 2 baris). Gunakan `.kpi-value` dengan `white-space: nowrap`, `tabular-nums`, dan `clamp(1.25rem, 5.5vw, 1.875rem)`."
-        classesHint=".kpi-value (nowrap + tabular-nums + clamp)"
+        description="Di kartu KPI 2 kolom pada layar sempit (320–375px), font besar seperti `text-3xl` membuat tanda `+` terpisah baris atau nilai panjang (`+Rp 14.8jt`) meluber keluar kartu. Bungkus kartu dengan `.kpi-container` (`container-type: inline-size`) dan gunakan `.kpi-value` agar ukuran huruf mengikuti lebar kartu (`clamp(1.0625rem, 12.5cqi, 1.875rem)`) serta terkunci 1 baris."
+        classesHint=".kpi-container + .kpi-value (nowrap + tabular-nums + cqi clamp)"
         actions={
           <div className="flex flex-wrap items-center gap-2">
-            <div className="inline-flex items-center rounded-full border border-gray-300 bg-gray-100/80 p-0.5 text-xs">
+            <div className="inline-flex items-center rounded-full border border-gray-300 dark:border-white/[0.12] bg-gray-100/80 dark:bg-[#1B1E24] p-0.5 text-xs">
               <button
                 type="button"
                 onClick={() => setKpiFrameWidth(320)}
                 className={`px-2.5 py-1 rounded-full font-medium tabular-nums whitespace-nowrap shrink-0 cursor-pointer transition-colors ${
                   kpiFrameWidth === 320
-                    ? 'bg-white text-gray-900 shadow-xs'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'bg-white dark:bg-[#252A34] text-gray-900 dark:text-[#F3F4F6] shadow-xs'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                 }`}
               >
                 320px
@@ -256,8 +256,8 @@ export const Mobile375FixesUiKit: React.FC = () => {
                 onClick={() => setKpiFrameWidth(375)}
                 className={`px-2.5 py-1 rounded-full font-medium tabular-nums whitespace-nowrap shrink-0 cursor-pointer transition-colors ${
                   kpiFrameWidth === 375
-                    ? 'bg-white text-gray-900 shadow-xs'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'bg-white dark:bg-[#252A34] text-gray-900 dark:text-[#F3F4F6] shadow-xs'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                 }`}
               >
                 375px
@@ -268,8 +268,8 @@ export const Mobile375FixesUiKit: React.FC = () => {
               onClick={() => setKpiFixActive((v) => !v)}
               className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium whitespace-nowrap shrink-0 cursor-pointer transition-colors ${
                 kpiFixActive
-                  ? 'border-emerald-300 bg-emerald-50 text-emerald-800'
-                  : 'border-rose-300 bg-rose-50 text-rose-800'
+                  ? 'border-emerald-300 dark:border-emerald-500/40 bg-emerald-50 dark:bg-emerald-500/15 text-emerald-800 dark:text-emerald-300'
+                  : 'border-rose-300 dark:border-rose-500/40 bg-rose-50 dark:bg-rose-500/15 text-rose-800 dark:text-rose-300'
               }`}
             >
               {kpiFixActive ? <CheckCircle2 className="w-3.5 h-3.5" /> : <AlertTriangle className="w-3.5 h-3.5" />}
@@ -278,51 +278,59 @@ export const Mobile375FixesUiKit: React.FC = () => {
           </div>
         }
         codeSnippet={`/* Global utility in src/index.css */
+.kpi-container {
+  container-type: inline-size;
+}
 .kpi-value {
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
-  font-size: clamp(1.25rem, 5.5vw, 1.875rem);
+  font-size: clamp(1.0625rem, 4.8vw, 1.875rem);
   line-height: 1.15;
 }
+.kpi-container .kpi-value {
+  font-size: clamp(1.0625rem, 12.5cqi, 1.875rem);
+}
 
-<p className="kpi-value font-bold text-gray-900">+€5.3M</p>`}
+<div className="kpi-container rounded-xl border p-3">
+  <p className="kpi-value font-bold text-gray-900">+Rp 14.8jt</p>
+</div>`}
       >
         <div
           style={{ maxWidth: `${kpiFrameWidth}px` }}
-          className="mx-auto w-full rounded-2xl border border-gray-300 bg-gray-50 p-3 transition-[max-width] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]"
+          className="mx-auto w-full rounded-2xl border border-gray-300 dark:border-white/[0.12] bg-gray-50 dark:bg-[#15181E] p-3 transition-[max-width] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]"
         >
-          <div className="flex items-center justify-between text-[11px] font-medium text-gray-600 mb-2.5">
-            <span className="tabular-nums">Card Container: {kpiFrameWidth}px (2-col grid)</span>
-            <span className={kpiFixActive ? 'text-emerald-700 font-semibold' : 'text-rose-700 font-semibold'}>
+          <div className="flex items-center justify-between gap-2 text-[11px] font-medium text-gray-600 dark:text-gray-400 mb-2.5">
+            <span className="tabular-nums truncate">Card Container: {kpiFrameWidth}px (2-col grid)</span>
+            <span className={`shrink-0 ${kpiFixActive ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : 'text-rose-700 dark:text-rose-400 font-semibold'}`}>
               {kpiFixActive ? '1 line locked' : 'Wraps on narrow width'}
             </span>
           </div>
           <div className="grid grid-cols-2 gap-2.5">
-            <div className="rounded-xl border border-gray-300/90 bg-white p-3 min-w-0">
-              <p className="text-[11px] font-medium text-gray-500">Net Growth</p>
+            <div className="kpi-container rounded-xl border border-gray-300/90 dark:border-white/[0.10] bg-white dark:bg-[#181B21] p-3 min-w-0 overflow-hidden">
+              <p className="text-[11px] font-medium text-gray-500 dark:text-gray-400 truncate">Net Growth</p>
               <p
                 className={
                   kpiFixActive
-                    ? 'mt-1.5 kpi-value font-bold text-gray-900 tracking-tight'
-                    : 'mt-1.5 text-[28px] leading-[1.08] font-bold text-gray-900 break-words'
+                    ? 'mt-1.5 kpi-value font-bold text-gray-900 dark:text-[#F3F4F6] tracking-tight'
+                    : 'mt-1.5 text-[28px] leading-[1.08] font-bold text-gray-900 dark:text-[#F3F4F6] break-words'
                 }
               >
                 {kpiFixActive ? '+€5.3M' : '+ €5.3 M'}
               </p>
-              <p className="mt-1 text-[11px] font-medium text-emerald-700 tabular-nums">+12.4% MoM</p>
+              <p className="mt-1 text-[11px] font-medium text-emerald-700 dark:text-emerald-400 tabular-nums truncate">+12.4% MoM</p>
             </div>
-            <div className="rounded-xl border border-gray-300/90 bg-white p-3 min-w-0">
-              <p className="text-[11px] font-medium text-gray-500">Tuition Total</p>
+            <div className="kpi-container rounded-xl border border-gray-300/90 dark:border-white/[0.10] bg-white dark:bg-[#181B21] p-3 min-w-0 overflow-hidden">
+              <p className="text-[11px] font-medium text-gray-500 dark:text-gray-400 truncate">Tuition Total</p>
               <p
                 className={
                   kpiFixActive
-                    ? 'mt-1.5 kpi-value font-bold text-gray-900 tracking-tight'
-                    : 'mt-1.5 text-[28px] leading-[1.08] font-bold text-gray-900 break-words'
+                    ? 'mt-1.5 kpi-value font-bold text-gray-900 dark:text-[#F3F4F6] tracking-tight'
+                    : 'mt-1.5 text-[28px] leading-[1.08] font-bold text-gray-900 dark:text-[#F3F4F6] break-words'
                 }
               >
                 +Rp 14.8jt
               </p>
-              <p className="mt-1 text-[11px] font-medium text-gray-600 tabular-nums">98.4% settled</p>
+              <p className="mt-1 text-[11px] font-medium text-gray-600 dark:text-gray-400 tabular-nums truncate">98.4% settled</p>
             </div>
           </div>
         </div>

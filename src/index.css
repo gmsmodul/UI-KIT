@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --color-primary-50: #fef1f5;
@@ -25,11 +26,20 @@ body {
    3. Touch targets >= 44px strictly for coarse pointers (mouse stays dense)
    4. Bottom bar & content safe-area padding via env(safe-area-inset-bottom)
    ========================================================================== */
+.kpi-container {
+  container-type: inline-size;
+}
+
 .kpi-value {
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
-  font-size: clamp(1.25rem, 5.5vw, 1.875rem);
+  font-size: clamp(1.0625rem, 4.8vw, 1.875rem);
   line-height: 1.15;
+  max-width: 100%;
+}
+
+.kpi-container .kpi-value {
+  font-size: clamp(1.0625rem, 12.5cqi, 1.875rem);
 }
 
 @media (max-width: 639px) {
@@ -119,6 +129,36 @@ body::-webkit-scrollbar-corner,
 }
 .custom-sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: #52545f;
+}
+
+.dark html::-webkit-scrollbar-track,
+.dark body::-webkit-scrollbar-track,
+.dark *:not(.no-scrollbar)::-webkit-scrollbar-track {
+  background: #181b21;
+}
+
+.dark html::-webkit-scrollbar-thumb,
+.dark body::-webkit-scrollbar-thumb,
+.dark *:not(.no-scrollbar)::-webkit-scrollbar-thumb {
+  background-color: #363b47;
+}
+
+.dark html::-webkit-scrollbar-thumb:hover,
+.dark body::-webkit-scrollbar-thumb:hover,
+.dark *:not(.no-scrollbar)::-webkit-scrollbar-thumb:hover {
+  background-color: #4b5263;
+}
+
+.dark .custom-sidebar-scrollbar::-webkit-scrollbar-track {
+  background: #15181e;
+}
+
+.dark .custom-sidebar-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #363b47;
+}
+
+.dark .custom-sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #4b5263;
 }
 
 /* Hide native scrollbars cleanly for custom slide/scroll indicator tracks */
@@ -584,6 +624,11 @@ body::-webkit-scrollbar-corner,
   background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 37%, #f3f4f6 63%);
   background-size: 200% 100%;
   animation: ui-shimmer 1.35s var(--ease-out) infinite;
+}
+
+.dark .ui-skeleton-shimmer {
+  background: linear-gradient(90deg, #1b1e24 25%, #262b34 37%, #1b1e24 63%);
+  background-size: 200% 100%;
 }
 
 /* ==========================================================================
@@ -1097,4 +1142,150 @@ body:has([data-modal-sheet-backdrop="true"]:not([data-closing="true"])) .app-she
     margin-bottom: 18px;
   }
 }
+
+/* ==========================================================================
+   Obsidian Dark Theme Layer (Base #121418 / Elevated #15181E & #1B1E24)
+   Applies across UI KIT showcases and modals while preserving explicit dark:*
+   classes and [data-dark-preserve="true"] swatch/stage blocks.
+   ========================================================================== */
+.dark body {
+  background-color: #0b0d10;
+  color: #f3f4f6;
+}
+
+.dark body:has([data-modal-sheet-backdrop="true"]:not([data-closing="true"])) .app-shell-container {
+  filter: brightness(0.88);
+}
+
+.dark :is(.ui-kit-root, [data-modal-sheet-backdrop="true"]) :is(
+  .bg-white,
+  .bg-white\/95,
+  .bg-white\/90,
+  .bg-white\/80,
+  .bg-white\/70
+):not([class*="dark:bg-"]):not([data-dark-preserve="true"]):not([data-dark-preserve="true"] *) {
+  background-color: #15181e;
+}
+
+.dark :is(.ui-kit-root, [data-modal-sheet-backdrop="true"]) :is(
+  .bg-gray-50,
+  .bg-gray-50\/70,
+  .bg-gray-50\/80,
+  .bg-gray-50\/50,
+  .bg-slate-50,
+  .bg-\[\#FAFBFD\],
+  .bg-\[\#F8F9FC\]
+):not([class*="dark:bg-"]):not([data-dark-preserve="true"]):not([data-dark-preserve="true"] *) {
+  background-color: #181b21;
+}
+
+.dark :is(.ui-kit-root, [data-modal-sheet-backdrop="true"]) :is(
+  .bg-gray-100,
+  .bg-gray-100\/80,
+  .bg-gray-100\/90,
+  .bg-gray-100\/70,
+  .bg-gray-200,
+  .bg-gray-200\/70,
+  .bg-slate-100,
+  .bg-\[\#F4F5F8\]
+):not([class*="dark:bg-"]):not([data-dark-preserve="true"]):not([data-dark-preserve="true"] *) {
+  background-color: #1b1e24;
+}
+
+.dark :is(.ui-kit-root, [data-modal-sheet-backdrop="true"]) :is(
+  .bg-\[\#FEF1F5\],
+  .bg-\[\#FEF1F5\]\/90,
+  .bg-\[\#FEF1F5\]\/60,
+  .bg-primary-50,
+  .bg-primary-50\/60
+):not([class*="dark:bg-"]):not([data-dark-preserve="true"]):not([data-dark-preserve="true"] *) {
+  background-color: rgba(238, 46, 101, 0.14);
+}
+
+.dark :is(.ui-kit-root, [data-modal-sheet-backdrop="true"]) :is(
+  .border-gray-100,
+  .border-gray-200,
+  .border-gray-200\/80,
+  .border-gray-300,
+  .border-gray-300\/90,
+  .border-gray-300\/85,
+  .border-slate-200,
+  .border-black\/\[0\.12\],
+  .border-black\/\[0\.14\],
+  .border-black\/\[0\.10\],
+  .border-black\/\[0\.08\]
+):not([class*="dark:border-"]):not([data-dark-preserve="true"]):not([data-dark-preserve="true"] *) {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark :is(.ui-kit-root, [data-modal-sheet-backdrop="true"]) :is(
+  .divide-gray-100,
+  .divide-gray-200,
+  .divide-gray-300
+):not([class*="dark:divide-"]):not([data-dark-preserve="true"]):not([data-dark-preserve="true"] *) > :not(:last-child) {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark :is(.ui-kit-root, [data-modal-sheet-backdrop="true"]) :is(
+  .text-gray-950,
+  .text-gray-900,
+  .text-slate-900,
+  .text-\[\#1C1D21\]
+):not([class*="dark:text-"]):not([data-dark-preserve="true"]):not([data-dark-preserve="true"] *) {
+  color: #f3f4f6;
+}
+
+.dark :is(.ui-kit-root, [data-modal-sheet-backdrop="true"]) :is(
+  .text-gray-800,
+  .text-gray-700,
+  .text-slate-700,
+  .text-slate-800
+):not([class*="dark:text-"]):not([data-dark-preserve="true"]):not([data-dark-preserve="true"] *) {
+  color: #d1d5db;
+}
+
+.dark :is(.ui-kit-root, [data-modal-sheet-backdrop="true"]) :is(
+  .text-gray-600,
+  .text-gray-500,
+  .text-gray-400,
+  .text-slate-500,
+  .text-\[\#5A5D67\],
+  .text-\[\#646772\]
+):not([class*="dark:text-"]):not([data-dark-preserve="true"]):not([data-dark-preserve="true"] *) {
+  color: #9ca3af;
+}
+
+.dark :is(.ui-kit-root, [data-modal-sheet-backdrop="true"]) :is(
+  .text-\[\#9D113C\],
+  .text-primary-800,
+  .text-primary-700
+):not([class*="dark:text-"]):not([data-dark-preserve="true"]):not([data-dark-preserve="true"] *) {
+  color: #fbc2d4;
+}
+
+.dark .ui-kit-root :is(
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+  textarea,
+  select
+):not([class*="dark:bg-"]):not([data-dark-preserve="true"]):not([data-dark-preserve="true"] *) {
+  background-color: #181b21;
+  color: #f3f4f6;
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.dark .ui-kit-root :is(
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+  textarea
+)::placeholder {
+  color: #6b7280;
+}
+
+.dark .ui-kit-root :is(.hover\:bg-gray-50, .hover\:bg-gray-50\/80, .hover\:bg-gray-100, .hover\:bg-gray-100\/90):hover:not([class*="dark:hover:"]):not([data-dark-preserve="true"]):not([data-dark-preserve="true"] *) {
+  background-color: #22262e;
+}
+
+.dark .ui-kit-root .hover\:text-gray-900:hover:not([class*="dark:hover:"]):not([data-dark-preserve="true"]):not([data-dark-preserve="true"] *) {
+  color: #ffffff;
+}
+
 

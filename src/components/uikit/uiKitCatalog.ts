@@ -264,6 +264,25 @@ export const UI_KIT_CATALOG: UiKitCategoryGroup[] = [
         ],
       },
       {
+        label: 'KPI Card',
+        keywords: ['kpi', 'kpi card', 'metric', 'statistik', 'trend', 'sparkline', 'target', 'dashboard card', 'angka'],
+        sections: [
+          { id: 'kpi-standard', title: 'Metric Grid & Timeframe' },
+          { id: 'kpi-sparkline', title: 'Sparkline Trend Card' },
+          { id: 'kpi-target', title: 'Target & Progress Card' },
+          { id: 'kpi-compact', title: 'Compact Split & Pastel KPI' },
+        ],
+      },
+      {
+        label: 'Card Article',
+        keywords: ['card article', 'artikel', 'blog card', 'editorial', 'berita', 'news card', 'reading time', 'bookmark'],
+        sections: [
+          { id: 'art-vertical', title: 'Vertical Editorial Cards' },
+          { id: 'art-horizontal', title: 'Horizontal Feed Article' },
+          { id: 'art-featured', title: 'Featured Split Article' },
+        ],
+      },
+      {
         label: 'Carousel',
         keywords: ['slider', 'swiper', 'galeri', 'slide', 'widening', 'meter'],
         sections: [
@@ -953,6 +972,15 @@ export const UI_KIT_CATALOG: UiKitCategoryGroup[] = [
         ],
       },
       { label: 'Toolbar', keywords: ['bilah alat', 'aksi', 'grouped'] },
+      {
+        label: 'Quick Access',
+        keywords: ['quick access', 'akses cepat', 'shortcut', 'pintasan', 'launcher', 'pinned', 'recent'],
+        sections: [
+          { id: 'qa-tiles', title: 'Shortcut Tiles Grid' },
+          { id: 'qa-pinned-recent', title: 'Pinned & Recent Launcher' },
+          { id: 'qa-strip', title: 'Compact Quick Action Strip' },
+        ],
+      },
     ],
   },
   {
@@ -1192,10 +1220,24 @@ export const UI_KIT_CATALOG: UiKitCategoryGroup[] = [
       },
       {
         label: 'Mobile Gestures & Slide',
-        keywords: ['mobile', 'pull to refresh', 'elastic', 'slide indicator', 'swipe', 'gestur', 'pagetransition', 'depth'],
+        keywords: [
+          'mobile',
+          'pull to refresh',
+          'elastic',
+          'slide indicator',
+          'swipe',
+          'gestur',
+          'gliding',
+          'sliding',
+          'motion gliding',
+          'swipe card',
+          'pagetransition',
+          'depth',
+        ],
         sections: [
           { id: 'mgs-ptr', title: 'Elastic Header Pull to Refresh' },
-          { id: 'mgs-slide', title: 'Horizontal Slide Indicator (Pengganti Scrollbar)' },
+          { id: 'mgs-slide', title: 'Horizontal Slide & Gliding Pill' },
+          { id: 'mgs-glide', title: 'Motion Gliding & Swipe Deck' },
           { id: 'mgs-transition-depth', title: 'Responsive PageTransition & Sheet Pull-Back' },
         ],
       },

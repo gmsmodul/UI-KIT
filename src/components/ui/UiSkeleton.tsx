@@ -40,7 +40,7 @@ export const UiSkeleton: React.FC<UiSkeletonProps> = ({
   style,
   ariaLabel,
 }) => {
-  const shimmerClass = animated ? 'ui-skeleton-shimmer' : 'bg-gray-200';
+  const shimmerClass = animated ? 'ui-skeleton-shimmer' : 'bg-gray-200 dark:bg-[#1B1E24]';
 
   if (lines > 1) {
     const count = Math.max(1, Math.floor(lines));
@@ -129,7 +129,7 @@ export const UiSkeletonCard: React.FC<UiSkeletonCardProps> = ({
   return (
     <UiSkeletonGroup
       label="Memuat kartu..."
-      className={`rounded-xl border border-gray-300 bg-white p-4 space-y-3 ${className}`}
+      className={`rounded-xl border border-gray-300 dark:border-white/[0.10] bg-white dark:bg-[#15181E] p-4 space-y-3 ${className}`}
     >
       {showMedia && (
         <UiSkeleton variant="rounded" className="h-28 w-full rounded-lg" animated={animated} />
@@ -185,7 +185,7 @@ export const UiSkeletonList: React.FC<UiSkeletonListProps> = ({
       {Array.from({ length: rows }).map((_, idx) => (
         <div
           key={idx}
-          className="flex items-center gap-3 p-3 rounded-xl border border-gray-300 bg-white"
+          className="flex items-center gap-3 p-3 rounded-xl border border-gray-300 dark:border-white/[0.10] bg-white dark:bg-[#15181E]"
         >
           {showAvatar && (
             <UiSkeleton variant="rounded" className="w-9 h-9 rounded-lg" animated={animated} />
@@ -228,9 +228,9 @@ export const UiSkeletonTable: React.FC<UiSkeletonTableProps> = ({
   return (
     <UiSkeletonGroup
       label="Memuat tabel..."
-      className={`border border-gray-300 rounded-xl overflow-hidden bg-white ${className}`}
+      className={`border border-gray-300 dark:border-white/[0.10] rounded-xl overflow-hidden bg-white dark:bg-[#15181E] ${className}`}
     >
-      <div className="px-4 py-2.5 bg-gray-50 border-b border-gray-300 flex items-center justify-between gap-3">
+      <div className="px-4 py-2.5 bg-gray-50 dark:bg-[#181B21] border-b border-gray-300 dark:border-white/[0.08] flex items-center justify-between gap-3">
         {Array.from({ length: safeCols }).map((_, cIdx) => (
           <UiSkeleton
             key={cIdx}
@@ -240,7 +240,7 @@ export const UiSkeletonTable: React.FC<UiSkeletonTableProps> = ({
           />
         ))}
       </div>
-      <div className="divide-y divide-gray-200">
+      <div className="divide-y divide-gray-200 dark:divide-white/[0.08]">
         {Array.from({ length: rows }).map((_, rIdx) => (
           <div key={rIdx} className="px-4 py-3 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5 min-w-0 flex-1">
@@ -304,8 +304,8 @@ export const UiSkeletonSearchPanel: React.FC<UiSkeletonSearchPanelProps> = ({
                   key={idx}
                   className={`flex items-center justify-between gap-2.5 ${
                     isSheet
-                      ? 'px-3.5 py-2.5 rounded-2xl bg-[#FAFBFD] border border-black/[0.08]'
-                      : 'px-2.5 py-2 rounded-lg bg-gray-50/70'
+                      ? 'px-3.5 py-2.5 rounded-2xl bg-[#FAFBFD] dark:bg-[#1B1E24] border border-black/[0.08] dark:border-white/[0.08]'
+                      : 'px-2.5 py-2 rounded-lg bg-gray-50/70 dark:bg-[#1B1E24]'
                   }`}
                 >
                   <div className="flex items-center gap-2.5 flex-1 min-w-0">
@@ -349,8 +349,8 @@ export const UiSkeletonSearchPanel: React.FC<UiSkeletonSearchPanelProps> = ({
                 key={idx}
                 className={`flex items-center justify-between gap-3 ${
                   isSheet
-                    ? 'px-3.5 py-2.5 rounded-2xl bg-[#FAFBFD] border border-black/[0.08]'
-                    : 'px-3 py-2 rounded-lg border border-gray-200/80 bg-white'
+                    ? 'px-3.5 py-2.5 rounded-2xl bg-[#FAFBFD] dark:bg-[#1B1E24] border border-black/[0.08] dark:border-white/[0.08]'
+                    : 'px-3 py-2 rounded-lg border border-gray-200/80 dark:border-white/[0.08] bg-white dark:bg-[#181B21]'
                 }`}
               >
                 <div className="flex-1 min-w-0 space-y-1.5">

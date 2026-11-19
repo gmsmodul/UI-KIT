@@ -34,6 +34,7 @@ import { ElasticPullToRefresh } from '../ui/ElasticPullToRefresh';
 import { MotionUiKit } from './MotionUiKit';
 import { AppOptimizationUiKit } from './AppOptimizationUiKit';
 import { GanttChartUiKit } from './GanttChartUiKit';
+import { QuickAccessUiKit } from './QuickAccessUiKit';
 
 interface OtherMultimediaUiKitProps {
   activeSubJump?: string;
@@ -1360,6 +1361,10 @@ export const OtherMultimediaUiKit: React.FC<OtherMultimediaUiKitProps> = ({ acti
 
       {(category === 'all' || category === 'navigation') && isVisible('mobilebottomnav') && (
         <MobileNavUiKitDemo />
+      )}
+
+      {(category === 'all' || category === 'navigation') && isVisible('quickaccess') && (
+        <QuickAccessUiKit />
       )}
 
       {/* ========================================================= */}

@@ -65,7 +65,7 @@ export const LoadingAnimationsUiKit: React.FC = () => {
         classesHint="<UiLoader variant='spinner-arc' size='xl' color='#C6F135' />"
         actions={
           <div className="flex flex-wrap items-center gap-1.5">
-            <div className="inline-flex items-center gap-1 rounded-full border border-gray-300 bg-gray-100/80 px-2 py-1">
+            <div className="inline-flex items-center gap-1 rounded-full border border-gray-300 dark:border-white/[0.12] bg-gray-100/80 dark:bg-[#1B1E24] px-2 py-1">
               {ACCENT_PALETTES.map((p) => (
                 <button
                   key={p.id}
@@ -74,7 +74,7 @@ export const LoadingAnimationsUiKit: React.FC = () => {
                   aria-label={`Warna aksen ${p.label}`}
                   onClick={() => setAccentId(p.id)}
                   className={`w-4 h-4 rounded-full transition-transform cursor-pointer ${
-                    accentId === p.id ? 'ring-2 ring-gray-900 ring-offset-1 scale-110' : 'opacity-80 hover:opacity-100'
+                    accentId === p.id ? 'ring-2 ring-gray-900 dark:ring-white ring-offset-1 dark:ring-offset-[#1B1E24] scale-110' : 'opacity-80 hover:opacity-100'
                   }`}
                   style={{ backgroundColor: p.color }}
                 />
@@ -86,8 +86,8 @@ export const LoadingAnimationsUiKit: React.FC = () => {
               onClick={() => setAutoCycle((prev) => !prev)}
               className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold transition-colors cursor-pointer ${
                 autoCycle
-                  ? 'bg-gray-900 text-white border-gray-900'
-                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  ? 'bg-gray-900 dark:bg-[#C6F135] text-white dark:text-[#121418] border-gray-900 dark:border-[#C6F135]'
+                  : 'bg-white dark:bg-[#1B1E24] text-gray-700 dark:text-gray-200 border-gray-300 dark:border-white/[0.12] hover:bg-gray-50 dark:hover:bg-[#232730]'
               }`}
             >
               {autoCycle ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
@@ -99,7 +99,10 @@ export const LoadingAnimationsUiKit: React.FC = () => {
       >
         <div className="space-y-5">
           {/* Dark macOS Showcase Window matching the reel layout */}
-          <div className="rounded-2xl overflow-hidden border border-gray-900/90 bg-[#121418] shadow-[0_20px_50px_-16px_rgba(15,23,42,0.45)]">
+          <div
+            data-dark-preserve="true"
+            className="rounded-2xl overflow-hidden border border-gray-900/90 dark:border-white/[0.12] bg-[#121418] shadow-[0_20px_50px_-16px_rgba(15,23,42,0.45)] dark:shadow-[0_24px_56px_-16px_rgba(0,0,0,0.75)]"
+          >
             {/* Window Titlebar */}
             <div className="px-4 py-3 bg-[#1B1E24] border-b border-white/[0.07] flex items-center justify-between gap-3">
               <div className="flex items-center gap-1.5 shrink-0">
@@ -173,14 +176,14 @@ export const LoadingAnimationsUiKit: React.FC = () => {
                   }}
                   className={`flex items-center justify-between gap-3 px-3 py-2 rounded-xl border text-left transition-all cursor-pointer ${
                     isSelected
-                      ? 'bg-[#121418] text-white border-[#121418] shadow-xs'
-                      : 'bg-gray-50/70 hover:bg-gray-100/90 text-gray-800 border-gray-200/80'
+                      ? 'bg-[#121418] dark:bg-[#1B1E24] text-white border-[#121418] dark:border-[#C6F135]/60 shadow-xs'
+                      : 'bg-gray-50/70 dark:bg-[#121418] hover:bg-gray-100/90 dark:hover:bg-[#1B1E24] text-gray-800 dark:text-gray-200 border-gray-200/80 dark:border-white/[0.08]'
                   }`}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
                     <span
                       className={`w-6 text-xs font-bold tabular-nums shrink-0 ${
-                        isSelected ? 'text-[#C6F135]' : 'text-gray-500'
+                        isSelected ? 'text-[#C6F135]' : 'text-gray-500 dark:text-gray-400'
                       }`}
                     >
                       {item.num}.
@@ -189,7 +192,7 @@ export const LoadingAnimationsUiKit: React.FC = () => {
                   </div>
                   <span
                     className={`text-[10.5px] font-mono shrink-0 ${
-                      isSelected ? 'text-gray-300' : 'text-gray-500'
+                      isSelected ? 'text-gray-300' : 'text-gray-500 dark:text-gray-400'
                     }`}
                   >
                     {item.id}
@@ -221,11 +224,12 @@ export const LoadingAnimationsUiKit: React.FC = () => {
                   setSelectedId(item.id);
                   document.getElementById('ldr-stage')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }}
-                className={`group rounded-xl p-3 bg-[#15181E] border text-left transition-all flex flex-col items-center justify-between gap-3 cursor-pointer ${
+                className={`group rounded-xl p-3 bg-[#15181E] dark:bg-[#121418] border text-left transition-all flex flex-col items-center justify-between gap-3 cursor-pointer ${
                   isSelected
                     ? 'border-[#C6F135] ring-2 ring-[#C6F135]/30'
-                    : 'border-gray-800 hover:border-gray-600 hover:-translate-y-0.5'
+                    : 'border-gray-800 dark:border-white/[0.10] hover:border-gray-600 dark:hover:border-white/25 hover:-translate-y-0.5'
                 }`}
+                data-dark-preserve="true"
               >
                 <div className="w-full flex items-center justify-between text-[10px] font-mono text-gray-400">
                   <span className={isSelected ? 'text-[#C6F135] font-bold' : ''}>
@@ -302,8 +306,8 @@ export const LoadingAnimationsUiKit: React.FC = () => {
               <UiLoader
                 variant="elastic-ring"
                 size="sm"
-                color="#1C1D21"
-                trackColor="#E5E7EB"
+                color="currentColor"
+                trackColor="rgba(156,163,175,0.28)"
               />
             </div>
           </div>

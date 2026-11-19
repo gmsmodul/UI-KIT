@@ -33,20 +33,20 @@ const DemoModalSheet: React.FC<{
       <div
         ref={setSheetElement}
         {...sheetGestureProps}
-        className="w-full sm:max-w-lg bg-white rounded-t-[28px] sm:rounded-[26px] p-6 space-y-4 shadow-2xl animate-bottom-sheet"
+        className="w-full sm:max-w-lg bg-white dark:bg-[#15181E] border border-transparent dark:border-white/[0.10] rounded-t-[28px] sm:rounded-[26px] p-6 space-y-4 shadow-2xl animate-bottom-sheet"
       >
         <div
           data-sheet-handle="true"
           className="sm:hidden flex justify-center py-2 -mt-3 -mb-1 cursor-grab active:cursor-grabbing touch-none"
         >
-          <div className="w-10 h-1 bg-black/20 rounded-full animate-sheet-handle" />
+          <div className="w-10 h-1 bg-black/20 dark:bg-white/25 rounded-full animate-sheet-handle" />
         </div>
-        <div className="flex items-center justify-between pb-3 border-b border-black/[0.12]">
+        <div className="flex items-center justify-between pb-3 border-b border-black/[0.12] dark:border-white/[0.08]">
           <div>
             <span className="text-[10.5px] font-bold uppercase text-[#ee2e65]">
               Modal Variant · {variant.toUpperCase()}
             </span>
-            <h3 className="text-[17px] font-semibold text-[#1C1D21]">
+            <h3 className="text-[17px] font-semibold text-[#1C1D21] dark:text-[#F3F4F6]">
               {variant === 'scroll'
                 ? 'Scrolling Long Content Modal'
                 : variant === 'centered'
@@ -56,7 +56,7 @@ const DemoModalSheet: React.FC<{
           </div>
           <button
             onClick={animateClose}
-            className="w-8 h-8 rounded-full hover:bg-[#F4F5F8] hover:rotate-90 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-95 flex items-center justify-center cursor-pointer"
+            className="w-8 h-8 rounded-full text-gray-600 dark:text-gray-300 hover:bg-[#F4F5F8] dark:hover:bg-[#1B1E24] hover:rotate-90 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-95 flex items-center justify-center cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -130,7 +130,7 @@ const DrawerSpecSheet: React.FC<{
       <div
         ref={isBottomDrawer ? setSheetElement : undefined}
         {...(isBottomDrawer ? sheetGestureProps : {})}
-        className={`bg-white shadow-2xl p-6 flex flex-col justify-between transition-all duration-[260ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
+        className={`bg-white dark:bg-[#15181E] border border-transparent dark:border-white/[0.10] shadow-2xl p-6 flex flex-col justify-between transition-all duration-[260ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
           spec.dir === 'left'
             ? 'w-80 max-w-[85vw] h-full mr-auto rounded-r-[28px] animate-ui-drawer-left'
             : spec.dir === 'right'
@@ -146,19 +146,19 @@ const DrawerSpecSheet: React.FC<{
               data-sheet-handle="true"
               className="flex justify-center py-2 -mt-3 -mb-1 cursor-grab active:cursor-grabbing touch-none"
             >
-              <div className="w-10 h-1 bg-black/20 rounded-full animate-sheet-handle" />
+              <div className="w-10 h-1 bg-black/20 dark:bg-white/25 rounded-full animate-sheet-handle" />
             </div>
           )}
-          <div className="flex items-center justify-between pb-3 border-b border-black/[0.12]">
+          <div className="flex items-center justify-between pb-3 border-b border-black/[0.12] dark:border-white/[0.08]">
             <div>
               <span className="text-[10.5px] font-bold uppercase text-[#ee2e65]">
                 {spec.type} · {spec.dir.toUpperCase()} Placement
               </span>
-              <h3 className="text-[17px] font-semibold text-[#1C1D21]">UI KIT {spec.dir} Panel</h3>
+              <h3 className="text-[17px] font-semibold text-[#1C1D21] dark:text-[#F3F4F6]">UI KIT {spec.dir} Panel</h3>
             </div>
             <button
               onClick={handleClose}
-              className="w-8 h-8 rounded-full hover:bg-[#F4F5F8] hover:rotate-90 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-95 flex items-center justify-center cursor-pointer"
+              className="w-8 h-8 rounded-full text-gray-600 dark:text-gray-300 hover:bg-[#F4F5F8] dark:hover:bg-[#1B1E24] hover:rotate-90 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-95 flex items-center justify-center cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -206,22 +206,24 @@ const SweetAlertSheet: React.FC<{
         ref={setSheetElement}
         {...sheetGestureProps}
         onClick={(e) => e.stopPropagation()}
-        className="w-full sm:max-w-sm bg-white rounded-t-[28px] sm:rounded-[26px] p-6 text-center space-y-3 shadow-2xl animate-bottom-sheet"
+        className="w-full sm:max-w-sm bg-white dark:bg-[#15181E] border border-transparent dark:border-white/[0.10] rounded-t-[28px] sm:rounded-[26px] p-6 text-center space-y-3 shadow-2xl animate-bottom-sheet"
       >
         <div
           data-sheet-handle="true"
           className="sm:hidden flex justify-center py-2 -mt-3 -mb-1 cursor-grab active:cursor-grabbing touch-none"
         >
-          <div className="w-10 h-1 bg-black/20 rounded-full animate-sheet-handle" />
+          <div className="w-10 h-1 bg-black/20 dark:bg-white/25 rounded-full animate-sheet-handle" />
         </div>
         <div
           className={`animate-ui-check w-12 h-12 rounded-full mx-auto flex items-center justify-center ${
-            type === 'success' ? 'bg-[#E6F9F0] text-[#10B981]' : 'bg-[#FFECEB] text-[#EF4444]'
+            type === 'success'
+              ? 'bg-[#E6F9F0] dark:bg-emerald-500/15 text-[#10B981]'
+              : 'bg-[#FFECEB] dark:bg-rose-500/15 text-[#EF4444]'
           }`}
         >
           {type === 'success' ? <CheckCircle2 className="w-6 h-6" /> : <AlertTriangle className="w-6 h-6" />}
         </div>
-        <h3 className="text-[17px] font-bold text-[#1C1D21]">
+        <h3 className="text-[17px] font-bold text-[#1C1D21] dark:text-[#F3F4F6]">
           {type === 'success' ? 'Good job!' : 'Are you sure?'}
         </h3>
         <p className="text-[12.5px] text-[#5A5D67]">
@@ -279,17 +281,17 @@ const SessionTimeoutSheet: React.FC<{
         ref={setSheetElement}
         {...sheetGestureProps}
         onClick={(e) => e.stopPropagation()}
-        className="w-full sm:max-w-sm bg-white rounded-t-[28px] sm:rounded-[26px] p-6 space-y-3 shadow-2xl animate-bottom-sheet"
+        className="w-full sm:max-w-sm bg-white dark:bg-[#15181E] border border-transparent dark:border-white/[0.10] rounded-t-[28px] sm:rounded-[26px] p-6 space-y-3 shadow-2xl animate-bottom-sheet"
       >
         <div
           data-sheet-handle="true"
           className="sm:hidden flex justify-center py-2 -mt-3 -mb-1 cursor-grab active:cursor-grabbing touch-none"
         >
-          <div className="w-10 h-1 bg-black/20 rounded-full animate-sheet-handle" />
+          <div className="w-10 h-1 bg-black/20 dark:bg-white/25 rounded-full animate-sheet-handle" />
         </div>
-        <div className="flex items-center gap-2.5 text-[#8C5811]">
+        <div className="flex items-center gap-2.5 text-[#8C5811] dark:text-amber-400">
           <Clock className="w-5 h-5" />
-          <h3 className="text-[16px] font-bold text-[#1C1D21]">Session Timeout Warning</h3>
+          <h3 className="text-[16px] font-bold text-[#1C1D21] dark:text-[#F3F4F6]">Session Timeout Warning</h3>
         </div>
         <p className="text-[12.5px] text-[#5A5D67]">
           Your UI KIT workspace session will automatically lock in <strong>00:59</strong> due to inactivity.

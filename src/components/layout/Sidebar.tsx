@@ -98,7 +98,7 @@ export const Sidebar: React.FC = () => {
 
   return (
     <aside
-      className={`hidden md:flex md:static inset-y-0 left-0 z-50 h-full max-h-full overflow-hidden shrink-0 flex-col transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] bg-transparent backdrop-blur-md border-r border-black/[0.12] ${
+      className={`hidden md:flex md:static inset-y-0 left-0 z-50 h-full max-h-full overflow-hidden shrink-0 flex-col transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] bg-transparent backdrop-blur-md border-r border-black/[0.12] dark:border-white/[0.08] ${
         sidebarOpen ? 'w-[260px]' : 'w-[84px]'
       } p-4 select-none`}
     >
@@ -114,10 +114,10 @@ export const Sidebar: React.FC = () => {
           </div>
           {sidebarOpen && (
             <div className="min-w-0 text-left">
-              <span className="block font-semibold text-[16px] tracking-tight text-[#1C1D21] leading-tight">
+              <span className="block font-semibold text-[16px] tracking-tight text-[#1C1D21] dark:text-[#F3F4F6] leading-tight">
                 UI KIT
               </span>
-              <span className="block text-[10.5px] font-medium text-[#646772] leading-tight">
+              <span className="block text-[10.5px] font-medium text-[#646772] dark:text-gray-400 leading-tight">
                 Design System
               </span>
             </div>
@@ -126,7 +126,7 @@ export const Sidebar: React.FC = () => {
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           title="Toggle Sidebar"
-          className="hidden md:flex w-8 h-8 rounded-lg hover:bg-black/5 items-center justify-center text-[#5A5D67] transition-colors cursor-pointer shrink-0"
+          className="hidden md:flex w-8 h-8 rounded-lg hover:bg-black/5 dark:hover:bg-white/[0.06] items-center justify-center text-[#5A5D67] dark:text-gray-400 transition-colors cursor-pointer shrink-0"
         >
           <PanelLeft className="w-4 h-4" />
         </button>
@@ -142,7 +142,7 @@ export const Sidebar: React.FC = () => {
           <div ref={mainMenuRef} className="relative space-y-1 pb-2">
             <span
               aria-hidden="true"
-              className={`pointer-events-none absolute left-0 right-0 top-0 rounded-lg bg-white shadow-xs transition-[transform,height,opacity] duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
+              className={`pointer-events-none absolute left-0 right-0 top-0 rounded-lg bg-white dark:bg-[#121418] shadow-xs dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)] transition-[transform,height,opacity] duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
                 menuIndicator.visible ? 'opacity-100' : 'opacity-0'
               }`}
               style={{
@@ -151,7 +151,7 @@ export const Sidebar: React.FC = () => {
               }}
             />
             {sidebarOpen && (
-              <div className="relative z-10 px-3 pb-1.5 text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <div className="relative z-10 px-3 pb-1.5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                 Design System
               </div>
             )}
@@ -170,14 +170,14 @@ export const Sidebar: React.FC = () => {
                     title={!sidebarOpen ? group.label : undefined}
                   className={`relative z-10 w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group cursor-pointer ${
                     isActive
-                      ? `text-gray-900 ${menuIndicator.visible ? '' : 'bg-white shadow-xs'}`
-                      : 'text-gray-600 hover:bg-white/60 hover:text-gray-950'
+                      ? `text-gray-900 dark:text-white ${menuIndicator.visible ? '' : 'bg-white dark:bg-[#121418] shadow-xs'}`
+                      : 'text-gray-600 dark:text-gray-400 hover:bg-white/60 dark:hover:bg-white/[0.05] hover:text-gray-950 dark:hover:text-gray-100'
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <Icon
                       className={`w-4 h-4 shrink-0 transition-colors duration-200 ${
-                        isActive ? 'text-[#ee2e65]' : 'text-gray-500 group-hover:text-gray-900'
+                        isActive ? 'text-[#ee2e65]' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-100'
                       }`}
                     />
                     {sidebarOpen && <span className="truncate">{group.label}</span>}
@@ -186,8 +186,8 @@ export const Sidebar: React.FC = () => {
                     <span
                       className={`min-w-5 h-5 px-1.5 rounded-full text-[11px] font-semibold flex items-center justify-center shrink-0 tabular-nums transition-colors ${
                         isActive
-                          ? 'bg-[#FEF1F5] text-[#9D113C]'
-                          : 'bg-white/70 text-gray-500 group-hover:text-gray-800'
+                          ? 'bg-[#FEF1F5] dark:bg-[#ee2e65]/20 text-[#9D113C] dark:text-[#f895b5]'
+                          : 'bg-white/70 dark:bg-[#121418]/80 text-gray-500 dark:text-gray-400 group-hover:text-gray-800 dark:group-hover:text-gray-200'
                       }`}
                     >
                       {group.items.length}
@@ -201,21 +201,21 @@ export const Sidebar: React.FC = () => {
       </div>
 
       {/* Compact UI KIT System Footer */}
-      <div className="shrink-0 pt-3 mt-2 border-t border-black/[0.12]">
-        <div className="flex items-center justify-between gap-2.5 p-2 rounded-2xl bg-white/75 border border-black/[0.10]">
+      <div className="shrink-0 pt-3 mt-2 border-t border-black/[0.12] dark:border-white/[0.08]">
+        <div className="flex items-center justify-between gap-2.5 p-2 rounded-2xl bg-white/75 dark:bg-[#121418]/90 border border-black/[0.10] dark:border-white/[0.08]">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="w-9 h-9 rounded-full bg-[#ee2e65] text-white text-xs font-bold flex items-center justify-center shrink-0 shadow-xs">
               UI
             </div>
             {sidebarOpen && (
               <div className="min-w-0">
-                <div className="text-[13px] font-semibold text-[#1C1D21] truncate">UI KIT</div>
-                <div className="text-[11px] text-[#646772] truncate">Design System</div>
+                <div className="text-[13px] font-semibold text-[#1C1D21] dark:text-[#F3F4F6] truncate">UI KIT</div>
+                <div className="text-[11px] text-[#646772] dark:text-gray-400 truncate">Design System</div>
               </div>
             )}
           </div>
           {sidebarOpen && (
-            <span className="px-2 py-0.5 rounded-full bg-[#FEF1F5] text-[#9D113C] text-[10.5px] font-semibold whitespace-nowrap shrink-0 tabular-nums">
+            <span className="px-2 py-0.5 rounded-full bg-[#FEF1F5] dark:bg-[#ee2e65]/20 text-[#9D113C] dark:text-[#f895b5] text-[10.5px] font-semibold whitespace-nowrap shrink-0 tabular-nums">
               {totalElements} Items
             </span>
           )}

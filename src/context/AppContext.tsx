@@ -379,6 +379,11 @@ interface AppContextType {
   isOnline: boolean;
   pendingSyncCount: number;
   syncPendingNow: () => Promise<void>;
+
+  // App Theme (Light / Dark)
+  theme: 'light' | 'dark';
+  setTheme: (theme: 'light' | 'dark') => void;
+  toggleTheme: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -542,6 +547,34 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       window.removeEventListener('offline', onOffline);
     };
   }, [syncPendingNow]);
+
+  // App Theme (Light / Dark)
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window === 'undefined') return 'light';
+    try {
+      const saved = window.localStorage.getItem('uikit_theme_v1');
+      return saved === 'dark' ? 'dark' : 'light';
+    } catch {
+      return 'light';
+    }
+  });
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const root = document.documentElement;
+    root.classList.toggle('dark', theme === 'dark');
+    root.dataset.theme = theme;
+    root.style.colorScheme = theme;
+    try {
+      window.localStorage.setItem('uikit_theme_v1', theme);
+    } catch {
+      // Ignore storage errors
+    }
+  }, [theme]);
+
+  const toggleTheme = useCallback(() => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  }, []);
 
   // Toasts
   const [toasts, setToasts] = useState<ToastItem[]>([]);
@@ -1980,6 +2013,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         isOnline,
         pendingSyncCount,
         syncPendingNow,
+        theme,
+        setTheme,
+        toggleTheme,
       }}
     >
       {children}

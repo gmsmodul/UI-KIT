@@ -225,11 +225,13 @@ export const HorizontalSlideTrack: React.FC<HorizontalSlideTrackProps> = ({
   const visibilityClass = visibility === 'mobile-only' ? 'md:hidden' : '';
 
   const thumbRestColor =
-    accent === 'primary' ? 'bg-[#ee2e65]/80' : 'bg-[#1C1D21]/75';
+    accent === 'primary'
+      ? 'bg-[#ee2e65]/80 dark:bg-[#ee2e65]/85'
+      : 'bg-[#1C1D21]/75 dark:bg-white/70';
   const thumbActiveColor =
     accent === 'primary'
       ? 'bg-[#ee2e65] shadow-[0_0_10px_rgba(238,46,101,0.45)]'
-      : 'bg-[#1C1D21] shadow-[0_1px_8px_rgba(28,29,33,0.3)]';
+      : 'bg-[#1C1D21] dark:bg-white shadow-[0_1px_8px_rgba(28,29,33,0.3)] dark:shadow-[0_1px_8px_rgba(255,255,255,0.22)]';
 
   return (
     <div className={`min-w-0 ${className}`}>
@@ -255,9 +257,9 @@ export const HorizontalSlideTrack: React.FC<HorizontalSlideTrackProps> = ({
             role="presentation"
             onClick={handleRailClick}
             title="Geser atau ketuk untuk melihat item lainnya"
-            className={`relative h-[4px] rounded-full bg-black/[0.08] cursor-pointer transition-all duration-200 ${
+            className={`relative h-[4px] rounded-full bg-black/[0.08] dark:bg-white/[0.14] cursor-pointer transition-all duration-200 ${
               indicatorSize === 'wide' ? 'w-32 sm:w-40' : 'w-[76px]'
-            } ${isMoving ? 'bg-black/[0.12]' : ''}`}
+            } ${isMoving ? 'bg-black/[0.12] dark:bg-white/[0.22]' : ''}`}
           >
             <span
               className={`slide-indicator-thumb absolute top-0 left-0 h-full rounded-full pointer-events-none ${

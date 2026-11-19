@@ -312,10 +312,10 @@ export const MobileBottomNav: React.FC = () => {
               onClick={(e) => e.stopPropagation()}
               className={`${
                 menuClosing ? 'animate-menu-fold-down' : 'animate-menu-fold-up'
-              } pointer-events-auto w-[min(280px,100%)] max-h-[calc(100vh-92px)] bg-white rounded-[24px] shadow-[0_20px_48px_-12px_rgba(15,23,42,0.28)] border border-black/[0.14] flex flex-col overflow-hidden`}
+              } pointer-events-auto w-[min(280px,100%)] max-h-[calc(100vh-92px)] bg-white dark:bg-[#15181E] rounded-[24px] shadow-[0_20px_48px_-12px_rgba(15,23,42,0.28)] dark:shadow-[0_24px_56px_-12px_rgba(0,0,0,0.75)] border border-black/[0.14] dark:border-white/[0.12] flex flex-col overflow-hidden`}
             >
               {/* Top UI KIT Brand Header */}
-              <div className="px-3.5 pt-3 pb-2.5 border-b border-black/[0.12] flex items-center justify-between gap-2 shrink-0">
+              <div className="px-3.5 pt-3 pb-2.5 border-b border-black/[0.12] dark:border-white/[0.08] flex items-center justify-between gap-2 shrink-0">
                 <button
                   type="button"
                   onClick={() => handleSelectCategory('utilities', 'Grid')}
@@ -325,10 +325,10 @@ export const MobileBottomNav: React.FC = () => {
                     UI
                   </div>
                   <div className="min-w-0">
-                    <div className="text-[13px] font-semibold text-[#1C1D21] truncate group-hover:text-[#ee2e65] transition-colors">
+                    <div className="text-[13px] font-semibold text-[#1C1D21] dark:text-[#F3F4F6] truncate group-hover:text-[#ee2e65] transition-colors">
                       UI KIT
                     </div>
-                    <div className="text-[10px] text-[#646772] leading-tight">
+                    <div className="text-[10px] text-[#646772] dark:text-gray-400 leading-tight">
                       Design System
                     </div>
                   </div>
@@ -343,13 +343,13 @@ export const MobileBottomNav: React.FC = () => {
                     }
                     className={`w-7 h-7 rounded-full flex items-center justify-center relative transition-colors cursor-pointer ${
                       menuSubview === 'updates'
-                        ? 'bg-[#FEF1F5] text-[#ee2e65]'
-                        : 'hover:bg-[#F4F5F8] text-[#4B4E57]'
+                        ? 'bg-[#FEF1F5] dark:bg-[#ee2e65]/20 text-[#ee2e65]'
+                        : 'hover:bg-[#F4F5F8] dark:hover:bg-[#1B1E24] text-[#4B4E57] dark:text-gray-300'
                     }`}
                   >
                     <Bell className="w-3.5 h-3.5" />
                     {unreadUiUpdatesCount > 0 && (
-                      <span className="w-2 h-2 rounded-full bg-[#ee2e65] absolute top-1 right-1 ring-1 ring-white" />
+                      <span className="w-2 h-2 rounded-full bg-[#ee2e65] absolute top-1 right-1 ring-1 ring-white dark:ring-[#15181E]" />
                     )}
                   </button>
                   <button
@@ -387,13 +387,13 @@ export const MobileBottomNav: React.FC = () => {
                           className={`w-full flex items-center justify-between px-3 py-2 rounded-full text-left font-semibold transition-colors duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer ${
                             isCurrent
                               ? 'bg-[#ee2e65] text-white shadow-[0_6px_16px_-6px_rgba(238,46,101,0.55)]'
-                              : 'text-[#1C1D21] hover:bg-[#F4F5F8]'
+                              : 'text-[#1C1D21] dark:text-gray-200 hover:bg-[#F4F5F8] dark:hover:bg-[#1B1E24]'
                           }`}
                         >
                           <div className="flex items-center gap-2.5 min-w-0">
                             <Icon
                               className={`w-4 h-4 shrink-0 ${
-                                isCurrent ? 'text-white stroke-[2.2px]' : 'text-[#1C1D21] stroke-[1.8px]'
+                                isCurrent ? 'text-white stroke-[2.2px]' : 'text-[#1C1D21] dark:text-gray-300 stroke-[1.8px]'
                               }`}
                             />
                             <span className="text-[13px] truncate">{group.label}</span>
@@ -403,7 +403,7 @@ export const MobileBottomNav: React.FC = () => {
                             className={`min-w-[22px] h-[20px] px-1.5 rounded-full text-[10.5px] font-bold flex items-center justify-center shrink-0 tabular-nums ${
                               isCurrent
                                 ? 'bg-white text-[#ee2e65]'
-                                : 'bg-gray-100 text-gray-600'
+                                : 'bg-gray-100 dark:bg-[#1B1E24] text-gray-600 dark:text-gray-300'
                             }`}
                           >
                             {group.items.length}
@@ -412,15 +412,15 @@ export const MobileBottomNav: React.FC = () => {
                       );
                     })}
 
-                    <div className="my-1 border-t border-black/[0.12] mx-2" />
+                    <div className="my-1 border-t border-black/[0.12] dark:border-white/[0.08] mx-2" />
                     <button
                       type="button"
                       data-drawer-item="true"
                       onClick={() => setMenuSubview('updates')}
-                      className="w-full flex items-center justify-between px-3 py-2 rounded-full text-left text-[#1C1D21] hover:bg-[#F4F5F8] font-semibold transition-all duration-200 cursor-pointer"
+                      className="w-full flex items-center justify-between px-3 py-2 rounded-full text-left text-[#1C1D21] dark:text-gray-200 hover:bg-[#F4F5F8] dark:hover:bg-[#1B1E24] font-semibold transition-all duration-200 cursor-pointer"
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <Bell className="w-4 h-4 shrink-0 text-[#1C1D21] stroke-[1.8px]" />
+                        <Bell className="w-4 h-4 shrink-0 text-[#1C1D21] dark:text-gray-300 stroke-[1.8px]" />
                         <span className="text-[13px] truncate">UI KIT Updates</span>
                       </div>
                       {unreadUiUpdatesCount > 0 && (
@@ -440,7 +440,7 @@ export const MobileBottomNav: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setMenuSubview('nav')}
-                      className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#1C1D21] hover:text-[#ee2e65] whitespace-nowrap cursor-pointer"
+                      className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#1C1D21] dark:text-gray-200 hover:text-[#ee2e65] whitespace-nowrap cursor-pointer"
                     >
                       <ArrowLeft className="w-3.5 h-3.5 shrink-0" />
                       <span>Back</span>
@@ -470,25 +470,25 @@ export const MobileBottomNav: React.FC = () => {
                           }}
                           className={`w-full text-left p-3 rounded-2xl border transition-all flex items-start gap-2.5 cursor-pointer ${
                             item.unread
-                              ? `${theme.bg} border-black/[0.12]`
-                              : 'bg-[#FAFBFD] border-black/[0.12] hover:bg-gray-100/70'
+                              ? `${theme.bg} dark:bg-[#1B1E24] border-black/[0.12] dark:border-white/[0.10]`
+                              : 'bg-[#FAFBFD] dark:bg-[#121418] border-black/[0.12] dark:border-white/[0.08] hover:bg-gray-100/70 dark:hover:bg-[#1B1E24]'
                           }`}
                         >
                           <span
                             className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
-                              item.unread ? theme.dot : 'bg-gray-400'
+                              item.unread ? theme.dot : 'bg-gray-400 dark:bg-gray-600'
                             }`}
                           />
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center justify-between gap-2">
-                              <span className="text-[12.5px] font-semibold text-[#1C1D21] truncate">
+                              <span className="text-[12.5px] font-semibold text-[#1C1D21] dark:text-gray-100 truncate">
                                 {item.title}
                               </span>
-                              <span className="text-[10.5px] text-[#646772] shrink-0">
+                              <span className="text-[10.5px] text-[#646772] dark:text-gray-400 shrink-0">
                                 {item.time}
                               </span>
                             </div>
-                            <p className="text-[11.5px] text-[#5A5D67] mt-0.5 line-clamp-2">
+                            <p className="text-[11.5px] text-[#5A5D67] dark:text-gray-400 mt-0.5 line-clamp-2">
                               {item.desc}
                             </p>
                           </div>
@@ -509,7 +509,7 @@ export const MobileBottomNav: React.FC = () => {
         <nav
           ref={pillBarRef}
           aria-label="UI KIT mobile navigation"
-          className="relative flex-1 bg-white/95 backdrop-blur-md rounded-full p-1 shadow-[0_10px_28px_-8px_rgba(15,23,42,0.18)] border border-black/[0.14] flex items-center justify-between"
+          className="relative flex-1 bg-white/95 dark:bg-[#15181E]/95 backdrop-blur-md rounded-full p-1 shadow-[0_10px_28px_-8px_rgba(15,23,42,0.18)] dark:shadow-[0_14px_36px_-8px_rgba(0,0,0,0.75)] border border-black/[0.14] dark:border-white/[0.12] flex items-center justify-between"
         >
           {/* Gliding Brand-Primary Active Pill */}
           <span
@@ -540,7 +540,7 @@ export const MobileBottomNav: React.FC = () => {
                   closeMenuSmoothly();
                 }}
                 className={`relative z-10 flex-1 h-10 rounded-full flex items-center justify-center transition-colors duration-200 cursor-pointer ${
-                  isActive ? 'text-white' : 'text-[#1C1D21] hover:text-[#ee2e65]'
+                  isActive ? 'text-white' : 'text-[#1C1D21] dark:text-gray-300 hover:text-[#ee2e65]'
                 }`}
               >
                 <div className="relative flex items-center justify-center">
@@ -548,7 +548,7 @@ export const MobileBottomNav: React.FC = () => {
                   {slot.dot && (
                     <span
                       className={`w-2 h-2 rounded-full absolute -top-0.5 -right-1 ring-[1.5px] ${
-                        isActive ? 'bg-white ring-[#ee2e65]' : 'bg-[#ee2e65] ring-white'
+                        isActive ? 'bg-white ring-[#ee2e65]' : 'bg-[#ee2e65] ring-white dark:ring-[#15181E]'
                       }`}
                     />
                   )}
@@ -567,7 +567,7 @@ export const MobileBottomNav: React.FC = () => {
             aria-expanded={menuOpen && !menuClosing}
             onClick={() => (menuOpen && !menuClosing ? closeMenuSmoothly() : openMenuSmoothly())}
             className={`relative z-10 flex-1 h-10 rounded-full flex items-center justify-center gap-1 transition-colors duration-200 cursor-pointer ${
-              isOverflowActive ? 'text-white' : 'text-[#1C1D21] hover:text-[#ee2e65]'
+              isOverflowActive ? 'text-white' : 'text-[#1C1D21] dark:text-gray-300 hover:text-[#ee2e65]'
             }`}
           >
             {isOverflowActive && ActiveOverflowIcon && (
@@ -589,10 +589,10 @@ export const MobileBottomNav: React.FC = () => {
             closeMenuSmoothly();
             setIsUiMobileSearchOpen(true);
           }}
-          className={`w-12 h-12 shrink-0 rounded-full backdrop-blur-md shadow-[0_10px_28px_-8px_rgba(15,23,42,0.18)] border flex items-center justify-center transition-all duration-200 active:scale-95 cursor-pointer ${
+          className={`w-12 h-12 shrink-0 rounded-full backdrop-blur-md shadow-[0_10px_28px_-8px_rgba(15,23,42,0.18)] dark:shadow-[0_14px_36px_-8px_rgba(0,0,0,0.75)] border flex items-center justify-center transition-all duration-200 active:scale-95 cursor-pointer ${
             isUiMobileSearchOpen
               ? 'bg-[#ee2e65] text-white border-[#ee2e65]'
-              : 'bg-white/95 text-[#1C1D21] border-black/[0.14] hover:text-[#ee2e65]'
+              : 'bg-white/95 dark:bg-[#15181E]/95 text-[#1C1D21] dark:text-gray-200 border-black/[0.14] dark:border-white/[0.12] hover:text-[#ee2e65]'
           }`}
         >
           <Search className="w-[18px] h-[18px] stroke-[2px]" />
@@ -604,23 +604,23 @@ export const MobileBottomNav: React.FC = () => {
         <div
           ref={searchBackdropRef}
           data-modal-sheet-backdrop="true"
-          className="animate-ui-fade fixed inset-0 z-50 bg-black/35 backdrop-blur-xs flex items-end justify-center md:hidden no-print"
+          className="animate-ui-fade fixed inset-0 z-50 bg-black/35 dark:bg-black/60 backdrop-blur-xs flex items-end justify-center md:hidden no-print"
         >
           <div
             ref={setSearchSheetEl}
             {...searchGestureProps}
-            className="w-full bg-white rounded-t-[28px] p-5 pb-[calc(1.75rem+env(safe-area-inset-bottom,0px))] space-y-4 shadow-2xl max-h-[82vh] flex flex-col animate-bottom-sheet"
+            className="w-full bg-white dark:bg-[#121418] rounded-t-[28px] p-5 pb-[calc(1.75rem+env(safe-area-inset-bottom,0px))] space-y-4 shadow-2xl border-t border-transparent dark:border-white/[0.10] max-h-[82vh] flex flex-col animate-bottom-sheet"
           >
             <div
               data-sheet-handle="true"
               className="flex justify-center py-2 -mt-3 -mb-1 cursor-grab active:cursor-grabbing touch-none shrink-0"
             >
-              <div className="w-10 h-1 bg-black/20 rounded-full animate-sheet-handle" />
+              <div className="w-10 h-1 bg-black/20 dark:bg-white/25 rounded-full animate-sheet-handle" />
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
-              <div className="flex-1 flex items-center gap-2.5 bg-[#F4F5F8] rounded-full px-4 py-2.5 border border-black/[0.14] focus-within:border-[#ee2e65] focus-within:bg-white transition-colors">
-                <Search className="w-4 h-4 text-[#646772] shrink-0" />
+              <div className="flex-1 flex items-center gap-2.5 bg-[#F4F5F8] dark:bg-[#1B1E24] rounded-full px-4 py-2.5 border border-black/[0.14] dark:border-white/[0.12] focus-within:border-[#ee2e65] focus-within:bg-white dark:focus-within:bg-[#181B21] transition-colors">
+                <Search className="w-4 h-4 text-[#646772] dark:text-gray-400 shrink-0" />
                 <input
                   ref={searchInputRef}
                   type="text"
@@ -628,13 +628,13 @@ export const MobileBottomNav: React.FC = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Cari kategori, komponen, atau token UI..."
-                  className="w-full bg-transparent text-base sm:text-[13.5px] text-[#1C1D21] placeholder:text-[#646772] outline-none"
+                  className="w-full bg-transparent text-base sm:text-[13.5px] text-[#1C1D21] dark:text-gray-100 placeholder:text-[#646772] dark:placeholder:text-gray-500 outline-none"
                 />
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={() => setSearchQuery('')}
-                    className="text-[#646772] hover:text-[#1C1D21] cursor-pointer"
+                    className="text-[#646772] dark:text-gray-400 hover:text-[#1C1D21] dark:hover:text-white cursor-pointer"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -644,7 +644,7 @@ export const MobileBottomNav: React.FC = () => {
                 type="button"
                 aria-label="Close search"
                 onClick={animateCloseSearch}
-                className="w-9 h-9 rounded-full hover:bg-[#F4F5F8] flex items-center justify-center text-[#5A5D67] shrink-0 cursor-pointer"
+                className="w-9 h-9 rounded-full hover:bg-[#F4F5F8] dark:hover:bg-[#1B1E24] flex items-center justify-center text-[#5A5D67] dark:text-gray-400 shrink-0 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -656,7 +656,7 @@ export const MobileBottomNav: React.FC = () => {
                   {/* Recent Search */}
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between px-1">
-                      <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#646772]">
+                      <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#646772] dark:text-gray-400">
                         <Clock className="w-3 h-3" />
                         <span>Pencarian Terakhir</span>
                       </span>
@@ -673,7 +673,7 @@ export const MobileBottomNav: React.FC = () => {
                     </div>
 
                     {recentSearches.length === 0 ? (
-                      <div className="px-3.5 py-2.5 rounded-2xl bg-[#FAFBFD] border border-dashed border-black/[0.12] text-[12px] text-[#646772]">
+                      <div className="px-3.5 py-2.5 rounded-2xl bg-[#FAFBFD] dark:bg-[#1B1E24] border border-dashed border-black/[0.12] dark:border-white/[0.10] text-[12px] text-[#646772] dark:text-gray-400">
                         Belum ada riwayat pencarian. Pilih saran atau kategori di bawah.
                       </div>
                     ) : (
@@ -681,7 +681,7 @@ export const MobileBottomNav: React.FC = () => {
                         {recentSearches.map((rec) => (
                           <div
                             key={rec.id}
-                            className="flex items-center justify-between gap-1.5 rounded-2xl bg-[#FAFBFD] border border-black/[0.10] pr-1.5"
+                            className="flex items-center justify-between gap-1.5 rounded-2xl bg-[#FAFBFD] dark:bg-[#1B1E24] border border-black/[0.10] dark:border-white/[0.08] pr-1.5"
                           >
                             <button
                               type="button"
@@ -705,13 +705,13 @@ export const MobileBottomNav: React.FC = () => {
                               }}
                               className="flex-1 min-w-0 flex items-center gap-2.5 px-3.5 py-2.5 text-left cursor-pointer"
                             >
-                              <Clock className="w-4 h-4 text-[#646772] shrink-0" />
+                              <Clock className="w-4 h-4 text-[#646772] dark:text-gray-400 shrink-0" />
                               <div className="min-w-0 flex-1">
-                                <div className="text-[13px] font-semibold text-[#1C1D21] truncate">
+                                <div className="text-[13px] font-semibold text-[#1C1D21] dark:text-gray-100 truncate">
                                   {rec.query}
                                 </div>
                                 {(rec.groupLabel || rec.itemLabel) && (
-                                  <div className="text-[11px] text-[#646772] truncate">
+                                  <div className="text-[11px] text-[#646772] dark:text-gray-400 truncate">
                                     {[rec.groupLabel, rec.itemLabel, rec.sectionTitle]
                                       .filter(Boolean)
                                       .join(' · ')}
@@ -723,7 +723,7 @@ export const MobileBottomNav: React.FC = () => {
                               type="button"
                               aria-label={`Hapus riwayat ${rec.query}`}
                               onClick={() => setRecentSearches(removeRecentSearch(rec.id))}
-                              className="w-8 h-8 rounded-full flex items-center justify-center text-[#646772] hover:bg-gray-200/70 shrink-0 cursor-pointer"
+                              className="w-8 h-8 rounded-full flex items-center justify-center text-[#646772] dark:text-gray-400 hover:bg-gray-200/70 dark:hover:bg-white/[0.08] shrink-0 cursor-pointer"
                             >
                               <X className="w-3.5 h-3.5" />
                             </button>
@@ -735,7 +735,7 @@ export const MobileBottomNav: React.FC = () => {
 
                   {/* Suggestion Search */}
                   <div className="space-y-1.5">
-                    <div className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#646772] px-1">
+                    <div className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#646772] dark:text-gray-400 px-1">
                       <Sparkles className="w-3 h-3 text-[#ee2e65]" />
                       <span>Saran Pencarian</span>
                     </div>
@@ -757,7 +757,7 @@ export const MobileBottomNav: React.FC = () => {
                             selectUiNode(sug.groupId, sug.itemLabel, sug.sectionId);
                             animateCloseSearch();
                           }}
-                          className="px-3 py-1.5 rounded-full bg-[#FAFBFD] hover:bg-[#FEF1F5] border border-black/[0.10] hover:border-[#FBC2D4] text-[12px] font-semibold text-[#1C1D21] hover:text-[#9D113C] transition-colors cursor-pointer"
+                          className="px-3 py-1.5 rounded-full bg-[#FAFBFD] dark:bg-[#1B1E24] hover:bg-[#FEF1F5] dark:hover:bg-[#ee2e65]/15 border border-black/[0.10] dark:border-white/[0.10] hover:border-[#FBC2D4] dark:hover:border-[#ee2e65]/40 text-[12px] font-semibold text-[#1C1D21] dark:text-gray-200 hover:text-[#9D113C] dark:hover:text-[#fbc2d4] transition-colors cursor-pointer"
                         >
                           {sug.label}
                         </button>
@@ -772,7 +772,7 @@ export const MobileBottomNav: React.FC = () => {
               {/* Matched UI KIT Elements */}
               {!isMobileSearchLoading && searchResults.matchedElements.length > 0 && (
                 <div className="space-y-1.5 animate-ui-fade">
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-[#646772] px-1">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-[#646772] dark:text-gray-400 px-1">
                     Komponen & Bagian
                   </div>
                   <div className="space-y-1">
@@ -794,17 +794,17 @@ export const MobileBottomNav: React.FC = () => {
                           selectUiNode(res.groupId, res.itemLabel, res.section?.id);
                           animateCloseSearch();
                         }}
-                        className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl bg-[#FAFBFD] hover:bg-[#FEF1F5] border border-black/[0.10] text-left transition-colors cursor-pointer"
+                        className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl bg-[#FAFBFD] dark:bg-[#1B1E24] hover:bg-[#FEF1F5] dark:hover:bg-[#232730] border border-black/[0.10] dark:border-white/[0.08] text-left transition-colors cursor-pointer"
                       >
                         <div className="min-w-0 pr-2">
-                          <div className="text-[13px] font-semibold text-[#1C1D21] truncate">
+                          <div className="text-[13px] font-semibold text-[#1C1D21] dark:text-gray-100 truncate">
                             {res.section ? res.section.title : res.itemLabel}
                           </div>
-                          <div className="text-[11px] text-[#646772] truncate">
+                          <div className="text-[11px] text-[#646772] dark:text-gray-400 truncate">
                             {res.groupLabel} · {res.itemLabel}
                           </div>
                         </div>
-                        <ChevronRight className="w-4 h-4 text-[#5A5D67] shrink-0" />
+                        <ChevronRight className="w-4 h-4 text-[#5A5D67] dark:text-gray-400 shrink-0" />
                       </button>
                     ))}
                   </div>
@@ -814,7 +814,7 @@ export const MobileBottomNav: React.FC = () => {
               {/* Categories */}
               {!isMobileSearchLoading && searchResults.matchedGroups.length > 0 && (
                 <div className="space-y-1.5">
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-[#646772] px-1">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-[#646772] dark:text-gray-400 px-1">
                     {searchQuery ? 'Kategori' : 'Akses Cepat Kategori UI KIT'}
                   </div>
                   <div className="space-y-1">
@@ -832,7 +832,7 @@ export const MobileBottomNav: React.FC = () => {
                           className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl border transition-colors text-left cursor-pointer ${
                             isCurrent
                               ? 'bg-[#ee2e65] border-[#ee2e65] text-white font-semibold'
-                              : 'bg-[#FAFBFD] border-black/[0.10] hover:bg-[#F4F5F8] text-[#1C1D21] font-medium'
+                              : 'bg-[#FAFBFD] dark:bg-[#1B1E24] border-black/[0.10] dark:border-white/[0.08] hover:bg-[#F4F5F8] dark:hover:bg-[#232730] text-[#1C1D21] dark:text-gray-100 font-medium'
                           }`}
                         >
                           <div className="flex items-center gap-3 min-w-0">
@@ -841,7 +841,7 @@ export const MobileBottomNav: React.FC = () => {
                           </div>
                           <ChevronRight
                             className={`w-4 h-4 shrink-0 ${
-                              isCurrent ? 'text-white/80' : 'text-[#5A5D67]'
+                              isCurrent ? 'text-white/80' : 'text-[#5A5D67] dark:text-gray-400'
                             }`}
                           />
                         </button>
@@ -856,7 +856,7 @@ export const MobileBottomNav: React.FC = () => {
                 searchResults.matchedGroups.length === 0 &&
                 searchResults.matchedElements.length === 0 && (
                   <div className="py-6 text-center space-y-3">
-                    <p className="text-[12.5px] text-[#646772]">
+                    <p className="text-[12.5px] text-[#646772] dark:text-gray-400">
                       Tidak ada komponen untuk &ldquo;{searchQuery}&rdquo;
                     </p>
                     <div className="flex flex-wrap justify-center gap-1.5">
@@ -865,7 +865,7 @@ export const MobileBottomNav: React.FC = () => {
                           key={sug.id}
                           type="button"
                           onClick={() => setSearchQuery(sug.query)}
-                          className="px-3 py-1.5 rounded-full bg-[#FEF1F5] border border-[#FBC2D4] text-[11.5px] font-semibold text-[#9D113C] cursor-pointer"
+                          className="px-3 py-1.5 rounded-full bg-[#FEF1F5] dark:bg-[#ee2e65]/15 border border-[#FBC2D4] dark:border-[#ee2e65]/35 text-[11.5px] font-semibold text-[#9D113C] dark:text-[#fbc2d4] cursor-pointer"
                         >
                           {sug.label}
                         </button>

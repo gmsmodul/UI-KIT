@@ -29,6 +29,8 @@ import { useApp } from '../../context/AppContext';
 import { UiDocPage, UiDocSection } from './UiDocBlock';
 import { KanbanBoardUiKit } from './KanbanBoardUiKit';
 import { TimelineUiKit } from './TimelineUiKit';
+import { KpiCardUiKit } from './KpiCardUiKit';
+import { CardArticleUiKit } from './CardArticleUiKit';
 import { PASTEL_THEMES } from '../../constants/theme';
 import { ACTION_BTN_PRIMARY, ACTION_BTN_SECONDARY } from '../../constants/buttonStyles';
 import { playUiMotionSound } from '../../utils/uiMotionSound';
@@ -2860,6 +2862,12 @@ export const DataDisplayUiKit: React.FC<DataDisplayUiKitProps> = ({ activeSubJum
 
       {/* 2.20 TIMELINE */}
       {isVisible('timeline') && <TimelineUiKit />}
+
+      {/* 2.21 KPI CARD */}
+      {isVisible('kpicard') && <KpiCardUiKit />}
+
+      {/* 2.22 CARD ARTICLE */}
+      {isVisible('cardarticle') && <CardArticleUiKit />}
     </div>
   );
 };

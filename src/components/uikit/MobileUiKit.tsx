@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import {
   Bell,
@@ -14,6 +14,8 @@ import {
   Download,
   CheckCheck,
   ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
   BarChart2,
   Save,
   RefreshCw,
@@ -64,9 +66,27 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
   // 6. Mobile Gestures & Slide Demo State
   const [ptrDemoSeq, setPtrDemoSeq] = useState(0);
   const [slideMonth, setSlideMonth] = useState('Feb');
+  const [glideSegment, setGlideSegment] = useState<'Semua' | 'Materi' | 'Kuis' | 'Rekap'>('Semua');
+  const [glideCardIdx, setGlideCardIdx] = useState(0);
+  const [glideViewportWidth, setGlideViewportWidth] = useState(308);
+  const glideViewportRef = useRef<HTMLDivElement>(null);
   const [transitionTab, setTransitionTab] = useState(0);
   const [transitionDir, setTransitionDir] = useState<1 | -1>(1);
   const [depthPullDemo, setDepthPullDemo] = useState(false);
+
+  useEffect(() => {
+    if (activeSubJump !== 'Mobile Gestures & Slide') return;
+    const el = glideViewportRef.current;
+    if (!el) return;
+    const updateWidth = () => {
+      if (el.clientWidth > 0) setGlideViewportWidth(el.clientWidth);
+    };
+    updateWidth();
+    if (typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(updateWidth);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [activeSubJump]);
 
   // 7. Mobile Notification Popover Demo State
   const [notifTab, setNotifTab] = useState<'All' | 'Unread'>('All');
@@ -643,10 +663,11 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
       {activeSubJump === 'Mobile Gestures & Slide' && (
         <UiDocPage
           title="Mobile Gestures & Slide"
-          description="Interaksi sentuh khusus mobile: Elastic Header Pull-to-Refresh bergaya pegas, Horizontal Slide Indicator tanpa scrollbar, serta transisi halaman arah adaptif dan Sheet Depth Pull-Back."
+          description="Interaksi sentuh khusus mobile: Elastic Header Pull-to-Refresh bergaya pegas, Horizontal Slide Indicator dengan Motion Gliding Pill, Swipe-to-Glide Card Slider (drag x + velocity snap), serta transisi halaman arah adaptif dan Sheet Depth Pull-Back."
           subLinks={[
             { id: 'mgs-ptr', label: 'Elastic Header Pull to Refresh' },
-            { id: 'mgs-slide', label: 'Horizontal Slide Indicator' },
+            { id: 'mgs-slide', label: 'Horizontal Slide & Gliding Pill' },
+            { id: 'mgs-glide', label: 'Motion Gliding & Swipe Deck' },
             { id: 'mgs-transition-depth', label: 'Responsive PageTransition & Sheet Pull-Back' },
           ]}
         >
@@ -659,26 +680,28 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
               <button
                 type="button"
                 onClick={() => setPtrDemoSeq((s) => s + 1)}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FEF1F5] text-[#9D113C] text-xs font-semibold hover:bg-[#FDE0E9] cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FEF1F5] dark:bg-[#ee2e65]/15 text-[#9D113C] dark:text-[#f895b5] text-xs font-semibold hover:bg-[#FDE0E9] dark:hover:bg-[#ee2e65]/25 cursor-pointer"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 <span>Simulasi Pull</span>
               </button>
             }
           >
-            <div className="bg-[#E8EAEE] rounded-2xl p-4 sm:p-6 flex justify-center">
-              <div className="w-full max-w-[340px] h-[250px] bg-white rounded-[24px] border border-black/[0.12] shadow-md overflow-hidden flex flex-col">
+            <div className="bg-[#E8EAEE] dark:bg-[#121418] rounded-2xl p-4 sm:p-6 flex justify-center">
+              <div className="w-full max-w-[340px] h-[250px] bg-white dark:bg-[#181B21] rounded-[24px] border border-black/[0.12] dark:border-white/[0.10] shadow-md overflow-hidden flex flex-col">
                 <ElasticPullToRefresh
                   allowDesktopMousePull
                   demoTriggerSeq={ptrDemoSeq}
                   onRefresh={() => triggerToast('Segarkan', 'Data mobile berhasil diperbarui.', 'success')}
                 >
                   <div className="flex-1 overflow-y-auto p-4 space-y-2.5">
-                    <div className="text-xs font-semibold text-[#1C1D21]">Tarik ke bawah area ini</div>
-                    <div className="p-3 rounded-2xl bg-[#EEF8F3] text-xs text-[#146C43] font-medium">
+                    <div className="text-xs font-semibold text-[#1C1D21] dark:text-[#F3F4F6]">
+                      Tarik ke bawah area ini
+                    </div>
+                    <div className="p-3 rounded-2xl bg-[#EEF8F3] dark:bg-emerald-500/15 text-xs text-[#146C43] dark:text-emerald-300 font-medium">
                       Design Tokens · Synced
                     </div>
-                    <div className="p-3 rounded-2xl bg-[#FEF1F5] text-xs text-[#9D113C] font-medium">
+                    <div className="p-3 rounded-2xl bg-[#FEF1F5] dark:bg-[#ee2e65]/15 text-xs text-[#9D113C] dark:text-[#f895b5] font-medium">
                       Motion Specs · 12 Categories
                     </div>
                   </div>
@@ -689,32 +712,280 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
 
           <UiDocSection
             id="mgs-slide"
-            title="Horizontal Slide Indicator (Pengganti Scrollbar)"
-            classesHint="HorizontalSlideTrack activeKey={active} accent='dark'"
-            codeSnippet={`<HorizontalSlideTrack activeKey={month} accent="dark">\n  {months.map(m => <button data-slide-active={month === m}>{m}</button>)}\n</HorizontalSlideTrack>`}
+            title="Horizontal Slide Indicator & Gliding Pill"
+            description="Menggabungkan HorizontalSlideTrack (pengganti scrollbar horizontal dengan kapsul indikator gerak) dan spring layoutId gliding pill agar sorotan aktif meluncur mulus antar item saat diklik atau digeser."
+            classesHint="HorizontalSlideTrack activeKey={month} visibility='always' + motion.span layoutId"
+            codeSnippet={`<HorizontalSlideTrack activeKey={month} accent="primary" visibility="always">\n  <div className="inline-flex items-center gap-1 p-1 rounded-full bg-white border">\n    {months.map((m) => (\n      <button key={m} data-slide-active={month === m ? 'true' : undefined} className="relative px-3.5 py-1.5 rounded-full">\n        {month === m && (\n          <motion.span\n            layoutId="month-glide-pill"\n            transition={{ type: 'spring', stiffness: 460, damping: 32 }}\n            className="absolute inset-0 rounded-full bg-[#ee2e65]"\n          />\n        )}\n        <span className="relative z-10">{m}</span>\n      </button>\n    ))}\n  </div>\n</HorizontalSlideTrack>`}
           >
-            <div className="max-w-sm bg-[#FAFBFD] p-4 rounded-2xl border border-black/[0.12] space-y-3">
+            <div className="max-w-sm bg-[#FAFBFD] dark:bg-[#15181E] p-4 rounded-2xl border border-black/[0.12] dark:border-white/[0.10] space-y-3">
               <HorizontalSlideTrack
                 activeKey={slideMonth}
-                trackClassName="inline-flex items-center gap-1.5 bg-white p-1 rounded-full border border-black/[0.12] max-w-full select-none"
-                accent="dark"
+                trackClassName="inline-flex items-center gap-1 bg-white dark:bg-[#1B1E24] p-1 rounded-full border border-black/[0.12] dark:border-white/[0.10] max-w-full select-none"
+                accent="primary"
+                visibility="always"
               >
-                {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'].map((m) => (
-                  <button
-                    key={m}
-                    type="button"
-                    data-slide-active={slideMonth === m ? 'true' : undefined}
-                    onClick={() => setSlideMonth(m)}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all shrink-0 cursor-pointer ${
-                      slideMonth === m ? 'bg-[#ee2e65] text-white' : 'text-[#5A5D67] hover:text-[#1C1D21]'
-                    }`}
-                  >
-                    {m}
-                  </button>
-                ))}
+                {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'].map((m) => {
+                  const isActive = slideMonth === m;
+                  return (
+                    <button
+                      key={m}
+                      type="button"
+                      data-slide-active={isActive ? 'true' : undefined}
+                      onClick={() => setSlideMonth(m)}
+                      className={`relative px-3.5 py-1.5 rounded-full text-xs font-medium shrink-0 cursor-pointer transition-colors duration-150 ${
+                        isActive
+                          ? 'text-white'
+                          : 'text-[#5A5D67] dark:text-gray-400 hover:text-[#1C1D21] dark:hover:text-gray-200'
+                      }`}
+                    >
+                      {isActive && (
+                        <motion.span
+                          layoutId="mgs-month-glide-pill"
+                          transition={{ type: 'spring', stiffness: 460, damping: 32, mass: 0.78 }}
+                          className="absolute inset-0 rounded-full bg-[#ee2e65] shadow-xs"
+                        />
+                      )}
+                      <span className="relative z-10">{m}</span>
+                    </button>
+                  );
+                })}
               </HorizontalSlideTrack>
-              <div className="text-[11.5px] text-[#646772]">
-                Bulan terpilih: <strong className="text-[#1C1D21]">{slideMonth}</strong>
+              <div className="flex items-center justify-between text-[11.5px] text-[#646772] dark:text-gray-400">
+                <span>
+                  Bulan terpilih:{' '}
+                  <strong className="text-[#1C1D21] dark:text-[#F3F4F6]">{slideMonth}</strong>
+                </span>
+                <span className="text-[11px] font-medium text-[#ee2e65] dark:text-[#f895b5]">
+                  Spring Glide + Track Indicator
+                </span>
+              </div>
+            </div>
+          </UiDocSection>
+
+          <UiDocSection
+            id="mgs-glide"
+            title="Motion Gliding Pill & Swipe-to-Glide Card Slider"
+            description="Geser langsung kartu dengan jari atau mouse (drag='x') untuk meluncur bebas dengan efek pegas tepi dan velocity snap, serta rasakan gliding pill pada segmented tab bar."
+            classesHint="motion.div drag='x' + dragElastic + spring snap | motion.span layoutId"
+            codeSnippet={`<motion.div\n  drag="x"\n  dragConstraints={{ left: -(slides.length - 1) * width, right: 0 }}\n  dragElastic={0.18}\n  animate={{ x: -activeIndex * width }}\n  transition={{ type: 'spring', stiffness: 360, damping: 32, mass: 0.85 }}\n  onDragEnd={(_, info) => snapToNearestSlide(info.offset.x, info.velocity.x)}\n  className="flex cursor-grab active:cursor-grabbing"\n>\n  {slides.map(s => <div style={{ width }}>{s}</div>)}\n</motion.div>`}
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
+              {/* Left: Gliding Segmented Pill & Underline Bar */}
+              <div className="rounded-2xl border border-black/[0.12] dark:border-white/[0.10] bg-[#FAFBFD] dark:bg-[#15181E] p-4 flex flex-col justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="text-xs font-bold text-[#1C1D21] dark:text-[#F3F4F6]">
+                    Gliding Tab & Segmented Indicator
+                  </div>
+                  <p className="text-[11px] text-[#646772] dark:text-gray-400">
+                    Ketuk tab untuk melihat kapsul latar dan garis bawah meluncur serempak dengan kurva spring.
+                  </p>
+                </div>
+
+                {/* Gliding Segmented Pill */}
+                <div className="rounded-xl bg-white dark:bg-[#1B1E24] border border-black/[0.10] dark:border-white/[0.08] p-1 grid grid-cols-4 gap-1">
+                  {(['Semua', 'Materi', 'Kuis', 'Rekap'] as const).map((tab) => {
+                    const active = glideSegment === tab;
+                    return (
+                      <button
+                        key={tab}
+                        type="button"
+                        onClick={() => setGlideSegment(tab)}
+                        className={`relative py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
+                          active
+                            ? 'text-white'
+                            : 'text-[#5A5D67] dark:text-gray-400 hover:text-[#1C1D21] dark:hover:text-gray-200'
+                        }`}
+                      >
+                        {active && (
+                          <motion.span
+                            layoutId="mgs-seg-glide-pill"
+                            transition={{ type: 'spring', stiffness: 460, damping: 33, mass: 0.78 }}
+                            className="absolute inset-0 rounded-lg bg-[#1C1D21] dark:bg-[#ee2e65] shadow-xs"
+                          />
+                        )}
+                        <span className="relative z-10">{tab}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Gliding Underline Tab Rail */}
+                <div className="border-b border-black/[0.10] dark:border-white/[0.10] grid grid-cols-4 text-xs">
+                  {(['Semua', 'Materi', 'Kuis', 'Rekap'] as const).map((tab) => {
+                    const active = glideSegment === tab;
+                    return (
+                      <button
+                        key={`ul-${tab}`}
+                        type="button"
+                        onClick={() => setGlideSegment(tab)}
+                        className={`relative pb-2.5 text-center font-semibold cursor-pointer transition-colors ${
+                          active
+                            ? 'text-[#ee2e65] dark:text-[#f895b5]'
+                            : 'text-[#646772] dark:text-gray-400 hover:text-[#1C1D21] dark:hover:text-gray-200'
+                        }`}
+                      >
+                        <span>{tab}</span>
+                        {active && (
+                          <motion.span
+                            layoutId="mgs-underline-glide"
+                            transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                            className="absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-[#ee2e65]"
+                          />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="text-[11px] text-[#646772] dark:text-gray-400 flex items-center justify-between">
+                  <span>
+                    Filter aktif:{' '}
+                    <strong className="text-[#1C1D21] dark:text-[#F3F4F6]">{glideSegment}</strong>
+                  </span>
+                  <code className="text-[10.5px] font-mono text-[#ee2e65] dark:text-[#f895b5]">
+                    layoutId spring
+                  </code>
+                </div>
+              </div>
+
+              {/* Right: Swipe-to-Glide Interactive Card Slider */}
+              <div className="rounded-2xl border border-black/[0.12] dark:border-white/[0.10] bg-[#FAFBFD] dark:bg-[#15181E] p-4 space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div>
+                    <div className="text-xs font-bold text-[#1C1D21] dark:text-[#F3F4F6]">
+                      Swipe-to-Glide Card Deck
+                    </div>
+                    <div className="text-[11px] text-[#646772] dark:text-gray-400">
+                      Seret kartu ke kiri/kanan atau gunakan panah
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      type="button"
+                      disabled={glideCardIdx === 0}
+                      onClick={() => setGlideCardIdx((i) => Math.max(0, i - 1))}
+                      aria-label="Slide sebelumnya"
+                      className="w-7 h-7 rounded-full border border-black/[0.12] dark:border-white/[0.12] bg-white dark:bg-[#1B1E24] text-[#1C1D21] dark:text-gray-200 flex items-center justify-center disabled:opacity-40 cursor-pointer"
+                    >
+                      <ChevronLeft className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      disabled={glideCardIdx === 3}
+                      onClick={() => setGlideCardIdx((i) => Math.min(3, i + 1))}
+                      aria-label="Slide berikutnya"
+                      className="w-7 h-7 rounded-full border border-black/[0.12] dark:border-white/[0.12] bg-white dark:bg-[#1B1E24] text-[#1C1D21] dark:text-gray-200 flex items-center justify-center disabled:opacity-40 cursor-pointer"
+                    >
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                <div
+                  ref={glideViewportRef}
+                  className="w-full overflow-hidden rounded-xl border border-black/[0.10] dark:border-white/[0.10] bg-white dark:bg-[#181B21] select-none"
+                >
+                  <motion.div
+                    drag="x"
+                    dragConstraints={{ left: -3 * glideViewportWidth, right: 0 }}
+                    dragElastic={0.16}
+                    animate={{ x: -glideCardIdx * glideViewportWidth }}
+                    transition={{ type: 'spring', stiffness: 360, damping: 32, mass: 0.85 }}
+                    onDragEnd={(_, info) => {
+                      const threshold = Math.min(56, glideViewportWidth * 0.22);
+                      if (info.offset.x < -threshold || info.velocity.x < -280) {
+                        setGlideCardIdx((i) => Math.min(3, i + 1));
+                      } else if (info.offset.x > threshold || info.velocity.x > 280) {
+                        setGlideCardIdx((i) => Math.max(0, i - 1));
+                      }
+                    }}
+                    className="flex cursor-grab active:cursor-grabbing touch-pan-y"
+                  >
+                    {[
+                      {
+                        step: '01 / 04',
+                        title: 'Elastic Gesture Tracking',
+                        desc: 'Kartu mengikuti pergeseran jari 1:1 secara real-time di sumbu horizontal.',
+                        metric: '98.2%',
+                        metricLabel: 'Presensi Kelas',
+                        tint: 'bg-[#FEF1F5] text-[#9D113C] dark:bg-[#ee2e65]/15 dark:text-[#f895b5]',
+                      },
+                      {
+                        step: '02 / 04',
+                        title: 'Velocity Momentum Snap',
+                        desc: 'Geseran cepat (flick) otomatis meluncur ke kartu berikutnya meski jarak seret pendek.',
+                        metric: '42m',
+                        metricLabel: 'Rata-rata Sesi',
+                        tint: 'bg-[#EDE9FE] text-[#543DE2] dark:bg-indigo-500/20 dark:text-indigo-300',
+                      },
+                      {
+                        step: '03 / 04',
+                        title: 'Rubber-Band Edge Resistance',
+                        desc: 'Di ujung daftar (awal/akhir), tarikan memantul lembut tanpa hentakan keras.',
+                        metric: '1.284',
+                        metricLabel: 'Peserta Aktif',
+                        tint: 'bg-[#E6F9F0] text-[#146C43] dark:bg-emerald-500/20 dark:text-emerald-300',
+                      },
+                      {
+                        step: '04 / 04',
+                        title: 'Spring Gliding Dots',
+                        desc: 'Indikator posisi di bawah kartu memanjang dan meluncur seirama dengan slide aktif.',
+                        metric: '88.4',
+                        metricLabel: 'Skor Evaluasi',
+                        tint: 'bg-[#FFF5E6] text-[#8C5811] dark:bg-amber-500/20 dark:text-amber-300',
+                      },
+                    ].map((slide) => (
+                      <div
+                        key={slide.step}
+                        style={{ width: glideViewportWidth }}
+                        className="shrink-0 p-4 space-y-2.5"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className={`px-2 py-0.5 rounded-md text-[10.5px] font-bold tabular-nums ${slide.tint}`}>
+                            {slide.step}
+                          </span>
+                          <span className="text-xs font-bold text-[#1C1D21] dark:text-[#F3F4F6] tabular-nums">
+                            {slide.metric}{' '}
+                            <span className="font-normal text-[11px] text-gray-500 dark:text-gray-400">
+                              · {slide.metricLabel}
+                            </span>
+                          </span>
+                        </div>
+                        <div className="text-xs font-bold text-[#1C1D21] dark:text-[#F3F4F6]">
+                          {slide.title}
+                        </div>
+                        <p className="text-[11px] text-[#5A5D67] dark:text-gray-400 leading-relaxed">
+                          {slide.desc}
+                        </p>
+                      </div>
+                    ))}
+                  </motion.div>
+                </div>
+
+                {/* Gliding Dot Indicator */}
+                <div className="flex items-center justify-center gap-1.5">
+                  {[0, 1, 2, 3].map((dot) => {
+                    const isCurrent = glideCardIdx === dot;
+                    return (
+                      <button
+                        key={dot}
+                        type="button"
+                        onClick={() => setGlideCardIdx(dot)}
+                        aria-label={`Pilih slide ${dot + 1}`}
+                        className="p-1 cursor-pointer"
+                      >
+                        <motion.span
+                          animate={{
+                            width: isCurrent ? 22 : 6,
+                            backgroundColor: isCurrent ? '#ee2e65' : 'rgba(148,163,184,0.45)',
+                          }}
+                          transition={{ type: 'spring', stiffness: 420, damping: 30 }}
+                          className="block h-1.5 rounded-full"
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </UiDocSection>
@@ -730,7 +1001,9 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                 type="button"
                 onClick={() => setDepthPullDemo((v) => !v)}
                 className={`inline-flex items-center gap-1.5 h-8 px-3 rounded-full text-[11.5px] font-semibold cursor-pointer ${
-                  depthPullDemo ? 'bg-[#ee2e65] text-white' : 'bg-[#F4F5F8] text-[#1C1D21]'
+                  depthPullDemo
+                    ? 'bg-[#ee2e65] text-white'
+                    : 'bg-[#F4F5F8] dark:bg-[#1B1E24] text-[#1C1D21] dark:text-gray-200 border border-transparent dark:border-white/[0.10]'
                 }`}
               >
                 <Smartphone className="w-3.5 h-3.5 shrink-0" />
@@ -740,9 +1013,11 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* PageTransition axis preview */}
-              <div className="rounded-2xl border border-gray-300 bg-[#FAFBFD] p-4 space-y-3">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-bold text-[#1C1D21]">Adaptive Axis Switch (Mobile X vs Desktop Y)</span>
+              <div className="rounded-2xl border border-gray-300 dark:border-white/[0.10] bg-[#FAFBFD] dark:bg-[#15181E] p-4 space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-xs font-bold text-[#1C1D21] dark:text-[#F3F4F6]">
+                    Adaptive Axis Switch (Mobile X vs Desktop Y)
+                  </span>
                   <div className="flex items-center gap-1">
                     {['Grid', 'Buttons', 'Cards'].map((lbl, idx) => (
                       <button
@@ -753,7 +1028,9 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                           setTransitionTab(idx);
                         }}
                         className={`px-2.5 py-1 rounded-full text-[11px] font-semibold cursor-pointer transition-colors ${
-                          transitionTab === idx ? 'bg-[#ee2e65] text-white' : 'bg-white text-gray-600 border border-gray-300'
+                          transitionTab === idx
+                            ? 'bg-[#ee2e65] text-white'
+                            : 'bg-white dark:bg-[#1B1E24] text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-white/[0.10]'
                         }`}
                       >
                         {lbl}
@@ -761,7 +1038,7 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                     ))}
                   </div>
                 </div>
-                <div className="h-24 rounded-xl bg-white border border-gray-300 overflow-hidden relative flex items-center justify-center p-4">
+                <div className="h-24 rounded-xl bg-white dark:bg-[#181B21] border border-gray-300 dark:border-white/[0.10] overflow-hidden relative flex items-center justify-center p-4">
                   <AnimatePresence mode="popLayout" initial={false} custom={transitionDir}>
                     <motion.div
                       key={transitionTab}
@@ -784,10 +1061,10 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                       }}
                       className="text-center space-y-1"
                     >
-                      <div className="text-xs font-bold text-[#1C1D21]">
+                      <div className="text-xs font-bold text-[#1C1D21] dark:text-[#F3F4F6]">
                         Halaman {['1. Grid System', '2. Action Buttons', '3. Pastel Cards'][transitionTab]}
                       </div>
-                      <div className="text-[11px] text-[#5A5D67]">
+                      <div className="text-[11px] text-[#5A5D67] dark:text-gray-400">
                         Spring directional transition (stiffness: 400, damping: 36)
                       </div>
                     </motion.div>
@@ -796,16 +1073,18 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
               </div>
 
               {/* App Shell Depth Pull-Back Preview */}
-              <div className="rounded-2xl border border-gray-300 bg-[#E8EAEE] p-4 flex items-center justify-center relative overflow-hidden min-h-[164px]">
+              <div className="rounded-2xl border border-gray-300 dark:border-white/[0.10] bg-[#E8EAEE] dark:bg-[#121418] p-4 flex items-center justify-center relative overflow-hidden min-h-[164px]">
                 <div
-                  className="w-full max-w-[260px] h-[132px] bg-white rounded-[20px] p-3 border border-black/[0.12] shadow-sm transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
+                  className="w-full max-w-[260px] h-[132px] bg-white dark:bg-[#181B21] rounded-[20px] p-3 border border-black/[0.12] dark:border-white/[0.10] shadow-sm transition-all duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
                   style={{
                     transform: depthPullDemo ? 'scale(0.95)' : 'scale(1)',
                     filter: depthPullDemo ? 'brightness(0.88)' : 'none',
                   }}
                 >
-                  <div className="text-[11px] font-bold text-[#1C1D21]">.app-shell-container</div>
-                  <div className="text-[10px] text-[#646772] mt-1">
+                  <div className="text-[11px] font-bold text-[#1C1D21] dark:text-[#F3F4F6]">
+                    .app-shell-container
+                  </div>
+                  <div className="text-[10px] text-[#646772] dark:text-gray-400 mt-1">
                     {depthPullDemo ? 'Tarik mundur (scale 0.95, brightness 0.88)' : 'Latar normal (scale 1)'}
                   </div>
                 </div>
@@ -815,10 +1094,12 @@ export const MobileUiKit: React.FC<MobileUiKitProps> = ({ activeSubJump }) => {
                       initial={{ y: 40, opacity: 0, filter: 'blur(3px)' }}
                       animate={{ y: 0, opacity: 1, filter: 'blur(0px)', transition: { type: 'spring', stiffness: 380, damping: 28 } }}
                       exit={{ y: 36, opacity: 0, filter: 'blur(2px)', transition: { duration: 0.16, ease: [0.23, 1, 0.32, 1] } }}
-                      className="absolute inset-x-4 bottom-2 bg-white rounded-t-[20px] p-3 shadow-xl border border-black/[0.14] flex items-center justify-between"
+                      className="absolute inset-x-4 bottom-2 bg-white dark:bg-[#1B1E24] rounded-t-[20px] p-3 shadow-xl border border-black/[0.14] dark:border-white/[0.12] flex items-center justify-between"
                     >
-                      <span className="text-[11px] font-semibold text-[#1C1D21]">Bottom Sheet Aktif</span>
-                      <span className="px-2 py-0.5 rounded-full bg-[#FEF1F5] text-[#ee2e65] text-[10px] font-bold">
+                      <span className="text-[11px] font-semibold text-[#1C1D21] dark:text-[#F3F4F6]">
+                        Bottom Sheet Aktif
+                      </span>
+                      <span className="px-2 py-0.5 rounded-full bg-[#FEF1F5] dark:bg-[#ee2e65]/15 text-[#ee2e65] dark:text-[#f895b5] text-[10px] font-bold">
                         Pull-Back
                       </span>
                     </motion.div>
