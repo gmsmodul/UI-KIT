@@ -8,7 +8,7 @@ import {
   Upload,
   Save,
   RotateCcw,
-  Trash2,
+  Minus,
   Check,
   AlertCircle,
 } from 'lucide-react';
@@ -684,7 +684,7 @@ export const SettingsPage: React.FC = () => {
                                   }}
                                   className={ACTION_BTN_DANGER_SOFT}
                                 >
-                                  <Trash2 className="w-4 h-4 shrink-0" />
+                                  <Minus className="w-4 h-4 shrink-0" />
                                   <span>Konfirmasi Hapus</span>
                                 </button>
                               ) : (
@@ -693,7 +693,7 @@ export const SettingsPage: React.FC = () => {
                                   onClick={() => setConfirmDeleteBatchId(batch.id)}
                                   className={ACTION_BTN_SECONDARY}
                                 >
-                                  <Trash2 className="w-4 h-4 shrink-0 text-[#942922]" />
+                                  <Minus className="w-4 h-4 shrink-0 text-[#942922]" />
                                   <span className="text-[#942922]">Hapus</span>
                                 </button>
                               )

@@ -6,7 +6,7 @@ import {
   GripVertical,
   Plus,
   Search,
-  Trash2,
+  Minus,
   AlertTriangle,
   ChevronDown,
   ChevronUp,
@@ -505,7 +505,7 @@ export const KanbanBoardUiKit: React.FC = () => {
                                   aria-label={`Hapus ${task.code}`}
                                   className="w-6 h-6 rounded-md border border-gray-300 bg-white hover:bg-rose-50 hover:border-rose-300 hover:text-rose-700 flex items-center justify-center text-gray-600 cursor-pointer"
                                 >
-                                  <Trash2 className="w-3 h-3" />
+                                  <Minus className="w-3 h-3" />
                                 </button>
                               </div>
                             </div>

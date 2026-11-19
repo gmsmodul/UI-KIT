@@ -7,7 +7,7 @@ import {
   Pencil,
   Plus,
   Save,
-  Trash2,
+  Minus,
   X,
 } from 'lucide-react';
 import {
@@ -782,7 +782,7 @@ export const ExamAssessmentStepBuilder: React.FC<ExamAssessmentStepBuilderProps>
                               aria-label={`Hapus scale ${scale.name}`}
                               className="w-8 h-8 rounded-full border border-black/[0.08] bg-white hover:bg-[#FFECEB] text-[#6E717A] hover:text-[#942922] inline-flex items-center justify-center cursor-pointer transition-colors"
                             >
-                              <Trash2 className="w-3.5 h-3.5" />
+                              <Minus className="w-3.5 h-3.5" />
                             </button>
                           ))}
                       </div>
@@ -921,7 +921,7 @@ export const ExamAssessmentStepBuilder: React.FC<ExamAssessmentStepBuilderProps>
                             aria-label="Hapus pilihan scale"
                             className="w-10 h-10 rounded-full border border-black/[0.08] bg-white hover:bg-[#FFECEB] hover:border-[#942922]/25 text-[#6E717A] hover:text-[#942922] inline-flex items-center justify-center shrink-0 cursor-pointer transition-colors"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <Minus className="w-4 h-4" />
                           </button>
                         </div>
                       ))}
@@ -1118,7 +1118,7 @@ export const ExamAssessmentStepBuilder: React.FC<ExamAssessmentStepBuilderProps>
                           aria-label="Hapus Position"
                           className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full border border-black/[0.08] bg-white hover:bg-[#FFECEB] text-[12px] font-medium text-[#6E717A] hover:text-[#942922] cursor-pointer transition-colors"
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
+                          <Minus className="w-3.5 h-3.5" />
                           <span>Hapus Position</span>
                         </button>
                       )}
@@ -1198,7 +1198,7 @@ export const ExamAssessmentStepBuilder: React.FC<ExamAssessmentStepBuilderProps>
                                   aria-label={`Hapus segment ${seg.name}`}
                                   className="w-10 h-10 rounded-full border border-black/[0.08] bg-white hover:bg-[#FFECEB] hover:border-[#942922]/25 text-[#6E717A] hover:text-[#942922] inline-flex items-center justify-center shrink-0 cursor-pointer transition-colors"
                                 >
-                                  <Trash2 className="w-4 h-4" />
+                                  <Minus className="w-4 h-4" />
                                 </button>
                               </div>
                             );
@@ -1396,7 +1396,7 @@ export const ExamAssessmentStepBuilder: React.FC<ExamAssessmentStepBuilderProps>
                                 aria-label={`Hapus kriteria ${param.label}`}
                                 className="w-10 h-10 rounded-full border border-black/[0.08] bg-white hover:bg-[#FFECEB] hover:border-[#942922]/25 text-[#6E717A] hover:text-[#942922] inline-flex items-center justify-center shrink-0 cursor-pointer transition-colors"
                               >
-                                <Trash2 className="w-4 h-4" />
+                                <Minus className="w-4 h-4" />
                               </button>
                             </div>
                           </div>

@@ -13,7 +13,7 @@ import {
   Play,
   RotateCcw,
   Share2,
-  Trash2,
+  Minus,
   X,
   Layers,
   GraduationCap,
@@ -1301,7 +1301,7 @@ export const MaterialsPage: React.FC = () => {
                   }}
                   className={`flex-1 sm:flex-initial ${ACTION_BTN_DANGER_SOFT}`}
                 >
-                  <Trash2 className="w-4 h-4 shrink-0" />
+                  <Minus className="w-4 h-4 shrink-0" />
                   <span className="sm:hidden">Hapus</span>
                   <span className="hidden sm:inline">Hapus Materi</span>
                 </button>

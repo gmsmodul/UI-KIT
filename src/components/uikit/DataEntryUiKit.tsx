@@ -46,7 +46,6 @@ import {
   AlertTriangle,
   RotateCcw,
   Download,
-  Trash2,
   Filter,
   Sparkles,
   RefreshCw,
@@ -1029,7 +1028,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                   onClick={() => triggerToast('ACTION_BTN_DANGER_SOFT', 'Destructive Soft CTA diklik.', 'warning')}
                   className={ACTION_BTN_DANGER_SOFT}
                 >
-                  <Trash2 className="w-4 h-4 shrink-0" />
+                  <Minus className="w-4 h-4 shrink-0" />
                   <span>{ctaCompactMode === 'mobile' ? 'Reset' : 'Reset Token'}</span>
                 </button>
               </div>
@@ -3420,7 +3419,7 @@ export const DataEntryUiKit: React.FC<DataEntryUiKitProps> = ({ activeSubJump })
                               onClick={() => setDemoRecentSearches([])}
                               className="inline-flex items-center gap-1 text-[11px] font-medium text-gray-500 hover:text-[#ee2e65] cursor-pointer"
                             >
-                              <Trash2 className="w-3 h-3" />
+                              <Minus className="w-3 h-3" />
                               <span>Hapus semua</span>
                             </button>
                           )}

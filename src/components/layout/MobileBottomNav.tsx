@@ -12,7 +12,7 @@ import {
   CheckCheck,
   Clock,
   Sparkles,
-  Trash2,
+  Minus,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { PASTEL_THEMES } from '../../constants/theme';
@@ -666,7 +666,7 @@ export const MobileBottomNav: React.FC = () => {
                           onClick={() => setRecentSearches(clearRecentSearches())}
                           className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#ee2e65] cursor-pointer"
                         >
-                          <Trash2 className="w-3 h-3" />
+                          <Minus className="w-3 h-3" />
                           <span>Hapus</span>
                         </button>
                       )}

@@ -8,7 +8,7 @@ import {
   Play,
   Plus,
   Save,
-  Trash2,
+  Minus,
   Clock,
   Award,
 } from 'lucide-react';
@@ -428,7 +428,7 @@ export const LiveQuizEditor: React.FC<LiveQuizEditorProps> = ({
                         title="Hapus Soal"
                         className="w-6 h-6 rounded-md hover:bg-[#FFECEB] flex items-center justify-center text-[#942922] cursor-pointer"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Minus className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
@@ -691,7 +691,7 @@ export const LiveQuizEditor: React.FC<LiveQuizEditorProps> = ({
                           }
                           className="w-9 h-9 rounded-xl border border-black/[0.08] hover:bg-[#FFECEB] text-[#942922] flex items-center justify-center cursor-pointer"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Minus className="w-4 h-4" />
                         </button>
                       )}
                     </div>

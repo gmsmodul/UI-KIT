@@ -13,7 +13,7 @@ import {
   FlaskConical,
   BookOpen,
   Check,
-  Trash2,
+  Minus,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import {
@@ -766,7 +766,7 @@ export const UploadMaterialModal: React.FC = () => {
                         aria-label="Hapus file terpilih"
                         className="w-7 h-7 rounded-full hover:bg-[#FFECEB] text-[#8A8D98] hover:text-[#942922] flex items-center justify-center cursor-pointer"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Minus className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>

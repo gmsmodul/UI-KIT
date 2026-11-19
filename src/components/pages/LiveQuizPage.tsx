@@ -10,7 +10,7 @@ import {
   Search,
   ShieldCheck,
   Sparkles,
-  Trash2,
+  Minus,
   Users,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
@@ -404,7 +404,7 @@ export const LiveQuizPage: React.FC = () => {
                           title="Hapus Kuis"
                           className="w-8 h-8 rounded-full hover:bg-[#FFECEB] text-[#6E717A] hover:text-[#942922] flex items-center justify-center cursor-pointer transition-colors"
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
+                          <Minus className="w-3.5 h-3.5" />
                         </button>
                       )}
                     </div>
